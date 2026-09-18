@@ -1,0 +1,29 @@
+---
+interface Props {
+  tone?: 'dark' | 'light';
+  id?: string;
+  'aria-label'?: string;
+}
+
+const { tone = 'dark', id, 'aria-label': ariaLabel } = Astro.props;
+---
+
+<section id={id} aria-label={ariaLabel} class:list={['section', `section--${tone}`]}>
+  <slot />
+</section>
+
+<style>
+  .section {
+    padding-block: clamp(3rem, 6vw, 6rem);
+  }
+
+  .section--dark {
+    background-color: var(--color-bg);
+    color: var(--color-cream);
+  }
+
+  .section--light {
+    background-color: var(--color-cream);
+    color: var(--color-bg);
+  }
+</style>

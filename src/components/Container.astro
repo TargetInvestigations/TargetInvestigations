@@ -1,0 +1,38 @@
+---
+/**
+ * Envoltorio de ancho máximo centrado. Tamaños derivados de los anchos de contenido
+ * medidos en Figma (Container / Container:margin dentro de cada Section).
+ */
+interface Props {
+  size?: 'default' | 'narrow' | 'wide';
+}
+
+const { size = 'default' } = Astro.props;
+---
+
+<div class:list={['container', `container--${size}`]}>
+  <slot />
+</div>
+
+<style>
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  /* ~1200px en Figma (Container de Hero/Footer/About) */
+  .container--default {
+    max-width: 75rem;
+  }
+
+  /* ~800px en Figma (Container de la sección CTA) */
+  .container--narrow {
+    max-width: 50rem;
+  }
+
+  /* ~1485px en Figma (Container:margin, ancho de página menos el margen lateral) */
+  .container--wide {
+    max-width: 92.8125rem;
+  }
+</style>

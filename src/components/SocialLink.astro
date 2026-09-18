@@ -1,0 +1,42 @@
+---
+import instagram from '../icons/social-instagram.svg?raw';
+import tiktok from '../icons/social-tiktok.svg?raw';
+import linkedin from '../icons/social-linkedin.svg?raw';
+import facebook from '../icons/social-facebook.svg?raw';
+
+const icons = { instagram, tiktok, linkedin, facebook } as const;
+
+interface Props {
+  network: keyof typeof icons;
+  href: string | null;
+}
+
+const { network, href } = Astro.props;
+const label = network.charAt(0).toUpperCase() + network.slice(1);
+---
+
+{href && (
+  <a href={href} class="social-link" aria-label={label} target="_blank" rel="noopener noreferrer">
+    <Fragment set:html={icons[network]} />
+  </a>
+)}
+
+<style>
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .social-link :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .social-link:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+</style>

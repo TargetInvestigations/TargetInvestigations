@@ -1,19 +1,52 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Section from '../components/Section.astro';
+import Container from '../components/Container.astro';
+import ValueBadges from '../components/ValueBadges.astro';
+import StatBadges from '../components/StatBadges.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import Footer from '../components/Footer.astro';
 import { siteConfig } from '../config/site';
 ---
 
 <!--
-  Placeholder de Fase 1 (Arquitectura). Verifica que el layout base, las fuentes y los
-  design tokens funcionan correctamente. La implementación real del Home (Hero, Services,
-  About, FAQs, CTA, Footer) se construye en la Fase 3, sobre los componentes del Design
-  System de la Fase 2.
+  Fase 2 (Design System): vitrina de componentes reutilizables para verificar que
+  funcionan correctamente en ambos breakpoints. Esto NO es el Home real — el
+  ensamblado final de Hero/Services/About con el contenido y las fotos completas
+  se hace en la Fase 3.
 -->
 <Layout>
-  <main style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1rem; padding: 2rem;">
-    <h1 style="font-size: 2rem; color: var(--color-gold);">{siteConfig.company.name}</h1>
-    <p style="color: var(--color-cream); max-width: 32rem;">
-      {siteConfig.company.tagline} — proyecto en construcción (Fase 1: Arquitectura).
-    </p>
+  <Header />
+
+  <main id="top">
+    <Section tone="dark" aria-label="Design system preview: value badges">
+      <Container size="wide">
+        <ValueBadges />
+      </Container>
+    </Section>
+
+    <Section tone="light" id="about" aria-label="Design system preview: stat badges">
+      <Container size="default">
+        <StatBadges />
+      </Container>
+    </Section>
+
+    <Section tone="dark" id="services" aria-label="Design system preview: FAQ accordion">
+      <Container size="narrow">
+        <h2 style="font-family: var(--font-display); margin-bottom: 1rem;">FAQs</h2>
+        <FaqAccordion />
+      </Container>
+    </Section>
+
+    <Section tone="dark" id="contact" aria-label="Design system preview: placeholder">
+      <Container size="narrow">
+        <p style="text-align:center; opacity: 0.7;">
+          {siteConfig.company.tagline} — Home real en Fase 3.
+        </p>
+      </Container>
+    </Section>
   </main>
+
+  <Footer />
 </Layout>

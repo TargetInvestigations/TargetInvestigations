@@ -1,0 +1,103 @@
+---
+/**
+ * Fila de 5 "value badges" del Hero (Group 38 en Figma). Contenido e íconos reales,
+ * extraídos del archivo de Figma (componente "Component 1", variantes 16-20).
+ */
+import discretion from '../icons/value-discretion.svg?raw';
+import intelligence from '../icons/value-intelligence.svg?raw';
+import results from '../icons/value-results.svg?raw';
+import integrity from '../icons/value-integrity.svg?raw';
+import precision from '../icons/value-precision.svg?raw';
+
+const values = [
+  {
+    icon: discretion,
+    label: 'Discretion',
+    description: 'Sensitive matters handled with confidentiality and professionalism.',
+  },
+  {
+    icon: integrity,
+    label: 'Integrity',
+    description: 'Ethical investigations conducted with respect for applicable laws and standards.',
+  },
+  {
+    icon: precision,
+    label: 'Precision',
+    description: 'Careful attention to detail and professionally documented investigations.',
+  },
+  {
+    icon: intelligence,
+    label: 'Intelligence',
+    description: 'Research, technology, experience and strategy focused on uncovering facts.',
+  },
+  {
+    icon: results,
+    label: 'Results',
+    description: 'Reliable, useful information to help clients make informed decisions.',
+  },
+];
+---
+
+<ul class="value-badges">
+  {values.map((value) => (
+    <li class="value-badges__item">
+      <span class="value-badges__icon" set:html={value.icon} />
+      <span class="value-badges__label">{value.label}</span>
+      <span class="value-badges__description">{value.description}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .value-badges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1.5rem;
+    text-align: center;
+  }
+
+  .value-badges__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .value-badges__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .value-badges__icon :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .value-badges__label {
+    font-family: var(--font-display);
+    color: var(--color-cream);
+    font-size: 1rem;
+  }
+
+  /* La descripción se reserva para pantallas más grandes, como en el diseño desktop */
+  .value-badges__description {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .value-badges {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.5rem;
+    }
+
+    .value-badges__description {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--color-cream);
+      opacity: 0.75;
+    }
+  }
+</style>

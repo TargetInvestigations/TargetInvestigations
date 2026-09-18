@@ -18,7 +18,8 @@
     layouts/    # Layout.astro — head, meta tags/SEO, fuentes, estilos globales
     pages/      # rutas de Astro (index.astro)
     styles/     # tokens.css (design tokens) + global.css (reset/base)
-    components/ # se agrega en Fase 2 con los componentes reutilizables del Design System
+    components/ # Design System: Container, Section, Button, Header, Footer, ValueBadges, StatBadges, AccordionItem, FaqAccordion, SocialLink
+    icons/      # SVG reales exportados de Figma (logo, value badges, redes sociales) — importados con ?raw
   public/       # assets estáticos (favicon, robots.txt)
   ```
 - **Convenciones del proyecto:** ESLint (`eslint-plugin-astro` + reglas de accesibilidad jsx-a11y) + Prettier (`prettier-plugin-astro`) para formato consistente. `npm run check` para type-checking de Astro/TS. Fuentes autohospedadas vía `@fontsource-variable` (Fraunces + Inter) — sin requests externos a Google Fonts. No hardcodear datos de contacto/redes/analytics en componentes: todo pasa por `src/config/site.ts`.
@@ -71,6 +72,8 @@
 1. **Versión de referencia:** el frame `Website` de la página `Moodboard` (id `53:57`) es el vigente. El de `Page 1` se descarta.
 2. **Estructura del sitio:** es un sitio de **una sola página** (home long-scroll). Home/Services/About/Contact del nav son **anclas** (`#services`, `#about`, `#contact`, etc.) dentro de la misma página, no rutas/páginas separadas. Esto simplifica el enrutamiento y el SEO (un solo documento, metadata única, encabezados H2 por sección en vez de H1 por página).
 3. **Breakpoint tablet:** no existe en el diseño. Se resolverá el rango intermedio con criterio propio de responsive (basado en cómo cambian los layouts entre 440px y 1549px), documentando explícitamente que es una interpretación nuestra y no un diseño aprobado por el cliente.
+4. **Sección FAQ (Fase 2, 2026-09-18):** en Figma, las 20 preguntas existen como tarjetas sueltas de un tablero tipo masonry (~196px de ancho cada una, 5 filas × 4 columnas) dentro de un componente ("Group 39") que en la página real aparece colapsado por defecto (barra "FAQs"). Ese tablero de tarjetas angostas no es un patrón accesible ni legible para una lista de FAQ real (texto de respuesta muy comprimido). Se implementó en su lugar como una lista vertical estándar de acordeones (`<details>`/`<summary>`, sin JavaScript), con el mismo contenido exacto (las 20 preguntas y respuestas reales). Esto es una decisión técnica/de accesibilidad, no un cambio de contenido — a validar con el usuario si prefiere otra presentación.
+5. **Botón CTA — color simplificado (Fase 2):** en Figma el botón "Request a Confidential Consultation" usa un fill de instancia (gradiente) superpuesto a un rectángulo sólido más oscuro (`#6C4E1F`); no fue posible reconstruir el gradiente exacto vía API. Se implementó como color sólido dorado (`--color-gold`, `#B8935A`) con texto navy oscuro — visualmente muy cercano, a confirmar contra Figma en la revisión de fidelidad de Fase 3.
 
 ---
 
@@ -126,7 +129,8 @@
 Ver `PROJECT_STATUS.md` para el detalle completo por fases. Estado actual resumido:
 
 - [x] Fase 0 — Acceso y descubrimiento de Figma
-- [~] Fase 1 — Arquitectura (falta solo el commit inicial de Git, pendiente de que el usuario configure su identidad de git)
+- [x] Fase 1 — Arquitectura
+- [x] Fase 2 — Design System (componentes base)
 - [ ] Fase 2 — Design System
 - [ ] Fase 3 — Primera página (Home)
 - [ ] Fase 4 — Páginas internas
@@ -157,3 +161,4 @@ _(Se irá completando a medida que se tomen decisiones de arquitectura/diseño/s
 
 - **2026-09-18:** Proyecto iniciado. Carpeta vacía, sin git inicializado. Se documentan reglas del proyecto. Sin acceso a Figma todavía — desarrollo de UI bloqueado hasta obtenerlo.
 - **2026-09-18:** Acceso a Figma obtenido vía API REST + Personal Access Token del usuario (archivo `TARGET-investigations`, file key `wNuM1O9AljP8HJUpOXFFro`). Auditoría de Fase 0 completada (estructura, contenido real, colores, tipografías, componentes). Usuario confirmó: (1) usar la versión "Moodboard" del frame Website como vigente, (2) el sitio es de una sola página con navegación por anclas, (3) interpolar el breakpoint tablet con criterio propio ante la ausencia de un frame de tablet en Figma. Ver sección Figma para el detalle completo.
+- **2026-09-18:** Fase 1 completada (Astro + TS strict, ESLint/Prettier, design tokens, site.config, layout base, git init + commit inicial). Fase 2 completada: componentes del Design System (Container, Section, Button, Header, Footer, ValueBadges, StatBadges, AccordionItem/FaqAccordion, SocialLink), con íconos reales exportados de Figma (logo, 5 value badges, 4 redes sociales). Se documentaron 2 deviaciones de diseño (ver "Decisiones confirmadas" arriba): FAQ como acordeón vertical en vez de tablero masonry, y botón CTA con color sólido en vez del gradiente exacto de Figma.

@@ -1,0 +1,115 @@
+---
+/**
+ * Las 20 preguntas frecuentes son contenido real del cliente, extraído del archivo
+ * de Figma (20 COMPONENT_SETs en el canvas "Moodboard"). Incluye tarifas reales.
+ *
+ * Nota de interpretación: en Figma estos 20 ítems existen como tarjetas sueltas de
+ * un tablero tipo masonry (5 filas x 4 columnas) dentro de un componente que en la
+ * página aparece colapsado por defecto (barra "FAQs"). Ese tablero de tarjetas
+ * angostas (~196px) no es un patrón accesible ni legible para una lista de FAQ real,
+ * así que se implementó como una lista vertical estándar de acordeones — más
+ * accesible y con el mismo contenido. Deviación documentada en CLAUDE.md.
+ */
+import AccordionItem from './AccordionItem.astro';
+
+const faqs = [
+  {
+    q: 'How much does a private investigator cost?',
+    a: 'Our standard investigative rate is $120 per hour. Surveillance assignments generally require a minimum of 4 hours per day for at least 3 days, depending on the case.',
+  },
+  {
+    q: 'Why is there a minimum number of surveillance hours?',
+    a: "Effective surveillance takes time. A subject's activities can vary from day to day, and multiple surveillance periods can help identify relevant patterns and obtain meaningful documentation.",
+  },
+  {
+    q: 'How can I reduce the cost of my investigation?',
+    a: 'Providing accurate information can help us work more efficiently. Photos, addresses, schedules, vehicle information, and known locations can reduce unnecessary research time and costs.',
+  },
+  {
+    q: 'Why should I be cautious of agencies offering very low prices?',
+    a: 'A low hourly rate does not always reflect the total cost of an investigation. Ask about minimum hours, travel, equipment, reports, and additional fees before hiring an agency. Choose experience, professionalism, and transparency—not price alone.',
+  },
+  {
+    q: 'Why would an investigation require more than one investigator?',
+    a: 'Multiple investigators may be necessary when a subject moves quickly, travels frequently, or when continuous surveillance is critical to the investigation.',
+  },
+  {
+    q: 'What factors can increase the cost of an investigation?',
+    a: 'Costs may increase due to multiple investigators, extensive travel, complex surveillance, high-security locations, urgent assignments, weekend work, specialized equipment, or complex financial investigations.',
+  },
+  {
+    q: "Can the subject's location affect the cost?",
+    a: 'Yes. Investigations involving frequent travel between Miami-Dade, Broward, and Palm Beach County, or restricted and high-security locations, may require additional time and resources.',
+  },
+  {
+    q: 'Are travel expenses included?',
+    a: 'Travel requirements are discussed during the planning process. Significant travel may involve additional expenses, which will be clearly addressed before services begin.',
+  },
+  {
+    q: 'How long does it take to get results?',
+    a: 'It depends on the case. Background checks usually take 24–72 hours. Surveillance investigations may take several days to several weeks, while complex fraud or financial cases may take weeks or longer. We provide realistic expectations based on your specific case.',
+  },
+  {
+    q: 'How much does an infidelity investigation cost?',
+    a: "Most infidelity investigations range from approximately $1,500 to $5,000, depending on the subject's schedule, movements, and the amount of surveillance required.",
+  },
+  {
+    q: 'Do you offer background checks?',
+    a: 'Yes. Public Background Checks start at $39.99, while Comprehensive Background Investigations start at $250.',
+  },
+  {
+    q: 'What is the difference between a Public Background Check and a Comprehensive Background Investigation?',
+    a: 'A Public Background Check provides a basic review of publicly available information. A Comprehensive Background Investigation involves more extensive research and analysis tailored to your specific needs.',
+  },
+  {
+    q: 'Can you investigate someone if I have limited information?',
+    a: 'Yes. However, the more accurate information you provide, the more efficiently we may be able to conduct the investigation and identify relevant leads.',
+  },
+  {
+    q: 'Are investigations confidential?',
+    a: 'Yes. We understand that investigations can involve sensitive personal, legal, family, and business matters. Your privacy and discretion are always a priority.',
+  },
+  {
+    q: 'Can you work with my attorney?',
+    a: 'Yes. We provide investigative support to attorneys and law firms, including surveillance, background investigations, locate services, investigative research, and evidence documentation.',
+  },
+  {
+    q: 'Do you provide forensic accounting and financial investigative support?',
+    a: 'Yes. TARGET INVESTIGATIONS coordinates specialized forensic accounting and financial investigative support through qualified professionals when required. Services may include fraud investigations, asset tracing, hidden asset analysis, business valuation, and litigation support.',
+  },
+  {
+    q: 'How much does forensic accounting cost?',
+    a: 'Forensic accounting and financial investigative support starts at approximately $1,400. The final cost depends on the complexity and scope of the financial matter.',
+  },
+  {
+    q: 'Can you guarantee results?',
+    a: 'No ethical investigator can guarantee a specific outcome. What we can guarantee is a professional, discreet, and thorough approach to obtaining the facts. The Truth Is Our Target.',
+  },
+  {
+    q: 'What information should I provide before starting an investigation?',
+    a: "Helpful information includes the subject's full name, recent photos, address, phone number, vehicle information, social media profiles, and known schedules or locations. The more accurate information you provide, the more efficiently we can investigate.",
+  },
+  {
+    q: 'How do I get started?',
+    a: "Simply contact TARGET INVESTIGATIONS for a confidential consultation. Tell us about your situation, provide the information you have, and we will discuss the investigative options available. Don't live with questions. Get the facts. The Truth Is Our Target.",
+  },
+];
+---
+
+<div class="faq-accordion">
+  {faqs.map((faq) => (
+    <AccordionItem question={faq.q}>
+      <p>{faq.a}</p>
+    </AccordionItem>
+  ))}
+</div>
+
+<style>
+  .faq-accordion {
+    border-top: 1px solid rgba(184, 147, 90, 0.3);
+  }
+
+  .faq-accordion :global(p) {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+/**
+ * Grid de 4 stats/trust badges de la sección About. Contenido real extraído de la
+ * captura de Figma. El número de licencia es un placeholder en el diseño original
+ * ("Class A Licensed # ___") — pendiente del dato real del cliente.
+ */
+import { siteConfig } from '../config/site';
+
+const licenseLabel = siteConfig.company.licenseNumber
+  ? `Licensed # ${siteConfig.company.licenseNumber}`
+  : 'Licensed & Insured PI';
+
+const stats = [
+  { value: 'Base Rates', label: siteConfig.company.coverageArea },
+  { value: '100%', label: 'Confidentiality' },
+  { value: '24h', label: 'Response Time' },
+  { value: 'Class A', label: licenseLabel },
+];
+---
+
+<ul class="stat-badges">
+  {stats.map((stat) => (
+    <li class="stat-badges__item">
+      <span class="stat-badges__value">{stat.value}</span>
+      <span class="stat-badges__label">{stat.label}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .stat-badges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background-color: var(--color-gold);
+  }
+
+  .stat-badges__item {
+    background-color: var(--color-bg);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .stat-badges__value {
+    font-family: var(--font-display);
+    color: var(--color-gold-light);
+    font-size: 1.25rem;
+  }
+
+  .stat-badges__label {
+    font-size: 0.8rem;
+    color: var(--color-cream);
+    opacity: 0.85;
+  }
+</style>

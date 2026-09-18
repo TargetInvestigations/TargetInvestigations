@@ -1,0 +1,72 @@
+---
+/**
+ * Botón/Link de CTA. Variante "solid" = botón dorado usado como CTA principal
+ * ("Request a Confidential Consultation") en Hero y sección de contacto.
+ * Color de fondo simplificado a un dorado sólido (--color-gold): en Figma el botón
+ * usa un fill de instancia (gradiente) superpuesto a un rectángulo sólido más oscuro;
+ * no fue posible reconstruir el gradiente exacto desde la API, así que se aproximó
+ * con el tono dorado principal — revisar visualmente contra Figma en Fase 3.
+ */
+interface Props {
+  href: string;
+  variant?: 'solid' | 'ghost';
+  external?: boolean;
+}
+
+const { href, variant = 'solid', external = false } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['button', `button--${variant}`]}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  <slot />
+</a>
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.75rem;
+    border-radius: var(--radius-button);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-button);
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .button--solid {
+    background-color: var(--color-gold);
+    color: var(--color-bg-alt);
+  }
+
+  .button--solid:hover {
+    background-color: var(--color-gold-light);
+  }
+
+  .button--ghost {
+    background-color: transparent;
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+  }
+
+  .button--ghost:hover {
+    background-color: var(--color-gold);
+    color: var(--color-bg-alt);
+  }
+
+  .button:focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 2px;
+  }
+</style>

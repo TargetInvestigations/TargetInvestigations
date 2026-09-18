@@ -38,23 +38,33 @@ Leyenda: `[ ]` Pendiente · `[~]` En progreso · `[x]` Completado · `[!]` Bloqu
 - [ ] Configurar manejo de assets — pendiente exportar assets reales de Figma (Fase 2/3)
 - [x] Configurar SEO base (metadata, sitemap/robots scaffolding) — `Layout.astro` (title/description/OG) + `public/robots.txt`; sitemap real se agrega en Fase 6 con dominio definitivo
 - [x] Crear `site.config` centralizado (empresa, contacto, redes, analytics, WhatsApp) — `src/config/site.ts`
-- [~] Inicializar repositorio Git — `git init` hecho; **pendiente que el usuario configure `git config user.name/email` local** antes del primer commit (no lo configuro yo por política de no tocar la config de git)
+- [x] Inicializar repositorio Git — `git init` + commit inicial (`651b2b7`) hecho
 
 **Validado:** `npm run check` (0 errores), `npm run lint` (limpio), `npm run format:check` (limpio), `npm run build` (genera `dist/` correctamente), servidor de desarrollo probado con `curl` (sirve HTML, meta tags y fuentes correctamente).
+
+**FASE 1 COMPLETADA.**
 
 ---
 
 ## FASE 2 — Design System
 
-- [ ] Container / layout base
-- [ ] Sistema tipográfico
-- [ ] Button (variantes/estados según Figma)
-- [ ] Link
-- [ ] Header / Navigation
-- [ ] Footer
-- [ ] Cards
-- [ ] Form controls
-- [ ] Section wrappers
+- [x] Container / layout base — `Container.astro` (default/narrow/wide), `Section.astro` (tono dark/light)
+- [~] Sistema tipográfico — resuelto vía tokens CSS + estilos base en `global.css`; sin componente dedicado (no hacía falta)
+- [x] Button (variantes/estados según Figma) — `Button.astro` (solid/ghost); ver nota de deviación sobre el gradiente en `CLAUDE.md`
+- [x] Link — cubierto por `Button.astro` + estilos de link en Nav/Footer
+- [x] Header / Navigation — `Header.astro` (logo real exportado de Figma, nav, menú mobile sin JS vía `<details>`)
+- [x] Footer — `Footer.astro`
+- [x] Cards — `ValueBadges.astro` (5 badges del Hero), `StatBadges.astro` (grid de About), `AccordionItem.astro`/`FaqAccordion.astro` (20 FAQs reales)
+- [ ] Form controls — no aplica: el diseño no tiene formulario de contacto (confirmado en Fase 0)
+- [x] Section wrappers — `Section.astro`
+
+**Íconos exportados de Figma como SVG real** (no inventados): logo/marca (`logo-mark.svg`), 5 íconos de value badges, 4 íconos de redes sociales (Instagram/TikTok/LinkedIn/Facebook). El ícono de WhatsApp no pudo exportarse (la API no resolvió ese nodo específico); pendiente para cuando se arme el botón de WhatsApp en Fase 3.
+
+**Deviación de diseño documentada:** la sección de FAQs en Figma existe como un tablero tipo masonry de tarjetas angostas (~196px) dentro de un componente que aparece colapsado por defecto en la página. Se implementó en su lugar como una lista vertical estándar de acordeones (mismo contenido, mejor accesibilidad/legibilidad). Ver detalle en `CLAUDE.md`.
+
+**Validado:** `npm run check`/`lint`/`format:check` limpios, `npm run build` genera `dist/` sin errores, servidor de desarrollo probado con `curl` — los 20 ítems de FAQ, el header con menú mobile, y el footer con placeholders se renderizan correctamente. Los íconos de redes sociales correctamente NO se muestran porque las URLs aún son `null` en `site.ts`.
+
+**FASE 2 COMPLETADA** (design system base). El ensamblado del Home real con Hero/Services/About usando fotos y contenido completo queda para la Fase 3.
 
 ---
 
@@ -182,4 +192,4 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 
 - **2026-09-18 (mañana):** Sesión inicial. Se recibieron las instrucciones del proyecto. Se creó `CLAUDE.md` y este archivo. Carpeta de proyecto vacía, sin Git inicializado. **Bloqueado en Fase 0** por falta de acceso a Figma.
 - **2026-09-18 (tarde):** Usuario proporcionó un Personal Access Token de Figma y el link del archivo. Se auditó el archivo completo vía API REST (estructura, contenido real, colores, tipografías, componentes) y se verificó visualmente con capturas exportadas. Se presentó el reporte de Fase 0 y el usuario confirmó las 3 decisiones abiertas (versión de referencia, sitio de una sola página, tablet interpolado). **Fase 0 completada.**
-- **2026-09-18 (noche):** Usuario confirmó Astro como stack. Se instaló Node.js LTS (no estaba presente en la máquina) vía winget con autorización del usuario. Se hizo scaffolding del proyecto Astro (template `minimal`, TS strict), se configuró ESLint+Prettier+astro check, se crearon los design tokens (`src/styles/tokens.css`), el layout base con SEO/fuentes (`src/layouts/Layout.astro`), y la configuración centralizada del sitio (`src/config/site.ts`). Se validó todo el pipeline (`check`/`lint`/`format:check`/`build`/dev server). Se hizo `git init`; **queda pendiente que el usuario configure su identidad de git local** para poder hacer el primer commit. **Fase 1 casi completa**, solo falta el commit inicial.
+- **2026-09-18 (noche):** Usuario confirmó Astro como stack. Se instaló Node.js LTS (no estaba presente en la máquina) vía winget con autorización del usuario. Se hizo scaffolding del proyecto Astro (template `minimal`, TS strict), se configuró ESLint+Prettier+astro check, se crearon los design tokens (`src/styles/tokens.css`), el layout base con SEO/fuentes (`src/layouts/Layout.astro`), y la configuración centralizada del sitio (`src/config/site.ts`). Se validó todo el pipeline (`check`/`lint`/`format:check`/`build`/dev server). Usuario configuró su identidad de git y se hizo el commit inicial (`651b2b7`). **Fase 1 completada.**

@@ -1,0 +1,167 @@
+---
+import Container from './Container.astro';
+import SocialLink from './SocialLink.astro';
+import logoMark from '../icons/logo-mark.svg?raw';
+import { siteConfig } from '../config/site';
+
+const phoneDisplay = siteConfig.contact.phoneDisplay ?? '(xxx) xxx-xxxx';
+const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
+---
+
+<footer class="footer">
+  <Container size="default">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <span class="footer__logo" set:html={logoMark} />
+        <p class="footer__tagline">
+          South Florida-based private investigation company serving clients throughout Florida.
+        </p>
+      </div>
+
+      <nav class="footer__col" aria-label="Footer navigation">
+        <h2 class="footer__heading">Navigation</h2>
+        <ul class="footer__list">
+          {siteConfig.nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Contact</h2>
+        <div class="footer__detail">
+          <span class="footer__detail-label">Direct Line</span>
+          <span>{phoneDisplay} · Monday to Friday 9 a.m. to 5 p.m.</span>
+        </div>
+        <div class="footer__detail">
+          <span class="footer__detail-label">Confidential Email</span>
+          <span>{email}</span>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Coverage</h2>
+        <p>{siteConfig.company.coverageArea}</p>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>
+        &copy; {new Date().getFullYear()} {siteConfig.company.name}. All rights reserved.
+      </p>
+      <div class="footer__social">
+        <SocialLink network="instagram" href={siteConfig.social.instagram} />
+        <SocialLink network="tiktok" href={siteConfig.social.tiktok} />
+        <SocialLink network="linkedin" href={siteConfig.social.linkedin} />
+        <SocialLink network="facebook" href={siteConfig.social.facebook} />
+      </div>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-bg);
+    color: var(--color-cream);
+    border-top: 1px solid rgba(184, 147, 90, 0.3);
+    padding-block: 3rem;
+    font-size: 0.9rem;
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer__logo {
+    display: block;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .footer__logo :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .footer__tagline {
+    opacity: 0.75;
+    max-width: 24rem;
+  }
+
+  .footer__heading {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .footer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .footer__list a {
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.85;
+  }
+
+  .footer__list a:hover {
+    opacity: 1;
+    color: var(--color-gold);
+  }
+
+  .footer__detail {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+  }
+
+  .footer__detail-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.6;
+  }
+
+  .footer__bottom {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(184, 147, 90, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    opacity: 0.75;
+  }
+
+  .footer__social {
+    display: flex;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer__grid {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer__bottom {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+</style>

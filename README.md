@@ -27,15 +27,15 @@ Sitio disponible en `http://localhost:4321`.
 
 ## Comandos
 
-| Comando               | Acción                                              |
-| :--------------------- | :--------------------------------------------------- |
-| `npm run dev`           | Servidor de desarrollo local                          |
-| `npm run build`         | Build de producción a `./dist/`                       |
-| `npm run preview`       | Sirve el build de producción localmente               |
-| `npm run check`         | Type-check de Astro/TypeScript                        |
-| `npm run lint`          | ESLint (incluye reglas de accesibilidad para Astro)    |
-| `npm run format`        | Formatea el código con Prettier                        |
-| `npm run format:check`  | Verifica formato sin modificar archivos                |
+| Comando                | Acción                                              |
+| :--------------------- | :-------------------------------------------------- |
+| `npm run dev`          | Servidor de desarrollo local                        |
+| `npm run build`        | Build de producción a `./dist/`                     |
+| `npm run preview`      | Sirve el build de producción localmente             |
+| `npm run check`        | Type-check de Astro/TypeScript                      |
+| `npm run lint`         | ESLint (incluye reglas de accesibilidad para Astro) |
+| `npm run format`       | Formatea el código con Prettier                     |
+| `npm run format:check` | Verifica formato sin modificar archivos             |
 
 ## Estructura del proyecto
 
