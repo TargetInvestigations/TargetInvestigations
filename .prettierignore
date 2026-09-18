@@ -1,0 +1,7 @@
+dist/
+node_modules/
+.astro/
+
+# Documentación de gestión del proyecto: formato controlado manualmente
+CLAUDE.md
+PROJECT_STATUS.md

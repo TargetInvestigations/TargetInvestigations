@@ -1,0 +1,40 @@
+/**
+ * Design tokens extraídos de Figma (file key wNuM1O9AljP8HJUpOXFFro, frame "Website" en Moodboard).
+ * El archivo de Figma no publica Styles ni Variables: estos valores se obtuvieron muestreando
+ * fills y estilos de texto de nodos reales vía la API REST. Ver CLAUDE.md, sección Figma.
+ *
+ * Los colores son de alta confianza (muestreados directo de fills sólidos).
+ * Los tamaños tipográficos son una primera aproximación (algunos se midieron sobre instancias
+ * del frame mobile, que puede tener escalado propio) y se revisarán con medición exacta durante
+ * la Fase 2 (Design System) al construir cada componente contra Figma.
+ */
+
+:root {
+  /* Color */
+  --color-bg: #0b213f; /* navy de fondo principal (secciones oscuras) */
+  --color-bg-alt: #081420; /* navy secundario, usado como texto sobre dorado */
+  --color-cream: #fbf8f2; /* blanco cálido, texto sobre fondo oscuro / fondos claros */
+  --color-white: #ffffff;
+  --color-gold: #b8935a; /* dorado/bronce principal, acentos */
+  --color-gold-light: #e9c37e; /* dorado claro, texto secundario sobre oscuro */
+  --color-gold-dark: #6c4e1f; /* bronce oscuro, fondo de botón primario */
+
+  /* Tipografía */
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+  --font-body: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+
+  /* Escala tipográfica (aproximada, ver nota arriba — pendiente de validar en Fase 2) */
+  --text-nav: 13px;
+  --text-body: 16px;
+  --text-button: 15px;
+  --text-heading-2: 25px;
+
+  /* Radios y bordes (muestreado del botón CTA) */
+  --radius-button: 5px;
+
+  /* Breakpoints de referencia (documentados en px; el diseño de Figma no define tablet,
+     ese rango intermedio es una interpolación nuestra, no un valor aprobado del diseño) */
+  --bp-mobile: 440px;
+  --bp-tablet: 768px; /* interpolado, sin respaldo directo en Figma */
+  --bp-desktop: 1549px;
+}

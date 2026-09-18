@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { siteConfig } from '../config/site';
+---
+
+<!--
+  Placeholder de Fase 1 (Arquitectura). Verifica que el layout base, las fuentes y los
+  design tokens funcionan correctamente. La implementación real del Home (Hero, Services,
+  About, FAQs, CTA, Footer) se construye en la Fase 3, sobre los componentes del Design
+  System de la Fase 2.
+-->
+<Layout>
+  <main style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1rem; padding: 2rem;">
+    <h1 style="font-size: 2rem; color: var(--color-gold);">{siteConfig.company.name}</h1>
+    <p style="color: var(--color-cream); max-width: 32rem;">
+      {siteConfig.company.tagline} — proyecto en construcción (Fase 1: Arquitectura).
+    </p>
+  </main>
+</Layout>
