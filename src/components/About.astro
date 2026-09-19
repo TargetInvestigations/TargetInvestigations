@@ -8,16 +8,10 @@ import { siteConfig } from '../config/site';
 <div class="about">
   <div class="about__intro">
     <p class="about__kicker">About</p>
-    <h2 class="about__heading">
-      Built on one simple principle: <em>the truth doesn't negotiate.</em>
-    </h2>
+    <h2 class="about__heading">Built on one simple principle: the truth doesn't negotiate.</h2>
   </div>
 
   <div class="about__grid">
-    <div class="about__stats">
-      <StatBadges />
-    </div>
-
     <div class="about__text">
       <p class="about__lead">Meet {siteConfig.company.founder}</p>
       <p>
@@ -31,16 +25,18 @@ import { siteConfig } from '../config/site';
         commitment is to provide clients with reliable information, carefully documented evidence,
         and investigative support they can trust when important decisions are at stake.
       </p>
+      <p>
+        Andrea understands that every investigation is different. Some involve deeply personal
+        family matters. Others involve businesses, attorneys, financial concerns, insurance claims,
+        or complex civil disputes. Regardless of the circumstances, her approach remains the same:
+        listen carefully, investigate responsibly, protect confidentiality, and pursue the facts.
+      </p>
 
       <details class="about__more">
-        <summary>Show more</summary>
-        <p>
-          Andrea understands that every investigation is different. Some involve deeply personal
-          family matters. Others involve businesses, attorneys, financial concerns, insurance
-          claims, or complex civil disputes. Regardless of the circumstances, her approach remains
-          the same: listen carefully, investigate responsibly, protect confidentiality, and pursue
-          the facts.
-        </p>
+        <summary>
+          <span class="about__more-label about__more-label--closed">Show more</span>
+          <span class="about__more-label about__more-label--open">Show less</span>
+        </summary>
         <p class="about__lead">More Than an Investigation</p>
         <p>
           {siteConfig.company.name} was created with a broader vision: to build a professional
@@ -69,6 +65,14 @@ import { siteConfig } from '../config/site';
         </p>
       </details>
     </div>
+
+    <div class="about__stats">
+      <StatBadges />
+    </div>
+
+    <blockquote class="about__quote">
+      "Our goal is simple: to build a company clients can trust when the truth matters most."
+    </blockquote>
 
     <div class="about__photo">
       <Image
@@ -102,10 +106,6 @@ import { siteConfig } from '../config/site';
     font-size: 1.75rem;
   }
 
-  .about__heading em {
-    color: var(--color-gold);
-  }
-
   .about__grid {
     display: flex;
     flex-direction: column;
@@ -119,6 +119,10 @@ import { siteConfig } from '../config/site';
 
   .about__text {
     order: 2;
+  }
+
+  .about__quote {
+    order: 3;
   }
 
   .about__photo {
@@ -135,7 +139,7 @@ import { siteConfig } from '../config/site';
     font-family: var(--font-display);
     font-weight: 600;
     opacity: 1 !important;
-    color: var(--color-cream);
+    color: var(--color-gold);
   }
 
   .about__more summary {
@@ -150,6 +154,28 @@ import { siteConfig } from '../config/site';
     display: none;
   }
 
+  .about__more-label--open {
+    display: none;
+  }
+
+  .about__more[open] .about__more-label--closed {
+    display: none;
+  }
+
+  .about__more[open] .about__more-label--open {
+    display: inline;
+  }
+
+  .about__quote {
+    margin: 0;
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-gold);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--color-cream);
+  }
+
   .about__photo :global(img) {
     width: 100%;
     height: auto;
@@ -159,11 +185,28 @@ import { siteConfig } from '../config/site';
   }
 
   @media (min-width: 1024px) {
+    .about__intro {
+      text-align: left;
+      margin-inline: 0;
+      max-width: none;
+    }
+
+    .about__heading {
+      font-size: 2.75rem;
+      font-weight: 600;
+      max-width: 24rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    /* Columnas ~iguales (560px/560px con 80px de separación sobre un contenedor de
+       1200px en Figma, nodo 322:1337) — no 2fr/1fr como estaba. La columna derecha
+       apila stats → cita → foto (la foto solo aparece al expandir "Show more"). */
     .about__grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      grid-template-areas: 'text photo' 'text stats';
-      gap: 1.5rem 4rem;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: 'text stats' 'text quote' 'text photo';
+      gap: 1.5rem 5rem;
       align-content: start;
     }
 
@@ -171,8 +214,19 @@ import { siteConfig } from '../config/site';
       grid-area: text;
     }
 
+    .about__quote {
+      grid-area: quote;
+    }
+
+    /* La foto solo aparece junto con el texto extra al abrir "Show more" (nodo
+       322:1096 en Figma: el CHANGE_TO que revela el resto del bio también trae la
+       foto) — antes se mostraba siempre, sin depender del estado del acordeón. */
     .about__photo {
       grid-area: photo;
+      display: none;
+    }
+
+    .about__grid:has(.about__more[open]) .about__photo {
       display: block;
     }
 

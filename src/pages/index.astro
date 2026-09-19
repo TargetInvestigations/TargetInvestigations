@@ -51,8 +51,24 @@ import Footer from '../components/Footer.astro';
 </Layout>
 
 <style>
+  /* :global() es necesario: estas secciones son el elemento raíz que renderiza
+     <Section>, no marcado escrito directamente en este archivo, así que el scoping
+     por defecto de Astro no las alcanza (se comprobó que el atributo data-astro-cid
+     de <section> es el de Section.astro, no el de index.astro). */
+
   /* Línea dorada sólida entre Hero y Services (nodo 185:815 en Figma, 1549×3.5px). */
-  #services {
+  :global(#services) {
     border-top: 2px solid var(--color-gold-light);
   }
+
+  /* Línea entre Services y About (nodo 227:1136): degradado navy→dorado (al centro)→navy,
+     distinta de la línea sólida de arriba — se "apaga" hacia los extremos. */
+  :global(#about) {
+    border-top: 4px solid transparent;
+    border-image: linear-gradient(to right, var(--color-bg) 0%, var(--color-gold) 50%, var(--color-bg) 100%) 1;
+    /* Fondo radial propio de esta sección (nodo 322:1221 en Figma), distinto del navy
+       plano del resto de secciones oscuras. */
+    background: radial-gradient(140% 100% at 85% 0%, #0d2743 0%, #021124 100%);
+  }
+
 </style>

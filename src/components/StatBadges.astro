@@ -1,30 +1,40 @@
 ---
 /**
- * Grid de 4 stats/trust badges de la sección About. Contenido real extraído de la
- * captura de Figma. El número de licencia es un placeholder en el diseño original
- * ("Class A Licensed # ___") — pendiente del dato real del cliente.
+ * Panel 2×2 de stats/trust badges de About (nodos I322:1221;322:1347 y siguientes
+ * en Figma). Contenido y estilos reales: valor grande (Fraunces, dorado), etiqueta
+ * (Inter, crema) y una leyenda en cursiva dorada al 60% de opacidad. La celda del
+ * mapa usa el contorno real de Florida (unión de los 67 condados) exportado de Figma.
  */
 import { siteConfig } from '../config/site';
+import floridaMap from '../icons/florida-map.svg?raw';
 
 const licenseLabel = siteConfig.company.licenseNumber
-  ? `Licensed # ${siteConfig.company.licenseNumber}`
-  : 'Licensed & Insured PI';
-
-const stats = [
-  { value: 'Base Rates', label: siteConfig.company.coverageArea },
-  { value: '100%', label: 'Confidentiality' },
-  { value: '24h', label: 'Response Time' },
-  { value: 'Class A', label: licenseLabel },
-];
+  ? `Licensed & Insured # ${siteConfig.company.licenseNumber}`
+  : 'Licensed & Insured # A------';
 ---
 
 <ul class="stat-badges">
-  {stats.map((stat) => (
-    <li class="stat-badges__item">
-      <span class="stat-badges__value">{stat.value}</span>
-      <span class="stat-badges__label">{stat.label}</span>
-    </li>
-  ))}
+  <li class="stat-badges__item stat-badges__item--map">
+    <div class="stat-badges__map-row">
+      <span class="stat-badges__address">{siteConfig.company.coverageArea}</span>
+      <span class="stat-badges__map" aria-hidden="true" set:html={floridaMap} />
+    </div>
+    <span class="stat-badges__caption">Nationwide Florida</span>
+  </li>
+  <li class="stat-badges__item">
+    <span class="stat-badges__value">100%</span>
+    <span class="stat-badges__label">Confidentiality</span>
+    <span class="stat-badges__caption">No exceptions</span>
+  </li>
+  <li class="stat-badges__item">
+    <span class="stat-badges__value">24h</span>
+    <span class="stat-badges__label">Response Time</span>
+    <span class="stat-badges__caption">Initial contact</span>
+  </li>
+  <li class="stat-badges__item">
+    <span class="stat-badges__value">Class A</span>
+    <span class="stat-badges__label">{licenseLabel}</span>
+  </li>
 </ul>
 
 <style>
@@ -39,22 +49,61 @@ const stats = [
   }
 
   .stat-badges__item {
-    background-color: var(--color-bg);
+    background-color: var(--color-navy-card);
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
+  }
+
+  .stat-badges__map-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .stat-badges__map {
+    display: block;
+    width: 3rem;
+    flex-shrink: 0;
+  }
+
+  .stat-badges__map :global(svg) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .stat-badges__address {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    color: var(--color-cream);
   }
 
   .stat-badges__value {
     font-family: var(--font-display);
-    color: var(--color-gold-light);
-    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    font-size: 1.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1;
   }
 
   .stat-badges__label {
+    font-family: var(--font-body);
+    font-weight: 600;
     font-size: 0.8rem;
     color: var(--color-cream);
-    opacity: 0.85;
+  }
+
+  .stat-badges__caption {
+    font-style: italic;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--color-gold);
+    opacity: 0.6;
   }
 </style>

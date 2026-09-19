@@ -11,8 +11,8 @@ export const siteConfig = {
     name: 'TARGET INVESTIGATIONS',
     tagline: 'The truth is our target',
     founder: 'Andrea Roa',
-    coverageArea: 'West Palm Beach, Boca Raton, and South Florida',
-    // Número de licencia de investigador privado. Placeholder en Figma ("Class A Licensed # ___").
+    coverageArea: 'Boca Raton, West Palm Beach, surrounding areas, and South Florida',
+    // Número de licencia de investigador privado. Placeholder en Figma ("Licensed & Insured # A------").
     licenseNumber: null as string | null,
   },
 
