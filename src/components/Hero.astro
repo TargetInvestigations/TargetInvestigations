@@ -15,14 +15,10 @@
 import { Image } from 'astro:assets';
 import Container from './Container.astro';
 import ValueBadges from './ValueBadges.astro';
+import WhatsAppCta from './WhatsAppCta.astro';
 import logoMark from '../icons/logo-mark.svg?raw';
-import whatsappIcon from '../icons/whatsapp.svg?raw';
 import heroPhoto from '../images/hero.png';
-import { siteConfig, getWhatsAppLink } from '../config/site';
-
-const whatsappHref = getWhatsAppLink() ?? '#contact';
-// Mismo placeholder que usa el propio Figma para este botón ("+1 123 4567890"), pendiente del cliente.
-const phoneDisplay = siteConfig.contact.phoneDisplay ?? '+1 123 4567890';
+import { siteConfig } from '../config/site';
 ---
 
 <div class="hero">
@@ -49,19 +45,7 @@ const phoneDisplay = siteConfig.contact.phoneDisplay ?? '+1 123 4567890';
         <span>Due Diligence</span>
       </p>
 
-      <a
-        href={whatsappHref}
-        class="hero__cta"
-        aria-label={`Request a confidential consultation — WhatsApp ${phoneDisplay}`}
-      >
-        <span class="hero__cta-face hero__cta-face--default" aria-hidden="true">
-          Request a Confidential Consultation
-        </span>
-        <span class="hero__cta-face hero__cta-face--whatsapp" aria-hidden="true">
-          <span class="hero__cta-icon" set:html={whatsappIcon} />
-          {phoneDisplay}
-        </span>
-      </a>
+      <WhatsAppCta class="hero__cta" />
     </div>
   </Container>
 
@@ -201,81 +185,12 @@ const phoneDisplay = siteConfig.contact.phoneDisplay ?? '+1 123 4567890';
     background-color: #e8e8e8;
   }
 
-  /* --- Botón CTA con "swap" a WhatsApp en hover/focus (nodos 399:561 / 53:41 en Figma) --- */
-  .hero__cta {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  /* Tamaño del CTA en el Hero (nodo 399:561 en Figma). El comportamiento hover→WhatsApp
+     vive en WhatsAppCta.astro; acá solo se ajusta el tamaño para este contexto.
+     :global() porque el <a> real lo renderiza ese componente hijo, no este archivo
+     (ver memoria "astro-scoped-css-child-component-gotcha"). */
+  :global(.hero__cta) {
     min-width: 18rem;
-    padding: 0.9rem 1.75rem;
-    border-radius: var(--radius-button);
-    background: var(--gradient-button);
-    text-decoration: none;
-    overflow: hidden;
-    transition: background 0.4s ease;
-  }
-
-  .hero__cta-face {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: var(--text-button);
-    white-space: nowrap;
-    transition:
-      opacity 0.35s ease,
-      transform 0.35s ease;
-  }
-
-  .hero__cta-face--default {
-    color: var(--color-bg-alt);
-  }
-
-  .hero__cta-face--whatsapp {
-    position: absolute;
-    inset: 0;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-gold-light);
-    opacity: 0;
-    transform: translateX(20%);
-  }
-
-  .hero__cta-icon {
-    display: block;
-    width: 1.35rem;
-    height: 1.35rem;
-  }
-
-  .hero__cta-icon :global(svg) {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .hero__cta:hover,
-  .hero__cta:focus-visible {
-    background: var(--color-gold-dark);
-  }
-
-  .hero__cta:hover .hero__cta-face--default,
-  .hero__cta:focus-visible .hero__cta-face--default {
-    opacity: 0;
-    transform: translateX(-20%);
-  }
-
-  .hero__cta:hover .hero__cta-face--whatsapp,
-  .hero__cta:focus-visible .hero__cta-face--whatsapp {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .hero__cta:focus-visible {
-    outline: 2px solid var(--color-cream);
-    outline-offset: 2px;
   }
 
   /* --- Desktop: la altura de `.hero` la fija un `min-height` explícito (no el

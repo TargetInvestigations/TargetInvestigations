@@ -1,0 +1,117 @@
+---
+/**
+ * Botón CTA con "swap" a WhatsApp en hover/focus (componente real de Figma `53:39`,
+ * reutilizado tal cual en Hero y en la sección "Need clarity about your situation?" —
+ * interacción `ON_HOVER → CHANGE_TO 53:41` idéntica en ambos lugares). El texto por
+ * defecto se desvanece hacia la izquierda mientras el ícono de WhatsApp + número
+ * (placeholder real de Figma, pendiente del cliente) aparece desde la derecha.
+ *
+ * El tamaño (padding/font-size/min-width) no es igual en las dos instancias reales de
+ * Figma — cada consumidor lo ajusta con su propia clase (ver `.hero__cta` /
+ * `.contact-cta__cta`, con `:global()` porque ese selector apunta al elemento raíz que
+ * devuelve este componente hijo).
+ */
+import whatsappIcon from '../icons/whatsapp.svg?raw';
+import { siteConfig, getWhatsAppLink } from '../config/site';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const whatsappHref = getWhatsAppLink() ?? '#contact';
+// Mismo placeholder que usa el propio Figma para este botón ("+1 123 4567890"), pendiente del cliente.
+const phoneDisplay = siteConfig.contact.phoneDisplay ?? '+1 123 4567890';
+---
+
+<a
+  href={whatsappHref}
+  class:list={['whatsapp-cta', className]}
+  aria-label={`Request a confidential consultation — WhatsApp ${phoneDisplay}`}
+>
+  <span class="whatsapp-cta__face whatsapp-cta__face--default" aria-hidden="true">
+    <slot>Request a Confidential Consultation</slot>
+  </span>
+  <span class="whatsapp-cta__face whatsapp-cta__face--whatsapp" aria-hidden="true">
+    <span class="whatsapp-cta__icon" set:html={whatsappIcon} />
+    {phoneDisplay}
+  </span>
+</a>
+
+<style>
+  .whatsapp-cta {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1.75rem;
+    border-radius: var(--radius-button);
+    background: var(--gradient-button);
+    text-decoration: none;
+    overflow: hidden;
+    transition: background 0.4s ease;
+  }
+
+  .whatsapp-cta__face {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-button);
+    white-space: nowrap;
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  .whatsapp-cta__face--default {
+    color: var(--color-bg-alt);
+  }
+
+  .whatsapp-cta__face--whatsapp {
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gold-light);
+    opacity: 0;
+    transform: translateX(20%);
+  }
+
+  .whatsapp-cta__icon {
+    display: block;
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .whatsapp-cta__icon :global(svg) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .whatsapp-cta:hover,
+  .whatsapp-cta:focus-visible {
+    background: var(--color-gold-dark);
+  }
+
+  .whatsapp-cta:hover .whatsapp-cta__face--default,
+  .whatsapp-cta:focus-visible .whatsapp-cta__face--default {
+    opacity: 0;
+    transform: translateX(-20%);
+  }
+
+  .whatsapp-cta:hover .whatsapp-cta__face--whatsapp,
+  .whatsapp-cta:focus-visible .whatsapp-cta__face--whatsapp {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .whatsapp-cta:focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 2px;
+  }
+</style>
