@@ -27,6 +27,11 @@
   /* Tipografía */
   --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --font-body: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+  /* Usadas puntualmente en el lockup del Hero (nodos 175:762/175:776 en Figma):
+     "TARGET" y el tagline usan Cinzel, "INVESTIGATIONS" y el subtítulo usan Instrument Sans —
+     distintas del resto del sitio (Fraunces/Inter), así que no reemplazan --font-display/--font-body. */
+  --font-cinzel: 'Cinzel Variable', 'Cinzel', Georgia, serif;
+  --font-instrument: 'Instrument Sans Variable', 'Instrument Sans', -apple-system, sans-serif;
 
   /* Escala tipográfica (aproximada, ver nota arriba — pendiente de validar en Fase 2) */
   --text-nav: 13px;

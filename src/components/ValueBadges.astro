@@ -2,36 +2,53 @@
 /**
  * Fila de 5 "value badges" del Hero (Group 38 en Figma). Contenido e íconos reales,
  * extraídos del archivo de Figma (componente "Component 1", variantes 16-20).
+ *
+ * En Figma (nodo 175:730 "Ellipse 4") los íconos están conectados por una línea
+ * dorada que se difumina en ambos extremos, y cada ícono tiene una interacción de
+ * hover (nodos 175:640/649/658/668/677): el círculo pasa de contorno a relleno
+ * sólido dorado, el ícono se pone blanco, la etiqueta se oculta y aparece la
+ * descripción (opacity 0 por defecto en el propio Figma). Solo se activa en
+ * desktop — en mobile no hay hover real y el mobile de Figma no muestra descripción.
  */
 import discretion from '../icons/value-discretion.svg?raw';
 import intelligence from '../icons/value-intelligence.svg?raw';
 import results from '../icons/value-results.svg?raw';
 import integrity from '../icons/value-integrity.svg?raw';
 import precision from '../icons/value-precision.svg?raw';
+import discretionHover from '../icons/value-discretion-hover.svg?raw';
+import intelligenceHover from '../icons/value-intelligence-hover.svg?raw';
+import resultsHover from '../icons/value-results-hover.svg?raw';
+import integrityHover from '../icons/value-integrity-hover.svg?raw';
+import precisionHover from '../icons/value-precision-hover.svg?raw';
 
 const values = [
   {
     icon: discretion,
+    iconHover: discretionHover,
     label: 'Discretion',
     description: 'Sensitive matters handled with confidentiality and professionalism.',
   },
   {
     icon: integrity,
+    iconHover: integrityHover,
     label: 'Integrity',
     description: 'Ethical investigations conducted with respect for applicable laws and standards.',
   },
   {
     icon: precision,
+    iconHover: precisionHover,
     label: 'Precision',
     description: 'Careful attention to detail and professionally documented investigations.',
   },
   {
     icon: intelligence,
+    iconHover: intelligenceHover,
     label: 'Intelligence',
     description: 'Research, technology, experience and strategy focused on uncovering facts.',
   },
   {
     icon: results,
+    iconHover: resultsHover,
     label: 'Results',
     description: 'Reliable, useful information to help clients make informed decisions.',
   },
@@ -41,7 +58,10 @@ const values = [
 <ul class="value-badges">
   {values.map((value) => (
     <li class="value-badges__item">
-      <span class="value-badges__icon" aria-hidden="true" set:html={value.icon} />
+      <span class="value-badges__icon" aria-hidden="true">
+        <span class="value-badges__icon-face value-badges__icon-face--default" set:html={value.icon} />
+        <span class="value-badges__icon-face value-badges__icon-face--hover" set:html={value.iconHover} />
+      </span>
       <span class="value-badges__label">{value.label}</span>
       <span class="value-badges__description">{value.description}</span>
     </li>
@@ -50,6 +70,7 @@ const values = [
 
 <style>
   .value-badges {
+    position: relative;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -60,6 +81,8 @@ const values = [
   }
 
   .value-badges__item {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,22 +90,37 @@ const values = [
   }
 
   .value-badges__icon {
+    position: relative;
     width: 1.75rem;
     height: 1.75rem;
   }
 
-  .value-badges__icon :global(svg) {
+  .value-badges__icon-face {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transition: opacity 0.3s ease;
+  }
+
+  .value-badges__icon-face :global(svg) {
     width: 100%;
     height: 100%;
+    display: block;
+  }
+
+  .value-badges__icon-face--hover {
+    opacity: 0;
   }
 
   .value-badges__label {
     font-family: var(--font-display);
-    color: var(--color-cream);
+    /* Nodo real "Discretion" en Figma: fill #E9C37E, no crema. */
+    color: var(--color-gold-light);
     font-size: 0.7rem;
+    transition: opacity 0.25s ease;
   }
 
-  /* La descripción se reserva para pantallas más grandes, como en el diseño desktop */
+  /* La descripción se reserva para desktop, como en el diseño (oculta en Figma por defecto). */
   .value-badges__description {
     display: none;
   }
@@ -90,6 +128,24 @@ const values = [
   @media (min-width: 1024px) {
     .value-badges {
       gap: 1.5rem;
+    }
+
+    /* Línea dorada que conecta los 5 íconos, difuminada en ambos extremos (nodo 175:730). */
+    .value-badges::before {
+      content: '';
+      position: absolute;
+      top: 1.25rem;
+      left: 0;
+      right: 0;
+      height: 1px;
+      z-index: 0;
+      background: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--color-gold-light) 8%,
+        var(--color-gold-light) 92%,
+        transparent 100%
+      );
     }
 
     .value-badges__icon {
@@ -103,9 +159,36 @@ const values = [
 
     .value-badges__description {
       display: block;
+      position: absolute;
+      top: calc(100% + 0.35rem);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10rem;
       font-size: 0.8rem;
       color: var(--color-cream);
-      opacity: 0.75;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .value-badges__item:hover .value-badges__icon-face--default,
+    .value-badges__item:focus-within .value-badges__icon-face--default {
+      opacity: 0;
+    }
+
+    .value-badges__item:hover .value-badges__icon-face--hover,
+    .value-badges__item:focus-within .value-badges__icon-face--hover {
+      opacity: 1;
+    }
+
+    .value-badges__item:hover .value-badges__label,
+    .value-badges__item:focus-within .value-badges__label {
+      opacity: 0;
+    }
+
+    .value-badges__item:hover .value-badges__description,
+    .value-badges__item:focus-within .value-badges__description {
+      opacity: 1;
     }
   }
 </style>
