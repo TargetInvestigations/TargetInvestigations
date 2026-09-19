@@ -19,6 +19,7 @@
   --color-gold-light: #e9c37e; /* dorado claro, texto secundario sobre oscuro */
   --color-gold-dark: #6c4e1f; /* bronce oscuro, fondo de botón primario */
   --color-navy-card: #163155; /* navy más claro, tarjeta de stats en About (nodo 322:1349) */
+  --color-gold-deep: #835e1e; /* dorado oscuro para texto sobre fondo crema (Footer, nodo 53:446) — más oscuro que --color-gold para contraste suficiente sobre --color-cream */
   --gradient-button: linear-gradient(
     90deg,
     #e9c37e 0%,
