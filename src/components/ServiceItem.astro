@@ -1,0 +1,161 @@
+---
+import { Image } from 'astro:assets';
+import imageA from '../images/service-1.png';
+import imageB from '../images/service-2.png';
+
+interface Props {
+  title: string;
+  description: string;
+  bullets: string[];
+  reverse?: boolean;
+}
+
+const { title, description, bullets, reverse = false } = Astro.props;
+---
+
+<details class="service-item" data-reverse={reverse}>
+  <summary class="service-item__summary">
+    <h3 class="service-item__title">{title}</h3>
+    <span class="service-item__chevron" aria-hidden="true"></span>
+  </summary>
+
+  <div class="service-item__body">
+    <div class="service-item__text">
+      <p class="service-item__description">{description}</p>
+      <ul class="service-item__bullets">
+        {bullets.map((bullet) => (
+          <li>{bullet}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="service-item__images">
+      <Image
+        src={imageA}
+        alt=""
+        role="presentation"
+        widths={[300, 500]}
+        sizes="(min-width: 1024px) 25vw, 45vw"
+        loading="lazy"
+      />
+      <Image
+        src={imageB}
+        alt=""
+        role="presentation"
+        widths={[300, 500]}
+        sizes="(min-width: 1024px) 25vw, 45vw"
+        loading="lazy"
+      />
+    </div>
+  </div>
+</details>
+
+<style>
+  .service-item {
+    border-bottom: 1px solid rgba(184, 147, 90, 0.3);
+    padding-block: 1.25rem;
+  }
+
+  .service-item__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .service-item__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .service-item__title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .service-item__chevron {
+    flex-shrink: 0;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 2px solid var(--color-gold);
+    border-bottom: 2px solid var(--color-gold);
+    transform: rotate(45deg);
+    transition: transform 0.15s ease;
+  }
+
+  .service-item[open] > .service-item__summary .service-item__chevron {
+    transform: rotate(-135deg);
+  }
+
+  .service-item__body {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .service-item__description {
+    opacity: 0.85;
+    margin-bottom: 1rem;
+  }
+
+  .service-item__bullets {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    opacity: 0.85;
+  }
+
+  .service-item__bullets li::before {
+    content: '◆';
+    color: var(--color-gold);
+    font-size: 0.6rem;
+    margin-right: 0.5rem;
+  }
+
+  .service-item__images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .service-item__images :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    aspect-ratio: 3 / 4;
+  }
+
+  /* --- Desktop: zigzag estático (siempre "abierto"), sin comportamiento de acordeón --- */
+  @media (min-width: 1024px) {
+    .service-item__summary {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .service-item__chevron {
+      display: none;
+    }
+
+    .service-item__body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .service-item[data-reverse='true'] .service-item__body {
+      direction: rtl;
+    }
+
+    .service-item[data-reverse='true'] .service-item__body > * {
+      direction: ltr;
+    }
+  }
+</style>

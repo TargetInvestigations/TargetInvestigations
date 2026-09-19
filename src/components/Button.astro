@@ -2,10 +2,7 @@
 /**
  * Botón/Link de CTA. Variante "solid" = botón dorado usado como CTA principal
  * ("Request a Confidential Consultation") en Hero y sección de contacto.
- * Color de fondo simplificado a un dorado sólido (--color-gold): en Figma el botón
- * usa un fill de instancia (gradiente) superpuesto a un rectángulo sólido más oscuro;
- * no fue posible reconstruir el gradiente exacto desde la API, así que se aproximó
- * con el tono dorado principal — revisar visualmente contra Figma en Fase 3.
+ * Gradiente exacto extraído del fill del nodo 185:816 en Figma.
  */
 interface Props {
   href: string;
@@ -46,12 +43,12 @@ const { href, variant = 'solid', external = false } = Astro.props;
   }
 
   .button--solid {
-    background-color: var(--color-gold);
+    background: var(--gradient-button);
     color: var(--color-bg-alt);
   }
 
   .button--solid:hover {
-    background-color: var(--color-gold-light);
+    background: var(--color-gold-light);
   }
 
   .button--ghost {

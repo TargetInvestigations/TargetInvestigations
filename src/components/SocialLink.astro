@@ -17,7 +17,7 @@ const label = network.charAt(0).toUpperCase() + network.slice(1);
 
 {href && (
   <a href={href} class="social-link" aria-label={label} target="_blank" rel="noopener noreferrer">
-    <Fragment set:html={icons[network]} />
+    <span aria-hidden="true" set:html={icons[network]} />
   </a>
 )}
 

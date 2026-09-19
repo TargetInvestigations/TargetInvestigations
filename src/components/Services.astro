@@ -1,0 +1,197 @@
+---
+/**
+ * Las 9 categorías de servicio son contenido real del cliente, extraído del
+ * archivo de Figma (frame "Frame 108" dentro de la sección de servicios).
+ */
+import ServiceItem from './ServiceItem.astro';
+
+const services = [
+  {
+    title: 'Background & Due Diligence',
+    description:
+      'Know who you are dealing with before making personal, professional, or financial decisions.',
+    bullets: [
+      'Comprehensive Background Investigations',
+      'Online Dating Background Investigations',
+      'Identity Verification',
+      'Address & Residency Research',
+      'Employment & Professional Verification',
+      'Babysitter & Caregiver Background Investigations',
+      'Contractor Verification',
+      'Business Partner Due Diligence',
+      'Tenant & Landlord Investigative Research',
+    ],
+  },
+  {
+    title: 'Family & Domestic Investigations',
+    description:
+      'Objective investigative support for sensitive family and domestic matters where reliable facts and documentation matter.',
+    bullets: [
+      'Child Custody Investigations',
+      'Child Support Investigations',
+      'Alimony Investigations',
+      'Divorce Investigations',
+      'Infidelity Investigations',
+      'Cohabitation Investigations',
+      'Domestic Relationship Investigations',
+    ],
+  },
+  {
+    title: 'Business & Corporate Investigations',
+    description:
+      'Protect your business with independent investigative research before problems become costly.',
+    bullets: [
+      'Corporate Investigations',
+      'Corporate Profiles',
+      'Business Partner Investigations',
+      'Corporate Due Diligence',
+      'Vendor & Supplier Due Diligence',
+      'Employee Background Investigations',
+      'Internal Investigations',
+      'Workplace Investigations',
+      'Conflict of Interest Investigations',
+      'Competitor & Business Intelligence',
+    ],
+  },
+  {
+    title: 'Locate & Skip-Trace Services',
+    description:
+      'Professional investigative resources to locate individuals when accurate information is difficult to find.',
+    bullets: [
+      'Person Location',
+      'Nationwide Locate Services',
+      'Witness Location',
+      'Missing Person Location — Civil Matters',
+      'Debtor / Responsible Party Location',
+      'Heir & Beneficiary Location',
+      'Former Employee Location',
+      'Address & Contact Research',
+    ],
+  },
+  {
+    title: 'Fraud, Asset & Financial Investigations',
+    description:
+      'Investigative research designed to uncover financial information, inconsistencies, assets, and potential fraudulent activity.',
+    bullets: [
+      'Fraud Investigations',
+      'Financial Investigations',
+      'Asset Investigations',
+      'Hidden Asset Research',
+      'Asset & Property Research',
+      'Financial Due Diligence',
+      'Fraudulent Claim Investigations',
+      'Business & Financial Profiles',
+      'Internal Financial Investigations',
+    ],
+  },
+  {
+    title: 'Forensic Accounting & Financial Analysis',
+    description:
+      'Specialized financial investigative support coordinated with qualified forensic accounting professionals.',
+    bullets: [
+      'Forensic Accounting',
+      'Fraud Examination',
+      'Financial Records Analysis',
+      'Asset Tracing',
+      'Hidden Asset Analysis',
+      'Business Valuation Support',
+      'Divorce & Matrimonial Financial Analysis',
+      'Economic Damages Analysis',
+      'Litigation Support',
+      'Expert Witness Support',
+    ],
+  },
+  {
+    title: 'Civil, Litigation & Attorney Support',
+    description:
+      'Professional investigative support for attorneys, law firms, and clients involved in civil and legal matters.',
+    bullets: [
+      'Civil Investigations',
+      'Pre-Litigation Investigations',
+      'Litigation Support',
+      'Witness Location',
+      'Witness Interviews',
+      'Witness Statements',
+      'Witness Credibility Research',
+      'Evidence Documentation',
+      'Case Development',
+      'Trial Preparation Support',
+    ],
+  },
+  {
+    title: 'Personal Injury, Accident & Insurance',
+    description:
+      'Independent investigative support to document facts, activities, witnesses, and circumstances surrounding claims and incidents.',
+    bullets: [
+      'Personal Injury Investigations',
+      'Accident Investigations',
+      'Insurance Claim Investigations',
+      'Claim Verification',
+      'Injury & Activity Surveillance',
+      'Witness Identification & Interviews',
+      'Scene Documentation',
+      'Loss Investigations',
+      'Claim Investigation Support',
+    ],
+  },
+  {
+    title: 'Property, Professional & Specialized Investigations',
+    description:
+      'Investigative research to verify people, businesses, property, professional credentials, and relevant facts.',
+    bullets: [
+      'Property Ownership Research',
+      'Property Damage Investigations',
+      'Property & Asset Location',
+      'Contractor Verification',
+      'License & Permit Verification',
+      'Professional Verification',
+      'Reputation & Character Investigations',
+      'Identity & Credibility Investigations',
+      'Public Records Research',
+      'Corporate Records Research',
+      'Investigative Research & Intelligence Reports',
+    ],
+  },
+];
+---
+
+<div class="services">
+  <div class="services__intro">
+    <p class="services__kicker">Investigative Services</p>
+    <h2 class="services__heading">What situation are you facing?</h2>
+  </div>
+
+  <div class="services__list">
+    {services.map((service, i) => (
+      <ServiceItem {...service} reverse={i % 2 === 1} />
+    ))}
+  </div>
+</div>
+
+<style>
+  .services__intro {
+    text-align: center;
+    max-width: 32rem;
+    margin-inline: auto;
+    margin-bottom: 2rem;
+  }
+
+  .services__kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-gold);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .services__heading {
+    font-size: 1.75rem;
+  }
+
+  @media (min-width: 1024px) {
+    .services__intro {
+      text-align: left;
+      margin-inline: 0;
+    }
+  }
+</style>

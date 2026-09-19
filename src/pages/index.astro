@@ -3,47 +3,46 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Section from '../components/Section.astro';
 import Container from '../components/Container.astro';
-import ValueBadges from '../components/ValueBadges.astro';
-import StatBadges from '../components/StatBadges.astro';
+import Hero from '../components/Hero.astro';
+import Services from '../components/Services.astro';
+import About from '../components/About.astro';
+import ContactCta from '../components/ContactCta.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
 import Footer from '../components/Footer.astro';
-import { siteConfig } from '../config/site';
 ---
 
-<!--
-  Fase 2 (Design System): vitrina de componentes reutilizables para verificar que
-  funcionan correctamente en ambos breakpoints. Esto NO es el Home real — el
-  ensamblado final de Hero/Services/About con el contenido y las fotos completas
-  se hace en la Fase 3.
--->
 <Layout>
   <Header />
 
   <main id="top">
-    <Section tone="dark" aria-label="Design system preview: value badges">
+    <Section tone="dark" aria-label="Hero">
+      <Hero />
+    </Section>
+
+    <Section tone="light" id="services" aria-label="Services">
       <Container size="wide">
-        <ValueBadges />
+        <Services />
       </Container>
     </Section>
 
-    <Section tone="light" id="about" aria-label="Design system preview: stat badges">
+    <Section tone="dark" id="about" aria-label="About">
       <Container size="default">
-        <StatBadges />
+        <About />
       </Container>
     </Section>
 
-    <Section tone="dark" id="services" aria-label="Design system preview: FAQ accordion">
+    <Section tone="dark" aria-label="Frequently asked questions">
       <Container size="narrow">
-        <h2 style="font-family: var(--font-display); margin-bottom: 1rem;">FAQs</h2>
+        <h2 style="font-family: var(--font-display); text-align: center; margin-bottom: 1rem;">
+          FAQs
+        </h2>
         <FaqAccordion />
       </Container>
     </Section>
 
-    <Section tone="dark" id="contact" aria-label="Design system preview: placeholder">
+    <Section tone="dark" id="contact" aria-label="Contact">
       <Container size="narrow">
-        <p style="text-align:center; opacity: 0.7;">
-          {siteConfig.company.tagline} — Home real en Fase 3.
-        </p>
+        <ContactCta />
       </Container>
     </Section>
   </main>

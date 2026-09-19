@@ -1,0 +1,157 @@
+---
+import { Image } from 'astro:assets';
+import StatBadges from './StatBadges.astro';
+import aboutPhoto from '../images/about.png';
+import { siteConfig } from '../config/site';
+---
+
+<div class="about">
+  <div class="about__intro">
+    <p class="about__kicker">About</p>
+    <h2 class="about__heading">
+      Built on one simple principle: <em>the truth doesn't negotiate.</em>
+    </h2>
+  </div>
+
+  <div class="about__grid">
+    <div class="about__text">
+      <p class="about__lead">Meet {siteConfig.company.founder}</p>
+      <p>
+        For more than a decade, Andrea Roa has been dedicated to the private investigative
+        profession, building her experience around one fundamental principle: when the truth
+        matters, the facts matter.
+      </p>
+      <p>
+        As the founder and Principal Private Investigator of {siteConfig.company.name}, Andrea
+        brings a professional, discreet, and detail-oriented approach to every assignment. Her
+        commitment is to provide clients with reliable information, carefully documented evidence,
+        and investigative support they can trust when important decisions are at stake.
+      </p>
+
+      <details class="about__more">
+        <summary>Show more</summary>
+        <p>
+          Andrea understands that every investigation is different. Some involve deeply personal
+          family matters. Others involve businesses, attorneys, financial concerns, insurance
+          claims, or complex civil disputes. Regardless of the circumstances, her approach remains
+          the same: listen carefully, investigate responsibly, protect confidentiality, and pursue
+          the facts.
+        </p>
+        <p class="about__lead">More Than an Investigation</p>
+        <p>
+          {siteConfig.company.name} was created with a broader vision: to build a professional
+          investigative resource that can serve not only individuals and families, but also law
+          firms, attorneys, businesses, organizations, and the community.
+        </p>
+        <p>
+          Together with her daughter, an attorney, Andrea has developed a collaborative network
+          designed to connect investigative services with legal and professional resources when
+          appropriate. This collaboration allows {siteConfig.company.name} to provide investigative
+          support that can complement the work of attorneys and other professionals, including
+          fact-finding, witness location, background research, surveillance, financial investigative
+          support, evidence documentation, and other specialized investigative services.
+        </p>
+        <p>
+          Our goal is simple: to help attorneys, organizations, businesses, families, and
+          individuals obtain the information and investigative support they need to make informed
+          decisions and address challenging circumstances with greater clarity.
+        </p>
+        <p class="about__lead">Our Commitment</p>
+        <p>
+          At {siteConfig.company.name}, we believe that professional investigation is about more
+          than finding information. It is about knowing where to look, asking the right questions,
+          recognizing what matters, documenting the facts, and handling sensitive information with
+          discretion and integrity.
+        </p>
+      </details>
+    </div>
+
+    <div class="about__side">
+      <Image
+        src={aboutPhoto}
+        alt={`${siteConfig.company.founder}, founder and Principal Private Investigator of ${siteConfig.company.name}`}
+        widths={[350, 500]}
+        sizes="(min-width: 1024px) 25vw, 60vw"
+        loading="lazy"
+      />
+      <StatBadges />
+    </div>
+  </div>
+</div>
+
+<style>
+  .about__intro {
+    text-align: center;
+    max-width: 40rem;
+    margin-inline: auto;
+    margin-bottom: 2.5rem;
+  }
+
+  .about__kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-gold);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .about__heading {
+    font-size: 1.75rem;
+  }
+
+  .about__heading em {
+    color: var(--color-gold);
+  }
+
+  .about__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .about__text p {
+    opacity: 0.85;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .about__lead {
+    font-family: var(--font-display);
+    font-weight: 600;
+    opacity: 1 !important;
+    color: var(--color-cream);
+  }
+
+  .about__more summary {
+    cursor: pointer;
+    color: var(--color-gold);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    list-style: none;
+  }
+
+  .about__more summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .about__side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .about__side :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  @media (min-width: 1024px) {
+    .about__grid {
+      grid-template-columns: 2fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

@@ -41,7 +41,7 @@ const values = [
 <ul class="value-badges">
   {values.map((value) => (
     <li class="value-badges__item">
-      <span class="value-badges__icon" set:html={value.icon} />
+      <span class="value-badges__icon" aria-hidden="true" set:html={value.icon} />
       <span class="value-badges__label">{value.label}</span>
       <span class="value-badges__description">{value.description}</span>
     </li>
