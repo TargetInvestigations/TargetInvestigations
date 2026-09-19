@@ -192,6 +192,23 @@ const services = [
     .services__intro {
       text-align: left;
       margin-inline: 0;
+      max-width: 22rem;
+    }
+
+    /* Tamaños reales medidos en Figma (nodos 53:145/53:147): kicker 19px con
+       letter-spacing 0.23em, heading 49px — el heading envuelve a 2 líneas porque
+       su caja mide ~342px, no por un <br> manual. */
+    .services__kicker {
+      font-size: 1.1875rem;
+      font-weight: 700;
+      letter-spacing: 0.23em;
+    }
+
+    .services__heading {
+      font-size: 3rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
     }
   }
 </style>

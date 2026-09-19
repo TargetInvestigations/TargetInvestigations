@@ -19,8 +19,8 @@ import Footer from '../components/Footer.astro';
       <Hero />
     </Section>
 
-    <Section tone="light" id="services" aria-label="Services">
-      <Container size="wide">
+    <Section tone="dark" id="services" aria-label="Services">
+      <Container size="default">
         <Services />
       </Container>
     </Section>
@@ -49,3 +49,10 @@ import Footer from '../components/Footer.astro';
 
   <Footer />
 </Layout>
+
+<style>
+  /* Línea dorada sólida entre Hero y Services (nodo 185:815 en Figma, 1549×3.5px). */
+  #services {
+    border-top: 2px solid var(--color-gold-light);
+  }
+</style>

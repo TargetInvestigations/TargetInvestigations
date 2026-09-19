@@ -52,8 +52,19 @@ const { title, description, bullets, reverse = false } = Astro.props;
 
 <style>
   .service-item {
-    border-bottom: 1px solid rgba(184, 147, 90, 0.3);
+    position: relative;
     padding-block: 1.25rem;
+  }
+
+  /* Línea divisoria entre categorías (nodo 447:863 en Figma): degradado navy→dorado→navy,
+     más "presente" al centro y difuminada hacia los extremos — no un borde uniforme. */
+  .service-item::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-bg) 0%, var(--color-gold-light) 52%, var(--color-bg) 100%);
   }
 
   .service-item__summary {
@@ -71,7 +82,9 @@ const { title, description, bullets, reverse = false } = Astro.props;
 
   .service-item__title {
     font-family: var(--font-display);
+    font-weight: 600;
     font-size: 1.1rem;
+    letter-spacing: -0.01em;
     margin: 0;
   }
 
@@ -97,7 +110,9 @@ const { title, description, bullets, reverse = false } = Astro.props;
   }
 
   .service-item__description {
-    opacity: 0.85;
+    font-size: 0.875rem;
+    line-height: 1.8;
+    opacity: 0.77;
     margin-bottom: 1rem;
   }
 
@@ -106,9 +121,17 @@ const { title, description, bullets, reverse = false } = Astro.props;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.5rem;
     font-size: 0.9rem;
     opacity: 0.85;
+  }
+
+  .service-item__bullets li {
+    padding-block: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .service-item__bullets li:last-child {
+    border-bottom: none;
   }
 
   .service-item__bullets li::before {
