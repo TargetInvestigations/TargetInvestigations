@@ -14,6 +14,10 @@ import { siteConfig } from '../config/site';
   </div>
 
   <div class="about__grid">
+    <div class="about__stats">
+      <StatBadges />
+    </div>
+
     <div class="about__text">
       <p class="about__lead">Meet {siteConfig.company.founder}</p>
       <p>
@@ -66,15 +70,14 @@ import { siteConfig } from '../config/site';
       </details>
     </div>
 
-    <div class="about__side">
+    <div class="about__photo">
       <Image
         src={aboutPhoto}
         alt={`${siteConfig.company.founder}, founder and Principal Private Investigator of ${siteConfig.company.name}`}
         widths={[350, 500]}
-        sizes="(min-width: 1024px) 25vw, 60vw"
+        sizes="25vw"
         loading="lazy"
       />
-      <StatBadges />
     </div>
   </div>
 </div>
@@ -104,9 +107,22 @@ import { siteConfig } from '../config/site';
   }
 
   .about__grid {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2.5rem;
+  }
+
+  /* En mobile Figma no muestra la foto de About (solo stats + bio); en desktop sí. */
+  .about__stats {
+    order: 1;
+  }
+
+  .about__text {
+    order: 2;
+  }
+
+  .about__photo {
+    display: none;
   }
 
   .about__text p {
@@ -134,13 +150,7 @@ import { siteConfig } from '../config/site';
     display: none;
   }
 
-  .about__side {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .about__side :global(img) {
+  .about__photo :global(img) {
     width: 100%;
     height: auto;
     border-radius: 0.5rem;
@@ -150,8 +160,24 @@ import { siteConfig } from '../config/site';
 
   @media (min-width: 1024px) {
     .about__grid {
+      display: grid;
       grid-template-columns: 2fr 1fr;
-      gap: 4rem;
+      grid-template-areas: 'text photo' 'text stats';
+      gap: 1.5rem 4rem;
+      align-content: start;
+    }
+
+    .about__text {
+      grid-area: text;
+    }
+
+    .about__photo {
+      grid-area: photo;
+      display: block;
+    }
+
+    .about__stats {
+      grid-area: stats;
     }
   }
 </style>

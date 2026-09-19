@@ -145,10 +145,19 @@ import { siteConfig } from '../config/site';
     color: var(--color-gold);
   }
 
-  /* --- Desktop: nav siempre visible en línea, se descarta el comportamiento de <details> --- */
+  /* --- Desktop: nav siempre visible en línea, se descarta el comportamiento de <details> ---
+     Nota: Chromium moderno oculta el contenido cerrado de <details> vía content-visibility
+     en el pseudo-elemento ::details-content, no solo con display:none. Forzar display en el
+     hijo no alcanza; hay que anular ::details-content directamente. */
   @media (min-width: 1024px) {
     .header__nav-toggle-btn {
       display: none;
+    }
+
+    .header__nav-toggle::details-content {
+      content-visibility: visible;
+      block-size: auto;
+      overflow: visible;
     }
 
     .header__nav {

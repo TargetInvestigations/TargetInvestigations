@@ -54,8 +54,8 @@ const values = [
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem 1.5rem;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
     text-align: center;
   }
 
@@ -63,12 +63,12 @@ const values = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
   }
 
   .value-badges__icon {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 1.75rem;
+    height: 1.75rem;
   }
 
   .value-badges__icon :global(svg) {
@@ -79,7 +79,7 @@ const values = [
   .value-badges__label {
     font-family: var(--font-display);
     color: var(--color-cream);
-    font-size: 1rem;
+    font-size: 0.7rem;
   }
 
   /* La descripción se reserva para pantallas más grandes, como en el diseño desktop */
@@ -89,8 +89,16 @@ const values = [
 
   @media (min-width: 1024px) {
     .value-badges {
-      grid-template-columns: repeat(5, 1fr);
       gap: 1.5rem;
+    }
+
+    .value-badges__icon {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .value-badges__label {
+      font-size: 1rem;
     }
 
     .value-badges__description {

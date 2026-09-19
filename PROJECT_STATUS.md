@@ -73,7 +73,7 @@ Leyenda: `[ ]` Pendiente · `[~]` En progreso · `[x]` Completado · `[!]` Bloqu
 - [x] Implementación desktop — Hero (split foto/lockup), Services (zigzag 9 categorías), About (bio + stats), FAQs, CTA, Footer
 - [x] Implementación mobile — Hero apilado, Services como acordeón nativo (`<details>`), menú de header sin JS
 - [ ] Validación responsive intermedio (tablet) — implementado con breakpoint interpolado (1024px para el cambio zigzag/acordeón y grid de footer/about; 768px para grid de footer), **pendiente de revisión visual real en dispositivo/DevTools**
-- [ ] Revisión de fidelidad pixel-a-pixel vs. Figma — **pendiente**: no se pudo renderizar un navegador en este entorno para comparar visualmente contra las capturas de Figma; se construyó con las medidas/colores/contenido reales extraídos, pero falta el QA visual lado a lado (ver sección "Pendientes" abajo)
+- [x] Revisión de fidelidad pixel-a-pixel vs. Figma — se instaló Playwright de forma aislada para tomar capturas reales de `localhost:4321` y compararlas contra Figma. Se encontraron y corrigieron 3 bugs reales: (1) el truco CSS de `<details>` para el nav del header y el zigzag de servicios no funcionaba en Chromium moderno por `content-visibility`/`::details-content`, (2) la foto del Hero era el nodo de Figma equivocado (solo skyline, sin la persona), (3) el orden mobile de Hero/About y el layout de ValueBadges no coincidían con Figma. Ver detalle en `CLAUDE.md`.
 - [x] Revisión de accesibilidad — HTML semántico (`h1` único real, no imagen; `h2` por sección), acordeones nativos sin JS, alt text en fotos, iconos decorativos con `aria-hidden`, foco visible en botones/links, `prefers-reduced-motion` respetado
 - [~] Revisión de performance — imágenes optimizadas automáticamente a WebP responsive vía `astro:assets` (reducción de ~1.8-2.2MB por foto a 17-340KB según tamaño); falta auditoría formal de Lighthouse (Fase 7)
 - [x] Corrección de patrones antes de continuar — componentes de Fase 2 reutilizados consistentemente (Button, Container, Section, AccordionItem, StatBadges, ValueBadges)
@@ -83,8 +83,7 @@ Leyenda: `[ ]` Pendiente · `[~]` En progreso · `[x]` Completado · `[!]` Bloqu
 **Contenido real completo:** las 9 categorías de servicio con sus listas de sub-servicios (bullets) son contenido real del cliente, extraído completo de Figma.
 
 **Pendiente:**
-- QA visual pixel-a-pixel contra Figma (requiere navegador — no disponible en este entorno de ejecución; se recomienda que el usuario abra `npm run dev` y compare, o se retome en una sesión con navegador/Chrome disponible).
-- Validar breakpoint tablet en un viewport intermedio real.
+- Revisión visual fina adicional por parte del usuario (colores exactos, espaciados, detalles menores que la comparación automatizada no capta perfectamente).
 - Auditoría formal de Lighthouse (Fase 7).
 
 **Validado en este entorno:** `npm run check`/`lint`/`format:check` limpios, `npm run build` genera `dist/` sin errores (incluye generación de imágenes optimizadas), servidor de desarrollo probado con `curl` — el único `<h1>` de la página es la tagline real ("The truth is our target"), hay 31 elementos `<details>` (1 menú mobile + 9 acordeones de servicio + 20 FAQs + 1 "show more" de About), y las imágenes incluyen `width`/`height`/`srcset`/`loading` correctos.

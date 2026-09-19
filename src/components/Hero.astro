@@ -11,17 +11,6 @@ import { siteConfig } from '../config/site';
 <div class="hero">
   <Container size="wide">
     <div class="hero__grid">
-      <div class="hero__photo">
-        <Image
-          src={heroPhoto}
-          alt="Private investigator overlooking a South Florida city skyline"
-          widths={[440, 768, 1000]}
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          loading="eager"
-          fetchpriority="high"
-        />
-      </div>
-
       <div class="hero__content">
         <span class="hero__icon" aria-hidden="true" set:html={logoMark} />
         <p class="hero__brand">
@@ -34,6 +23,17 @@ import { siteConfig } from '../config/site';
         <Button href="#contact" variant="solid">
           Request a Confidential Consultation
         </Button>
+      </div>
+
+      <div class="hero__photo">
+        <Image
+          src={heroPhoto}
+          alt="Private investigator overlooking a South Florida city skyline"
+          widths={[440, 768, 1000]}
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          loading="eager"
+          fetchpriority="high"
+        />
       </div>
     </div>
   </Container>
@@ -59,7 +59,9 @@ import { siteConfig } from '../config/site';
   .hero__photo :global(img) {
     width: 100%;
     height: auto;
-    border-radius: 0.5rem;
+    /* La foto es un recorte PNG con fondo transparente (persona + skyline), no un
+         rectángulo con marco — sin border-radius/sombra para que se funda con el fondo. */
+    display: block;
   }
 
   .hero__content {
@@ -112,6 +114,12 @@ import { siteConfig } from '../config/site';
     .hero__grid {
       grid-template-columns: 1fr 1fr;
       gap: 4rem;
+    }
+
+    /* En desktop la foto va a la izquierda y el lockup a la derecha (Figma); en mobile
+         el orden natural del DOM ya pone el lockup arriba y la foto debajo. */
+    .hero__photo {
+      order: -1;
     }
 
     .hero__content {
