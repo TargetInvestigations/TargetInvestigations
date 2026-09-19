@@ -27,7 +27,7 @@ import { siteConfig } from '../config/site';
               </li>
             ))}
           </ul>
-          <Button href="#contact" variant="solid">
+          <Button href="#contact" variant="ghost">
             Confidential Consultation
           </Button>
         </nav>
@@ -41,8 +41,10 @@ import { siteConfig } from '../config/site';
     position: sticky;
     top: 0;
     z-index: 50;
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-gold);
+    /* Fondo navy translúcido + desenfoque (nodo 53:481 en Figma): sin borde inferior. */
+    background-color: rgba(11, 33, 63, 0.86);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .header__bar {
@@ -136,7 +138,8 @@ import { siteConfig } from '../config/site';
     font-size: var(--text-nav);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-white);
+    /* Figma usa blanco al 75% de opacidad (no blanco puro) para el texto del nav. */
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
   }
 
