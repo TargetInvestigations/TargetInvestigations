@@ -133,6 +133,8 @@ import { siteConfig } from '../config/site';
   }
 
   .header__nav-link {
+    position: relative;
+    display: inline-block;
     font-family: var(--font-body);
     font-weight: 500;
     font-size: var(--text-nav);
@@ -141,11 +143,30 @@ import { siteConfig } from '../config/site';
     /* Figma usa blanco al 75% de opacidad (no blanco puro) para el texto del nav. */
     color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
+    padding-bottom: 0.1rem;
+  }
+
+  /* Barra inferior dorada (nodo 53:14, "Line 18"): en reposo es un elemento de
+     ancho ~0 del mismo color; en hover crece de izquierda a derecha vía Smart Animate. */
+  .header__nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-gold-light);
+    transition: width 0.3s ease-out;
   }
 
   .header__nav-link:hover,
   .header__nav-link:focus-visible {
-    color: var(--color-gold);
+    color: var(--color-white);
+  }
+
+  .header__nav-link:hover::after,
+  .header__nav-link:focus-visible::after {
+    width: 100%;
   }
 
   /* --- Desktop: nav siempre visible en línea, se descarta el comportamiento de <details> ---
