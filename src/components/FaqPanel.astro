@@ -1,17 +1,17 @@
 ---
 /**
- * Las 20 preguntas frecuentes son contenido real del cliente, extraído del archivo
- * de Figma (20 COMPONENT_SETs en el canvas "Moodboard"). Incluye tarifas reales.
+ * Panel de FAQs (nodo 200:876/200:872 en Figma, dentro de "Group 39"). Colapsado por
+ * defecto (barra dorada clara "FAQs" + flecha) — al hacer click (ON_CLICK real de
+ * Figma) se despliega un tablero de 20 preguntas en 5 filas x 4 columnas sobre un
+ * fondo dorado más oscuro (--color-gold, no --color-gold-light), con separadores
+ * verticales dorados entre columnas. Cada pregunta revela su respuesta (itálica,
+ * blanca) al pasar el mouse (interacción ON_HOVER real de cada tarjeta, nodo 216:384).
  *
- * Nota de interpretación: en Figma estos 20 ítems existen como tarjetas sueltas de
- * un tablero tipo masonry (5 filas x 4 columnas) dentro de un componente que en la
- * página aparece colapsado por defecto (barra "FAQs"). Ese tablero de tarjetas
- * angostas (~196px) no es un patrón accesible ni legible para una lista de FAQ real,
- * así que se implementó como una lista vertical estándar de acordeones — más
- * accesible y con el mismo contenido. Deviación documentada en CLAUDE.md.
+ * Las 20 preguntas son contenido real del cliente (ver CLAUDE.md), incluidas tarifas
+ * reales. Se agrupan en filas de 4 para reproducir el tablero real; en mobile (donde
+ * Figma no define un estado abierto explícito) se apilan en una sola columna dentro
+ * de cada fila — decisión de responsive propia, documentada en CLAUDE.md.
  */
-import AccordionItem from './AccordionItem.astro';
-
 const faqs = [
   {
     q: 'How much does a private investigator cost?',
@@ -94,22 +94,208 @@ const faqs = [
     a: "Simply contact TARGET INVESTIGATIONS for a confidential consultation. Tell us about your situation, provide the information you have, and we will discuss the investigative options available. Don't live with questions. Get the facts. The Truth Is Our Target.",
   },
 ];
+
+const rows = [];
+for (let i = 0; i < faqs.length; i += 4) rows.push(faqs.slice(i, i + 4));
 ---
 
-<div class="faq-accordion">
-  {faqs.map((faq) => (
-    <AccordionItem question={faq.q}>
-      <p>{faq.a}</p>
-    </AccordionItem>
-  ))}
-</div>
+<details class="faq-panel">
+  <summary class="faq-panel__summary">
+    <div class="faq-panel__summary-inner">
+      <span class="faq-panel__title">FAQs</span>
+      <span class="faq-panel__chevron" aria-hidden="true"></span>
+    </div>
+  </summary>
+
+  <div class="faq-panel__grid">
+    <div class="faq-panel__grid-inner">
+      {
+        rows.map((row) => (
+          <div class="faq-row">
+            {row.map((item) => (
+              <div class="faq-item">
+                <button type="button" class="faq-item__question">
+                  {item.q}
+                </button>
+                <div class="faq-item__answer-wrap">
+                  <p class="faq-item__answer">{item.a}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</details>
 
 <style>
-  .faq-accordion {
-    border-top: 1px solid rgba(184, 147, 90, 0.3);
+  .faq-panel {
+    width: 100%;
   }
 
-  .faq-accordion :global(p) {
+  .faq-panel__summary {
+    display: flex;
+    cursor: pointer;
+    list-style: none;
+    background: var(--color-gold-light);
+    transition: background-color 0.2s ease;
+  }
+
+  .faq-panel__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-panel[open] .faq-panel__summary {
+    background: var(--color-gold);
+  }
+
+  .faq-panel__summary-inner {
+    width: 100%;
+    max-width: 68.125rem;
+    margin-inline: auto;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .faq-panel__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.375rem;
+    letter-spacing: -0.02em;
+    color: var(--color-bg);
+  }
+
+  .faq-panel__chevron {
+    flex-shrink: 0;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-right: 4px solid var(--color-bg);
+    border-bottom: 4px solid var(--color-bg);
+    border-radius: 2px;
+    transform: rotate(45deg);
+    transition: transform 0.25s ease;
+  }
+
+  .faq-panel[open] .faq-panel__chevron {
+    transform: rotate(225deg);
+  }
+
+  .faq-panel__grid {
+    background: var(--color-gold);
+  }
+
+  .faq-panel__grid-inner {
+    width: 100%;
+    max-width: 68.125rem;
+    margin-inline: auto;
+    padding: 0 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8125rem;
+  }
+
+  .faq-row {
+    background: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1.25rem;
+  }
+
+  .faq-item {
+    padding-block: 0.875rem;
+  }
+
+  .faq-item:not(:first-child) {
+    border-top: 1px solid rgba(233, 195, 126, 0.3);
+  }
+
+  .faq-item__question {
+    all: unset;
+    display: block;
+    cursor: pointer;
+    width: 100%;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-gold-light);
+  }
+
+  .faq-item__answer-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.25s ease,
+      opacity 0.2s ease;
+  }
+
+  .faq-item__answer-wrap > .faq-item__answer {
+    overflow: hidden;
     margin: 0;
+    padding-top: 0.625rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-white);
+  }
+
+  .faq-item:hover .faq-item__answer-wrap,
+  .faq-item:focus-within .faq-item__answer-wrap {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .faq-panel__summary-inner {
+      padding-block: 3.5rem;
+    }
+
+    .faq-panel__title {
+      font-size: 2.75rem;
+    }
+
+    .faq-panel__grid-inner {
+      padding: 3.5625rem 1.5rem 3.5rem;
+      gap: 0.8125rem;
+    }
+
+    .faq-row {
+      flex-direction: row;
+      padding: 1.5rem 3.125rem 0.8125rem;
+      gap: 1.875rem;
+    }
+
+    .faq-item {
+      flex: 1 1 0;
+      min-width: 0;
+      padding-block: 0;
+      position: relative;
+      border-top: none;
+    }
+
+    .faq-item:not(:first-child) {
+      border-top: none;
+    }
+
+    .faq-item:not(:first-child)::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -0.9375rem;
+      width: 1px;
+      background: var(--color-gold-light);
+    }
+
+    .faq-item__answer-wrap > .faq-item__answer {
+      padding-top: 0.75rem;
+    }
   }
 </style>
