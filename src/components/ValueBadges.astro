@@ -80,6 +80,26 @@ const values = [
     text-align: center;
   }
 
+  /* Línea dorada que conecta los 5 íconos, difuminada en ambos extremos (nodo real
+     "Ellipse 4" del frame mobile, 399:442) — existe en los dos breakpoints, no solo
+     en desktop. La posición `top` se ajusta al tamaño del ícono de cada breakpoint. */
+  .value-badges::before {
+    content: '';
+    position: absolute;
+    top: 1.05rem;
+    left: 0;
+    right: 0;
+    height: 1px;
+    z-index: 0;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--color-gold-light) 8%,
+      var(--color-gold-light) 92%,
+      transparent 100%
+    );
+  }
+
   .value-badges__item {
     position: relative;
     z-index: 1;
@@ -91,8 +111,8 @@ const values = [
 
   .value-badges__icon {
     position: relative;
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 2.1rem;
+    height: 2.1rem;
   }
 
   .value-badges__icon-face {
@@ -130,22 +150,10 @@ const values = [
       gap: 1.5rem;
     }
 
-    /* Línea dorada que conecta los 5 íconos, difuminada en ambos extremos (nodo 175:730). */
+    /* Icono más grande en desktop (nodo 175:730) — la línea conectora (::before,
+       definida en el estilo base) se re-centra a la mitad del nuevo tamaño. */
     .value-badges::before {
-      content: '';
-      position: absolute;
       top: 1.25rem;
-      left: 0;
-      right: 0;
-      height: 1px;
-      z-index: 0;
-      background: linear-gradient(
-        to right,
-        transparent 0%,
-        var(--color-gold-light) 8%,
-        var(--color-gold-light) 92%,
-        transparent 100%
-      );
     }
 
     .value-badges__icon {

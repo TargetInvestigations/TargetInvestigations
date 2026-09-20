@@ -69,23 +69,58 @@ import { siteConfig } from '../config/site';
 <style>
   .hero {
     position: relative;
-    padding-block: clamp(2rem, 5vw, 4rem);
+    /* El solape negativo de ValueBadges sobre la foto (margin-top:-21%) hace que la
+       foto, un elemento anterior en el flujo normal, pinte más abajo de donde el
+       propio flujo termina calculando la altura de `.hero` — sin recortar esto la
+       foto se desborda visualmente sobre la sección de Services. */
+    overflow: hidden;
+    /* El header es fixed y se superpone (backdrop-blur) — antes este padding se
+       sumaba al padding-block genérico del <section> (ver #hero en index.astro) para
+       despejarlo; al quitar ese padding extra, el logo quedaba parcialmente tapado
+       detrás del header. Ahora este valor por sí solo tiene que cubrir esa altura. */
+    padding-top: clamp(5.5rem, 22vw, 6.5rem);
+    /* Sin padding-bottom: en el nodo real la línea divisoria con Services empieza
+       apenas termina la foto (incluso se solapa unos px con su borde inferior) — con
+       padding acá quedaba un espacio de fondo navy plano antes de la línea dorada. */
+    padding-bottom: 0;
+    /* Fondo radial "de luz" (nodo real `Frame 41` que envuelve todo el Hero mobile):
+       sin esto la foto se ve plana/azul en vez del tono cálido y con más vida del
+       diseño — se transparenta a través de la foto (opacity:0.83) y del espacio
+       alrededor del lockup. */
+    background: radial-gradient(130% 100% at 40% 45%, #4c6684 0%, #0c2342 55%, #021224 100%);
   }
 
-  /* --- Mobile: foto contenida, en flujo normal (no hay bleed de fondo en el frame mobile) --- */
+  /* --- Mobile: foto contenida, en flujo normal (no hay bleed de fondo en el frame mobile).
+       El nodo real (`Backgound 2`, 341:1572) tiene opacity:0.83 (no 100%) y un
+       degradado navy que oscurece del ~37% al ~98% de su alto (`Rectangle 8`,
+       341:1662) — sin esto la foto se ve plana/azul en vez del tono cálido difuminado
+       del diseño. Las ValueBadges además se solapan con la parte baja de la foto
+       (empiezan ~21% antes de que la foto termine), no van separadas con un margen. --- */
   .hero__photo {
     position: relative;
-    margin-bottom: clamp(2rem, 6vw, 3rem);
   }
 
   .hero__photo :global(img) {
     width: 100%;
     height: auto;
     display: block;
+    opacity: 0.83;
   }
 
   .hero__photo-fade {
-    display: none;
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 35%, rgba(9, 30, 57, 0.92) 88%, rgba(9, 30, 57, 0.92) 100%);
+  }
+
+  .hero > :global(.container:last-of-type) {
+    position: relative;
+    z-index: 1;
+    margin-top: -21%;
+    /* Un poco de aire entre las etiquetas y la línea divisoria — quedaban demasiado
+       pegadas al borde. */
+    margin-bottom: 1.5rem;
   }
 
   .hero__lockup {
@@ -126,12 +161,12 @@ import { siteConfig } from '../config/site';
   .hero__brand-sub {
     font-family: var(--font-instrument);
     font-weight: 400;
-    font-size: 0.9rem;
-    letter-spacing: 0.35em;
+    font-size: 0.98rem;
+    letter-spacing: 0.38em;
     color: var(--color-white);
     margin: 0;
     /* Compensa el letter-spacing final para mantener el centrado óptico del texto. */
-    padding-left: 0.35em;
+    padding-left: 0.38em;
   }
 
   .hero__divider {
@@ -205,8 +240,16 @@ import { siteConfig } from '../config/site';
        el cielo, contenido no crítico— y nunca por arriba/izquierda, donde está la cabeza. --- */
   @media (min-width: 1024px) {
     .hero {
+      /* En desktop no hace falta recortar: la foto es position:absolute;inset:0 y
+         nunca se desborda, y la descripción de ValueBadges en hover sí necesita
+         poder salir un poco de la caja sin que se corte. */
+      overflow: visible;
       padding-block: 0;
-      min-height: clamp(38rem, 52vw, 48rem);
+      /* El piso subió de 38rem a 47rem: a anchos "tablet" (~1024-1300px) el bloque de
+         texto+botón (anclado arriba) mide ~553px, y con el piso anterior la caja del
+         Hero podía quedar más baja que eso, haciendo que la fila de íconos (anclada
+         abajo) se solapara con el botón. Medido con Playwright en varios anchos. */
+      min-height: clamp(47rem, 52vw, 50rem);
     }
 
     /* Contenedor del lockup: superpuesto, anclado arriba, ancho completo. */
@@ -217,18 +260,21 @@ import { siteConfig } from '../config/site';
       z-index: 2;
     }
 
-    /* Contenedor de ValueBadges: superpuesto, anclado abajo, sobre la parte oscurecida de la foto. */
+    /* Contenedor de ValueBadges: superpuesto, anclado abajo, sobre la parte oscurecida de la foto.
+       Subido de 2.5rem a 6rem: la descripción más larga (4 renglones, ej. "Precision")
+       todavía quedaba con el último renglón debajo de la línea divisoria con 4.5rem. */
     .hero > :global(.container:last-of-type) {
       position: absolute;
-      inset-block-end: 2.5rem;
+      inset-block-end: 6rem;
       inset-inline: 0;
       z-index: 1;
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .hero__photo {
       position: absolute;
       inset: 0;
-      margin-bottom: 0;
       z-index: 0;
       /* Fondo radial muestreado del propio Section (53:60): se transparenta a través
          de la foto (fill al 70% de opacidad en Figma) dándole el aspecto "difuminado"

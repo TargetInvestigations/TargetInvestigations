@@ -15,7 +15,7 @@ import Footer from '../components/Footer.astro';
   <Header />
 
   <main id="top">
-    <Section tone="dark" aria-label="Hero">
+    <Section tone="dark" id="hero" aria-label="Hero">
       <Hero />
     </Section>
 
@@ -51,9 +51,31 @@ import Footer from '../components/Footer.astro';
      por defecto de Astro no las alcanza (se comprobó que el atributo data-astro-cid
      de <section> es el de Section.astro, no el de index.astro). */
 
-  /* Línea dorada sólida entre Hero y Services (nodo 185:815 en Figma, 1549×3.5px). */
+  /* El <section> que envuelve al Hero tenía SU PROPIO padding-block genérico
+     (`.section` en Section.astro, clamp(3rem,6vw,6rem)) además del padding que ya
+     maneja `.hero` — eso dejaba una franja de navy plano entre el navbar y la foto
+     arriba, y entre la foto/badges y la línea divisoria abajo, en desktop Y mobile.
+     El Hero controla su propio espaciado por completo (padding-top propio en mobile
+     para el lockup, min-height + capas absolutas en desktop), así que el <section>
+     que lo envuelve no debe aportar padding adicional. */
+  :global(#hero) {
+    padding-block: 0;
+  }
+
+  /* Línea entre Hero y Services: en mobile (nodo real `Rectangle 28`, 399:440) es un
+     degradado navy→dorado (al centro)→navy que se difumina hacia los extremos —
+     mismo estilo que la línea de abajo. En desktop (nodo 185:815) es sólida, sin
+     degradado — sí es una diferencia real entre breakpoints, no un descuido. */
   :global(#services) {
-    border-top: 2px solid var(--color-gold-light);
+    border-top: 4px solid transparent;
+    border-image: linear-gradient(to right, var(--color-bg) 0%, #836e47 51%, var(--color-bg) 100%) 1;
+  }
+
+  @media (min-width: 1024px) {
+    :global(#services) {
+      border-top: 2px solid var(--color-gold-light);
+      border-image: none;
+    }
   }
 
   /* Línea entre Services y About (nodo 227:1136): degradado navy→dorado (al centro)→navy,

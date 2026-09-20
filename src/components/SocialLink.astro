@@ -15,11 +15,17 @@ const { network, href } = Astro.props;
 const label = network.charAt(0).toUpperCase() + network.slice(1);
 ---
 
-{href && (
-  <a href={href} class="social-link" aria-label={label} target="_blank" rel="noopener noreferrer">
-    <span aria-hidden="true" set:html={icons[network]} />
-  </a>
-)}
+{
+  href ? (
+    <a href={href} class="social-link" aria-label={label} target="_blank" rel="noopener noreferrer">
+      <span aria-hidden="true" set:html={icons[network]} />
+    </a>
+  ) : (
+    /* Sin URL real todavía (pendiente del cliente) pero el ícono debe estar visible
+       igual, según el diseño — se muestra sin enlace en vez de ocultarlo por completo. */
+    <span class="social-link social-link--disabled" aria-hidden="true" set:html={icons[network]} />
+  )
+}
 
 <style>
   .social-link {
@@ -38,5 +44,9 @@ const label = network.charAt(0).toUpperCase() + network.slice(1);
   .social-link:focus-visible {
     outline: 2px solid var(--color-gold);
     outline-offset: 2px;
+  }
+
+  .social-link--disabled {
+    opacity: 0.5;
   }
 </style>
