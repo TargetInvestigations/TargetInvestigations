@@ -116,11 +116,11 @@
 | Google Search Console | Pendiente — requiere dominio + hosting + cuenta del cliente | Se configura tras tener dominio y hosting definitivos. |
 | WhatsApp | Pendiente — requiere número del cliente | No inventar número. Centralizar en configuración única (no hardcodear en múltiples archivos). |
 | Redes sociales | Pendiente — requiere URLs del cliente | Centralizar en configuración. No inventar URLs. |
-| Dominio | Pendiente | No definido aún. |
-| Hosting | Pendiente | No definido aún. Se evaluará según necesidades técnicas del proyecto una vez exista código. |
-| SSL/HTTPS | Pendiente — depende de hosting/dominio | El proyecto debe quedar listo para HTTPS. |
-| GitHub | Pendiente | Repositorio aún no inicializado (carpeta local sin git). |
-| GitHub Actions | Pendiente | Se configurará en Fase 10, desacoplado del proveedor de hosting hasta definirlo. |
+| Dominio | Pendiente (definitivo) | Dominio real aún no definido. Preview temporal en `targetinvestigations.github.io/TargetInvestigations` (ver Hosting) para mostrar avances mientras tanto — el usuario confirmó explícitamente (2026-09-20) que no importa que no sea el definitivo. |
+| Hosting | Resuelto (temporal) — 2026-09-20 | GitHub Pages, gratuito, deploy automático vía GitHub Actions en cada push a `main`. No es la elección definitiva de hosting de producción, solo una preview pública para mostrar el sitio mientras se define dominio/hosting real. |
+| SSL/HTTPS | Resuelto (temporal) | GitHub Pages sirve HTTPS automáticamente en `*.github.io`. Pendiente reconfigurar cuando haya dominio propio. |
+| GitHub | Resuelto — 2026-09-19 | Repositorio en `https://github.com/TargetInvestigations/TargetInvestigations`, rama `main`. |
+| GitHub Actions | Resuelto (parcial) — 2026-09-20 | `.github/workflows/deploy.yml`: build con `withastro/action` + deploy a GitHub Pages en cada push a `main`. Falta el paso manual único de habilitar Pages en Settings → Pages → Source: GitHub Actions (no se pudo automatizar sin `gh` CLI autenticado en este entorno). |
 
 ---
 
@@ -292,4 +292,13 @@ _(Se irá completando a medida que se tomen decisiones de arquitectura/diseño/s
   2. **Fix:** subido el piso del `clamp` de `38rem` a `47rem` (`clamp(47rem, 52vw, 50rem)`) — deja ~33px de aire en el peor caso (1024px de ancho) sin afectar los anchos más chicos (mobile, que no usa este min-height) ni los más grandes (donde `52vw` ya daba una caja más alta de sobra).
   3. **Sobre el scroll trabado:** no se pudo reproducir un bloqueo real del scroll en sí — medido con Playwright en 4 tamaños de tablet (1024×768, 820×1180, 1024×1366, 1100×900), `scrollTo` siempre llega hasta el final real de la página y el footer completo queda visible. La sospecha es que era una consecuencia visual/perceptiva del bug del solapamiento de arriba (un botón encimado sobre los íconos, en una página que además no dejaba avanzar visualmente, se puede sentir como "la página no baja más"), no un segundo bug de `overflow`/altura independiente. Si el usuario lo sigue viendo después de este fix, hay que revisarlo de nuevo con más detalle (dispositivo/navegador específico).
 
-  Verificado con Playwright: sin solapamiento en 1024/1100/1366px de ancho (antes 111px, ahora -33px = 33px de aire); scroll hasta el final confirmado en los 4 tamaños de tablet probados, footer completo visible en cada uno. `check`/`lint`/`build` limpios. Sin comitear, a la espera de aprobación.
+  Verificado con Playwright: sin solapamiento en 1024/1100/1366px de ancho (antes 111px, ahora -33px = 33px de aire); scroll hasta el final confirmado en los 4 tamaños de tablet probados, footer completo visible en cada uno. `check`/`lint`/`build` limpios. Aprobado por el usuario y comiteado en `c6b6bc9`, junto con toda la ronda de mobile/tablet/header/footer de esta sesión.
+
+- **2026-09-20:** Proyecto conectado a GitHub y desplegado en una preview pública gratuita, a pedido explícito del usuario ("no importa que no sea aún el definitivo... quiero mostrar la página web a otras personas"):
+  1. **Repositorio:** se conectó el repo local (ya existente, con todo el historial de esta sesión) a `https://github.com/TargetInvestigations/TargetInvestigations` (creado vacío por el usuario). Se renombró la rama local de `master` a `main` (estándar actual de GitHub para repos nuevos) antes del primer `push`.
+  2. **Hosting temporal — GitHub Pages:** gratuito, HTTPS automático, deploy en cada push a `main` vía GitHub Actions (`.github/workflows/deploy.yml`, usa `withastro/action` para build + `actions/deploy-pages` para publicar). URL resultante: `https://targetinvestigations.github.io/TargetInvestigations/`.
+  3. **`astro.config.mjs`:** se agregó `site`/`base` (`/TargetInvestigations/`, con slash final — sin él, Astro genera URLs mal concatenadas tipo `/TargetInvestigationsfavicon.svg`, detectado y corregido revisando el HTML compilado). Como el sitio no vive en la raíz del dominio, cualquier URL absoluta hardcodeada se rompe: se encontraron y corrigieron los dos únicos casos (`href="/favicon.svg"`/`href="/favicon.ico"` en `Layout.astro`, cambiados a `${import.meta.env.BASE_URL}favicon.svg` etc.). El resto de imágenes/CSS/JS los genera Astro automáticamente con el prefijo correcto.
+  4. **Pendiente de un paso manual del usuario:** este entorno no tiene `gh` CLI autenticado, así que no se pudo habilitar Pages vía API. Falta que el usuario entre a Settings → Pages del repo y configure "Source: GitHub Actions" (una sola vez); después de eso el workflow ya sube automáticamente en cada push a `main`.
+  5. Esto es explícitamente una preview temporal, no la decisión final de hosting/dominio (sigue pendiente, ver sección 4 de este documento) — documentado así para no confundir "ya está desplegado" con "el proyecto ya tiene hosting definitivo".
+
+  Verificado con `build` local simulando el subpath real (`dist/index.html` inspeccionado a mano: CSS/JS/imágenes/favicons todos con el prefijo `/TargetInvestigations/` correcto) y `check`/`lint` limpios. Comiteado y pusheado a `main`.
