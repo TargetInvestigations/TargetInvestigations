@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Section from '../components/Section.astro';
-import Container from '../components/Container.astro';
 import Hero from '../components/Hero.astro';
 import Services from '../components/Services.astro';
 import About from '../components/About.astro';
@@ -32,9 +31,7 @@ import Footer from '../components/Footer.astro';
     </Section>
 
     <Section tone="dark" id="contact" aria-label="Contact">
-      <Container size="narrow">
-        <ContactCta />
-      </Container>
+      <ContactCta />
     </Section>
   </main>
 
@@ -66,8 +63,8 @@ import Footer from '../components/Footer.astro';
     /* Services controla su propio espaciado y ancho (medidas de Figma en Services.astro). */
     padding-block: 0;
     /* Fill real de la Section 53:138: GRADIENT_RADIAL #0C2342→#02111F, centro en
-             87%/1.7%, elipse enorme (~8130×7065px sobre 1549×4944) — en la práctica se
-             oscurece suavemente de arriba a abajo. */
+               87%/1.7%, elipse enorme (~8130×7065px sobre 1549×4944) — en la práctica se
+               oscurece suavemente de arriba a abajo. */
     background: radial-gradient(525% 143% at 87% 1.7%, #0c2342 0%, #02111f 100%);
     border-top: 4px solid transparent;
     border-image: linear-gradient(to right, var(--color-bg) 0%, #836e47 51%, var(--color-bg) 100%) 1;
@@ -94,7 +91,7 @@ import Footer from '../components/Footer.astro';
       )
       1;
     /* Fill real de la Section 322:1221: GRADIENT_RADIAL #0D2743→#021124, centro en
-           81%/0%, radios ~2391×1571px sobre 1549×755. */
+             81%/0%, radios ~2391×1571px sobre 1549×755. */
     background: radial-gradient(154% 208% at 81% 0%, #0d2743 0%, #021124 100%);
   }
 
@@ -102,5 +99,12 @@ import Footer from '../components/Footer.astro';
      contacto abajo (y=6707 → 6824 en Figma), sin el padding genérico de <Section>. */
   :global(#faqs) {
     padding-block: 0;
+  }
+
+  /* Sección de contacto (53:400): ContactCta maneja su propio espaciado y ancho; fill
+     real GRADIENT_RADIAL #0C2342→#021124, centro en 69%/13%. */
+  :global(#contact) {
+    padding-block: 0;
+    background: radial-gradient(100% 272% at 69% 13%, #0c2342 0%, #021124 100%);
   }
 </style>

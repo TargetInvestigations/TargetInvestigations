@@ -1,12 +1,20 @@
 ---
 /**
- * CTA final "Need clarity about your situation?" (nodo 53:400 en Figma). Reutiliza el
- * mismo ícono de marca del Header/Hero (logo-mark.svg) y el mismo botón con swap a
- * WhatsApp en hover (WhatsAppCta.astro, componente real `53:39` — idéntico al del
- * Hero, solo que aquí el texto/botón es más grande, nodo `430:2312`).
+ * CTA final "Need clarity about your situation?" (Section 53:400 en Figma, 1549×617).
+ *
+ * - Ícono (Component 21, 274:689, instancia 279:714 de 135×149): el compás con "T" de
+ *   la marca; en hover aparece un destello de 4 puntas que crece desde el centro
+ *   (ON_HOVER → CHANGE_TO 274:688, Smart Animate 0.3s ease-out). SVG exportado de la
+ *   variante con destello (`contact-mark.svg`), con el destello aislado en `.sparkle`.
+ * - Botón: mismo componente que el CTA del Hero (swap a WhatsApp en hover,
+ *   WhatsAppCta.astro), más grande aquí (instancia 430:2312: 502×82, radio 8).
+ *
+ * Desktop (≥1024px) en unidades del frame de 1549px (`--u`, escala por encima de ese
+ * ancho, igual que el resto de secciones). Mobile sin cambios por ahora (se revisa en
+ * la ronda de mobile).
  */
 import WhatsAppCta from './WhatsAppCta.astro';
-import logoMark from '../icons/logo-mark.svg?raw';
+import contactMark from '../icons/contact-mark.svg?raw';
 import { siteConfig } from '../config/site';
 
 const phoneDisplay = siteConfig.contact.phoneDisplay ?? '(xxx) xxx-xxxx';
@@ -14,7 +22,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
 ---
 
 <div class="contact-cta">
-  <span class="contact-cta__icon" aria-hidden="true" set:html={logoMark} />
+  <span class="contact-cta__icon" aria-hidden="true" set:html={contactMark} />
 
   <h2 class="contact-cta__heading">Need clarity about your situation?</h2>
   <p class="contact-cta__lead">
@@ -39,6 +47,11 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
 
 <style>
   .contact-cta {
+    --u: 1px;
+    container-type: inline-size;
+    max-width: 50rem;
+    margin-inline: auto;
+    padding: clamp(3rem, 6vw, 6rem) 1.5rem;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -47,7 +60,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
 
   .contact-cta__icon {
     display: block;
-    width: 3.25rem;
+    width: 4.5rem;
     margin-bottom: 1.5rem;
   }
 
@@ -55,6 +68,24 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     width: 100%;
     height: auto;
     display: block;
+    overflow: visible;
+  }
+
+  /* Destello (274:687): en reposo invisible y reducido al centro (variante 274:690:
+     20×26 con opacidad 0); en hover crece a tamaño completo. */
+  .contact-cta__icon :global(.sparkle) {
+    opacity: 0;
+    transform: scale(0.25);
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      opacity 0.3s ease-out,
+      transform 0.3s ease-out;
+  }
+
+  .contact-cta__icon:hover :global(.sparkle) {
+    opacity: 1;
+    transform: scale(1);
   }
 
   .contact-cta__heading {
@@ -74,7 +105,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     color: var(--color-cream);
     opacity: 0.55;
     max-width: 28rem;
-    margin-bottom: 1.75rem;
+    margin: 0 0 1.75rem;
   }
 
   .contact-cta__details {
@@ -115,9 +146,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     color: var(--color-cream);
   }
 
-  /* Tamaño del CTA en esta sección (nodo 430:2312 en Figma) — más grande que el del
-     Hero. :global() porque el <a> real lo renderiza WhatsAppCta.astro, no este
-     archivo (ver memoria "astro-scoped-css-child-component-gotcha"). */
+  /* :global() porque el <a> real lo renderiza WhatsAppCta.astro, no este archivo. */
   :global(.contact-cta__cta) {
     padding: 1.15rem 2.5rem;
   }
@@ -128,10 +157,6 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
 
   @media (min-width: 768px) {
     .contact-cta__heading {
-      /* 3rem en vez de los 3.2rem (51.2px) medidos en el nodo: con el padding-inline
-         del Container (1.5rem) el ancho útil real es ~752px, apenas por debajo de los
-         757px que ocupa el texto a 51.2px en Figma, y se parte en dos líneas cuando en
-         el diseño va en una sola — se redujo lo mínimo necesario para que entre. */
       font-size: 3rem;
     }
 
@@ -142,6 +167,96 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
 
     .contact-cta__details {
       gap: 3rem;
+    }
+  }
+
+  /* --- Desktop (≥1024px): medidas reales de 53:400. --- */
+  @media (min-width: 1024px) {
+    /* 42px arriba. Abajo la Section declara 96px de padding pero recorta su contenido a
+         617px de alto (clipsContent), así que lo visible bajo los datos son 49px. */
+    .contact-cta {
+      --u: max(1px, 100cqi / 1549);
+      max-width: none;
+      padding: calc(var(--u) * 42) 0 calc(var(--u) * 49);
+    }
+
+    /* Instancia de 135×149 (el SVG de 99×110 escalado ×1.364). */
+    .contact-cta__icon {
+      width: calc(var(--u) * 135);
+      margin-bottom: 0;
+    }
+
+    /* Heading (53:410): Fraunces Medium 51.2px/61.4px crema, en una línea, 32px debajo
+         del ícono. */
+    .contact-cta__heading {
+      margin: 0;
+      padding-top: calc(var(--u) * 32);
+      font-size: calc(var(--u) * 51.2);
+      line-height: calc(var(--u) * 61.4);
+      white-space: nowrap;
+    }
+
+    /* Párrafo (53:412): Inter 16px/28.8px crema al 55%, caja de 520px, 24px debajo. */
+    .contact-cta__lead {
+      max-width: calc(var(--u) * 520);
+      margin: 0;
+      padding-top: calc(var(--u) * 24);
+      font-size: calc(var(--u) * 16);
+      line-height: calc(var(--u) * 28.8);
+    }
+
+    /* Botón (430:2312): 502×82, radio 8, texto Inter Bold 25.6px; 26px debajo. En la
+         cara de WhatsApp: número Inter Medium 29.6px (tracking 1.18px) e ícono de 48px. */
+    .contact-cta :global(.contact-cta__cta) {
+      margin-top: calc(var(--u) * 26);
+      min-width: calc(var(--u) * 502);
+      height: calc(var(--u) * 82);
+      /* La Inter web es algo más ancha: con 26px por lado queda en los 502px de Figma. */
+      padding: 0 calc(var(--u) * 26);
+      border-radius: calc(var(--u) * 8);
+    }
+
+    .contact-cta :global(.contact-cta__cta .whatsapp-cta__face) {
+      font-size: calc(var(--u) * 25.6);
+    }
+
+    .contact-cta :global(.contact-cta__cta .whatsapp-cta__face--whatsapp) {
+      font-weight: 500;
+      font-size: calc(var(--u) * 29.6);
+      letter-spacing: 0.04em;
+    }
+
+    .contact-cta :global(.contact-cta__cta .whatsapp-cta__icon) {
+      width: calc(var(--u) * 48);
+      height: calc(var(--u) * 48);
+    }
+
+    /* Datos de contacto (53:416): 48px debajo del botón, bloques separados 48px con
+         un divisor de 1×45px dorado al 20%. Etiqueta Inter Medium Italic 10px, tracking
+         2px, dorado al 60%, 6px sobre el valor (Inter Medium 16px/24px crema). */
+    .contact-cta__details {
+      margin-top: 0;
+      padding-top: calc(var(--u) * 48);
+      gap: calc(var(--u) * 48);
+    }
+
+    .contact-cta__detail {
+      gap: calc(var(--u) * 6);
+    }
+
+    .contact-cta__divider {
+      align-self: auto;
+      height: calc(var(--u) * 45);
+    }
+
+    .contact-cta__label {
+      font-size: calc(var(--u) * 10);
+      line-height: calc(var(--u) * 15);
+    }
+
+    .contact-cta__value {
+      font-size: calc(var(--u) * 16);
+      line-height: calc(var(--u) * 24);
     }
   }
 </style>
