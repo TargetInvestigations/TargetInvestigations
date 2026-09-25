@@ -1,49 +1,77 @@
 ---
 /**
- * Hero (Section 53:60 en Figma). La foto (nodo 174:113) es un único PNG recortado
- * (mujer + skyline, fondo transparente) pensado para ir de fondo a lo ancho de TODA
- * la sección — incluida la fila de ValueBadges — no como imagen contenida en una
- * columna. En mobile se mantiene como imagen contenida (no hay bleed de fondo en el
- * frame mobile de Figma); a partir de 1024px pasa a ser el fondo absoluto de `.hero`.
+ * Hero (Section 53:60 en Figma, 1549×1000). Tres comportamientos:
  *
- * El lockup (ícono/TARGET/INVESTIGATIONS/tagline/subtítulo/botón) está centrado
- * internamente y no alineado a la izquierda (confirmado midiendo los bounding boxes
- * de los nodos reales: cada línea de texto está centrada dentro del frame "Logo").
- * "TARGET" y el tagline usan Cinzel; "INVESTIGATIONS" y el subtítulo usan Instrument
- * Sans — ninguna es la fuente Inter/Fraunces del resto del sitio (ver tokens.css).
+ * - Mobile (<1024px, frame 341:1569): lockup → botón → foto en flujo normal, con las
+ *   ValueBadges solapando la parte baja de la foto.
+ * - Desktop intermedio (1024–1439px, p. ej. 1366×768): layout propio, aprobado por el
+ *   usuario para ese tamaño — caja de altura fija con foto `cover` y capas absolutas.
+ * - Desktop estándar (≥1440px, p. ej. 1920×1080): réplica proporcional del frame de
+ *   Figma. `.hero` es un contenedor (`container-type:inline-size`) y todo se posiciona
+ *   y dimensiona en "unidades Figma" (`--u` = 1px del frame de 1549px, vía `cqi`), así
+ *   que a cualquier ancho la composición es el diseño escalado. Como en Figma, la
+ *   Section empieza en y=0 de la página y el nav de vidrio se superpone a ella.
+ *
+ * El lockup de marca (ícono/TARGET con destellos/INVESTIGATIONS/tagline/subtítulo) es
+ * el PNG completo entregado por el cliente (desktop = frame "Logo" 175:759 sin el
+ * botón; mobile = frame "Logo" 341:1573), no una recreación con texto — replicarlo
+ * letra por letra no conseguía los detalles de brillo del diseño. El texto va en el
+ * `alt`, dentro del <h1>.
  */
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Container from './Container.astro';
 import ValueBadges from './ValueBadges.astro';
 import WhatsAppCta from './WhatsAppCta.astro';
-import logoMark from '../icons/logo-mark.svg?raw';
 import heroPhoto from '../images/hero.png';
+import heroSky from '../images/hero-sky.png';
+import logoDesktop from '../images/logo-lockup-desktop.png';
+import logoMobile from '../images/logo-lockup-mobile.png';
 import { siteConfig } from '../config/site';
+
+const logoDesktopImg = await getImage({
+  src: logoDesktop,
+  widths: [448, 640, 896, 1280, 1874],
+  format: 'webp',
+});
+const logoMobileImg = await getImage({
+  src: logoMobile,
+  widths: [366, 732, 1098],
+  format: 'webp',
+});
+const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. Private Investigations · Intelligence · Due Diligence`;
 ---
 
 <div class="hero">
-  <Container size="wide">
+  <!-- Textura de cielo (nodo 179:813, opacity 0.46) — solo en la réplica ≥1440px. -->
+  <div class="hero__sky" aria-hidden="true">
+    <Image src={heroSky} alt="" widths={[1146, 1672]} sizes="74vw" loading="lazy" />
+  </div>
+
+  <Container size="wide" class="hero__top">
     <div class="hero__lockup">
-      <span class="hero__icon" aria-hidden="true" set:html={logoMark} />
-
-      <p class="hero__brand">TARGET</p>
-      <p class="hero__brand-sub">INVESTIGATIONS</p>
-
-      <span class="hero__divider" aria-hidden="true"></span>
-
-      <h1 class="hero__tagline">
-        <span class="hero__tagline-line" aria-hidden="true"></span>
-        {siteConfig.company.tagline}
-        <span class="hero__tagline-line" aria-hidden="true"></span>
+      <h1 class="hero__logo">
+        <picture>
+          <source
+            media="(min-width: 1024px)"
+            type="image/webp"
+            srcset={logoDesktopImg.srcSet.attribute}
+            sizes="(min-width: 1440px) 41vw, 28rem"
+          />
+          <source
+            type="image/webp"
+            srcset={logoMobileImg.srcSet.attribute}
+            sizes="min(83.2vw, 23rem)"
+          />
+          <img
+            src={logoMobileImg.src}
+            alt={logoAlt}
+            width={logoMobile.width}
+            height={logoMobile.height}
+            loading="eager"
+            decoding="async"
+          />
+        </picture>
       </h1>
-
-      <p class="hero__subtitle">
-        <span>Private Investigations</span>
-        <span class="hero__dot" aria-hidden="true"></span>
-        <span>Intelligence</span>
-        <span class="hero__dot" aria-hidden="true"></span>
-        <span>Due Diligence</span>
-      </p>
 
       <WhatsAppCta class="hero__cta" />
     </div>
@@ -53,7 +81,7 @@ import { siteConfig } from '../config/site';
     <Image
       src={heroPhoto}
       alt=""
-      widths={[440, 768, 1200, 1672]}
+      widths={[440, 768, 1200, 1672, 2400]}
       sizes="100vw"
       loading="eager"
       fetchpriority="high"
@@ -61,7 +89,7 @@ import { siteConfig } from '../config/site';
     <div class="hero__photo-fade"></div>
   </div>
 
-  <Container size="wide">
+  <Container size="wide" class="hero__bottom">
     <ValueBadges />
   </Container>
 </div>
@@ -70,32 +98,25 @@ import { siteConfig } from '../config/site';
   .hero {
     position: relative;
     /* El solape negativo de ValueBadges sobre la foto (margin-top:-21%) hace que la
-       foto, un elemento anterior en el flujo normal, pinte más abajo de donde el
-       propio flujo termina calculando la altura de `.hero` — sin recortar esto la
-       foto se desborda visualmente sobre la sección de Services. */
+         foto, un elemento anterior en el flujo normal, pinte más abajo de donde el
+         propio flujo termina calculando la altura de `.hero` — sin recortar esto la
+         foto se desborda visualmente sobre la sección de Services. */
     overflow: hidden;
-    /* El header es fixed y se superpone (backdrop-blur) — antes este padding se
-       sumaba al padding-block genérico del <section> (ver #hero en index.astro) para
-       despejarlo; al quitar ese padding extra, el logo quedaba parcialmente tapado
-       detrás del header. Ahora este valor por sí solo tiene que cubrir esa altura. */
-    padding-top: clamp(5.5rem, 22vw, 6.5rem);
+    /* 36px entre el header y el logo (frame "Logo" 341:1573 en y=36 del Hero mobile). */
+    padding-top: 2.25rem;
     /* Sin padding-bottom: en el nodo real la línea divisoria con Services empieza
-       apenas termina la foto (incluso se solapa unos px con su borde inferior) — con
-       padding acá quedaba un espacio de fondo navy plano antes de la línea dorada. */
+         apenas termina la foto. */
     padding-bottom: 0;
-    /* Fondo radial "de luz" (nodo real `Frame 41` que envuelve todo el Hero mobile):
-       sin esto la foto se ve plana/azul en vez del tono cálido y con más vida del
-       diseño — se transparenta a través de la foto (opacity:0.83) y del espacio
-       alrededor del lockup. */
+    /* Fondo radial "de luz" (nodo real `Frame 41` que envuelve todo el Hero mobile). */
     background: radial-gradient(130% 100% at 40% 45%, #4c6684 0%, #0c2342 55%, #021224 100%);
   }
 
-  /* --- Mobile: foto contenida, en flujo normal (no hay bleed de fondo en el frame mobile).
-       El nodo real (`Backgound 2`, 341:1572) tiene opacity:0.83 (no 100%) y un
-       degradado navy que oscurece del ~37% al ~98% de su alto (`Rectangle 8`,
-       341:1662) — sin esto la foto se ve plana/azul en vez del tono cálido difuminado
-       del diseño. Las ValueBadges además se solapan con la parte baja de la foto
-       (empiezan ~21% antes de que la foto termine), no van separadas con un margen. --- */
+  .hero__sky {
+    display: none;
+  }
+
+  /* --- Mobile: foto contenida, en flujo normal. Nodo `Backgound 2` (341:1572) con
+       opacity 0.83 + degradado navy `Rectangle 8` (341:1662). --- */
   .hero__photo {
     position: relative;
   }
@@ -111,159 +132,74 @@ import { siteConfig } from '../config/site';
     display: block;
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, transparent 35%, rgba(9, 30, 57, 0.92) 88%, rgba(9, 30, 57, 0.92) 100%);
+    background: linear-gradient(
+      to bottom,
+      transparent 35%,
+      rgba(9, 30, 57, 0.92) 88%,
+      rgba(9, 30, 57, 0.92) 100%
+    );
   }
 
-  .hero > :global(.container:last-of-type) {
+  .hero > :global(.hero__bottom) {
     position: relative;
     z-index: 1;
     margin-top: -21%;
-    /* Un poco de aire entre las etiquetas y la línea divisoria — quedaban demasiado
-       pegadas al borde. */
+    /* Un poco de aire entre las etiquetas y la línea divisoria. */
     margin-bottom: 1.5rem;
   }
 
+  /* Mobile: logo 366px de ancho sobre 440 (83.2%), botón 10px debajo, foto 10px
+     debajo del botón (nodos 341:1573 / 399:599 / 341:1572). */
   .hero__lockup {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 0.85rem;
-    margin-bottom: clamp(2rem, 6vw, 3rem);
+    gap: 0.625rem;
+    margin-bottom: 0.625rem;
   }
 
-  .hero__icon {
+  .hero__logo {
+    width: min(83.2vw, 23rem);
+    margin: 0;
+  }
+
+  .hero__logo img {
     display: block;
-    width: 3.25rem;
-    height: 3.25rem;
-    margin-bottom: 0.25rem;
-  }
-
-  .hero__icon :global(svg) {
     width: 100%;
-    height: 100%;
-  }
-
-  .hero__brand {
-    font-family: var(--font-cinzel);
-    font-weight: 800;
-    font-size: 2.5rem;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    margin: 0;
-    /* Gradiente dorado vertical muestreado del ícono (nodo 53:482) para el wordmark. */
-    background: linear-gradient(180deg, var(--color-gold-light) 0%, #9b7739 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-
-  .hero__brand-sub {
-    font-family: var(--font-instrument);
-    font-weight: 400;
-    font-size: 0.98rem;
-    letter-spacing: 0.38em;
-    color: var(--color-white);
-    margin: 0;
-    /* Compensa el letter-spacing final para mantener el centrado óptico del texto. */
-    padding-left: 0.38em;
-  }
-
-  .hero__divider {
-    width: 70%;
-    max-width: 20rem;
-    height: 1px;
-    margin-block: 0.15rem;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.68), transparent);
-  }
-
-  .hero__tagline {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    font-family: var(--font-cinzel);
-    font-weight: 600;
-    color: var(--color-gold);
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    margin: 0;
-  }
-
-  .hero__tagline-line {
-    flex: 0 0 1.75rem;
-    height: 1px;
-    background: linear-gradient(to right, var(--color-gold), transparent);
-  }
-
-  .hero__tagline-line:last-child {
-    background: linear-gradient(to left, var(--color-gold), transparent);
-  }
-
-  .hero__subtitle {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-family: var(--font-instrument);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-white);
-    margin: 0.25rem 0 0.5rem;
-  }
-
-  .hero__dot {
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background-color: #e8e8e8;
+    height: auto;
+    aspect-ratio: 1649 / 1032;
   }
 
   /* Tamaño del CTA en el Hero (nodo 399:561 en Figma). El comportamiento hover→WhatsApp
      vive en WhatsAppCta.astro; acá solo se ajusta el tamaño para este contexto.
-     :global() porque el <a> real lo renderiza ese componente hijo, no este archivo
-     (ver memoria "astro-scoped-css-child-component-gotcha"). */
+     :global() porque el <a> real lo renderiza ese componente hijo, no este archivo. */
   :global(.hero__cta) {
     min-width: 18rem;
   }
 
-  /* --- Desktop: la altura de `.hero` la fija un `min-height` explícito (no el
-       contenido), y la foto pasa a ser `position:absolute;inset:0` de esa caja
-       completa — así la imagen SIEMPRE arranca en el borde superior de la sección
-       y llega exactamente hasta el borde inferior, sin huecos en ninguno de los dos
-       extremos. Lockup y ValueBadges se superponen encima (ambos absolutos, anclados
-       arriba/abajo respectivamente) en vez de ocupar espacio en el flujo — así nunca
-       "empujan" la altura de `.hero` por debajo de lo que la foto cubre. Con
-       `object-fit:cover` + `object-position:left top` el recorte (cuando la relación
-       de aspecto del contenedor lo exige) siempre sale por la derecha/abajo —el agua y
-       el cielo, contenido no crítico— y nunca por arriba/izquierda, donde está la cabeza. --- */
+  /* --- Desktop intermedio (1024–1439px): la altura de `.hero` la fija un `min-height`
+       explícito y foto, lockup y ValueBadges son capas absolutas. `object-fit:cover`
+       con `object-position:left top` recorta siempre por derecha/abajo (agua y cielo),
+       nunca la cabeza. --- */
   @media (min-width: 1024px) {
     .hero {
-      /* En desktop no hace falta recortar: la foto es position:absolute;inset:0 y
-         nunca se desborda, y la descripción de ValueBadges en hover sí necesita
-         poder salir un poco de la caja sin que se corte. */
+      /* La descripción de ValueBadges en hover necesita poder salir un poco de la caja. */
       overflow: visible;
       padding-block: 0;
-      /* El piso subió de 38rem a 47rem: a anchos "tablet" (~1024-1300px) el bloque de
-         texto+botón (anclado arriba) mide ~553px, y con el piso anterior la caja del
-         Hero podía quedar más baja que eso, haciendo que la fila de íconos (anclada
-         abajo) se solapara con el botón. Medido con Playwright en varios anchos. */
+      /* Piso de 47rem: a anchos ~1024-1300px el bloque logo+botón (anclado arriba) no
+             debe solaparse con la fila de íconos (anclada abajo). */
       min-height: clamp(47rem, 52vw, 50rem);
     }
 
-    /* Contenedor del lockup: superpuesto, anclado arriba, ancho completo. */
-    .hero > :global(.container:first-of-type) {
+    .hero > :global(.hero__top) {
       position: absolute;
       inset-block-start: 0;
       inset-inline: 0;
       z-index: 2;
     }
 
-    /* Contenedor de ValueBadges: superpuesto, anclado abajo, sobre la parte oscurecida de la foto.
-       Subido de 2.5rem a 6rem: la descripción más larga (4 renglones, ej. "Precision")
-       todavía quedaba con el último renglón debajo de la línea divisoria con 4.5rem. */
-    .hero > :global(.container:last-of-type) {
+    .hero > :global(.hero__bottom) {
       position: absolute;
       inset-block-end: 6rem;
       inset-inline: 0;
@@ -276,9 +212,6 @@ import { siteConfig } from '../config/site';
       position: absolute;
       inset: 0;
       z-index: 0;
-      /* Fondo radial muestreado del propio Section (53:60): se transparenta a través
-         de la foto (fill al 70% de opacidad en Figma) dándole el aspecto "difuminado"
-         que tiene en el diseño, en vez de la foto a opacidad plena y bordes duros. */
       background: radial-gradient(120% 120% at 19% 32%, #35566f 0%, #12243c 47%, #000f26 100%);
     }
 
@@ -291,11 +224,6 @@ import { siteConfig } from '../config/site';
     }
 
     .hero__photo-fade {
-      display: block;
-      position: absolute;
-      inset: 0;
-      /* Aproximación de los degradados de Figma (nodos 53:62/187:844): oscurece la
-         parte inferior de la foto para que ValueBadges se lea con buen contraste. */
       background: linear-gradient(
         to top,
         rgba(3, 10, 24, 0.85) 0%,
@@ -309,23 +237,134 @@ import { siteConfig } from '../config/site';
       margin-left: auto;
       margin-right: clamp(0rem, 6vw, 4rem);
       padding-block: clamp(3rem, 9vw, 5.5rem) 2.5rem;
+      gap: 1rem;
     }
 
-    .hero__icon {
-      width: 4.5rem;
-      height: 4.5rem;
+    .hero__logo {
+      width: 28rem;
     }
 
-    .hero__brand {
-      font-size: 4.25rem;
+    .hero__logo img {
+      aspect-ratio: 1874 / 1493;
+    }
+  }
+
+  /* --- Desktop estándar (≥1440px): réplica proporcional del frame 53:60. Cada valor
+       `calc(var(--u) * N)` es N px del frame de Figma de 1549px de ancho. --- */
+  @media (min-width: 1440px) {
+    .hero {
+      --u: calc(100cqi / 1549);
+      container-type: inline-size;
+      aspect-ratio: 1549 / 1000;
+      min-height: 0;
+      /* En Figma la Section arranca en y=0 y el nav (68px, vidrio) se superpone. */
+      margin-top: -68px;
+      /* Fill real de la Section 53:60 (GRADIENT_RADIAL, centro 19%/32%). */
+      background: radial-gradient(78.6% 108% at 19% 32%, #354b62 0%, #12243c 47%, #000f26 100%);
     }
 
-    .hero__brand-sub {
-      font-size: 1.35rem;
+    /* Capa recortada al Hero (clipsContent de la Section) — la textura sobresale
+         43px por arriba y 9px por la izquierda en Figma. */
+    .hero__sky {
+      display: block;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
     }
 
-    .hero__tagline {
-      font-size: 1.4rem;
+    /* Relleno real de 179:813: blend LINEAR_DODGE (suma de luz = `plus-lighter`),
+         filtros exposure -0.1 / contrast +0.16 / saturation -0.67, e imageTransform que
+         recorta el 2.9% izquierdo de la imagen (por eso el <img> es más ancho que la
+         caja de 1146px y arranca antes). */
+    .hero__sky :global(img) {
+      position: absolute;
+      left: calc(var(--u) * -43.2);
+      top: calc(var(--u) * -43);
+      width: calc(var(--u) * 1180.2);
+      height: calc(var(--u) * 664);
+      max-width: none;
+      opacity: 0.46;
+      mix-blend-mode: plus-lighter;
+      filter: brightness(0.93) contrast(1.16) saturate(0.33);
+    }
+
+    /* Foto (174:113): x=0 y=129, 1549×872, opacity 0.7 — misma proporción que la
+         imagen, así que no se recorta. */
+    .hero__photo {
+      inset: calc(var(--u) * 129) 0 0 0;
+      background: none;
+    }
+
+    .hero__photo :global(img) {
+      object-fit: cover;
+      object-position: center bottom;
+      opacity: 0.7;
+    }
+
+    /* Capas sobre la foto: degradados `Rectangle 7` (53:62, y=680 h=321) y `Rectangle 8`
+         (187:844, y=801 h=199) y brillo dorado radial al 6% (53:64). Alturas y posiciones
+         relativas a la caja de la foto. (El tinte de 53:63 tiene sus dos paradas en la
+         posición 0 → no se ve en Figma, así que no se replica.) */
+    .hero__photo-fade {
+      background:
+        linear-gradient(to top, #03132b, rgba(9, 30, 57, 0)) bottom / 100% 36.8% no-repeat,
+        linear-gradient(to top, #041125, rgba(9, 30, 57, 0)) bottom / 100% 22.8% no-repeat,
+        radial-gradient(
+          calc(var(--u) * 426) at 39.4% 49.8%,
+          rgba(184, 147, 90, 0.06) 0%,
+          rgba(184, 147, 90, 0) 70%
+        );
+    }
+
+    /* Alto 0 (anclado arriba): el lockup se posiciona dentro con coordenadas del
+         frame. Con `inset:0` esta capa (z-index 2) tapaba la fila de íconos y bloqueaba
+         su hover. */
+    .hero > :global(.hero__top) {
+      inset: 0 0 auto 0;
+      max-width: none;
+      padding: 0;
+    }
+
+    /* Frame "Logo" 175:759: x=717, y=151, 625px de ancho; el PNG ocupa hasta y=649 y
+         el botón (399:561) empieza en y=662. */
+    .hero__lockup {
+      position: absolute;
+      left: calc(var(--u) * 717);
+      top: calc(var(--u) * 151);
+      width: calc(var(--u) * 625);
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      gap: calc(var(--u) * 13);
+    }
+
+    .hero__logo {
+      width: 100%;
+    }
+
+    /* Botón 358×59, texto Inter Bold 18.3px. */
+    :global(.hero__cta) {
+      min-width: calc(var(--u) * 358);
+      height: calc(var(--u) * 59);
+      padding: 0 calc(var(--u) * 24);
+    }
+
+    :global(.hero__cta .whatsapp-cta__face) {
+      font-size: calc(var(--u) * 18.3);
+    }
+
+    :global(.hero__cta .whatsapp-cta__icon) {
+      width: calc(var(--u) * 26);
+      height: calc(var(--u) * 26);
+    }
+
+    /* Fila de ValueBadges (Group 38): círculos en y=834. El tamaño interno de la fila
+         vive en ValueBadges.astro (mismas unidades). */
+    .hero > :global(.hero__bottom) {
+      inset: calc(var(--u) * 830) 0 auto 0;
+      max-width: none;
+      padding: 0;
     }
   }
 </style>

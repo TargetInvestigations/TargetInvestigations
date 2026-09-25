@@ -5,12 +5,14 @@
  */
 interface Props {
   size?: 'default' | 'narrow' | 'wide';
+  /** Clase extra para que el padre lo seleccione (con :global(), ver CLAUDE.md). */
+  class?: string;
 }
 
-const { size = 'default' } = Astro.props;
+const { size = 'default', class: className } = Astro.props;
 ---
 
-<div class:list={['container', `container--${size}`]}>
+<div class:list={['container', `container--${size}`, className]}>
   <slot />
 </div>
 
