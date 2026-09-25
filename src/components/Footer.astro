@@ -13,69 +13,75 @@
  * está vectorizado en navy (no el dorado con gradiente de siempre), así que se exportó
  * tal cual como asset (`footer-wordmark.svg`) en vez de recrearlo con texto+CSS.
  */
-import Container from './Container.astro';
 import SocialLink from './SocialLink.astro';
 import footerWordmark from '../icons/footer-wordmark.svg?raw';
 import { siteConfig } from '../config/site';
 
 const phoneDisplay = siteConfig.contact.phoneDisplay ?? '(xxx) xxx-xxxx';
 const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
+// Copy real del Footer en Figma (53:474 / mobile): el orden de las ciudades es distinto
+// al de `siteConfig.company.coverageArea` (que es el texto de About).
+const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Florida';
 ---
 
 <footer class="footer">
-  <Container size="default">
-    <div class="footer__grid">
-      <div class="footer__brand">
-        <a href="#top" class="footer__logo" aria-label={`${siteConfig.company.name} — Home`}>
-          <span aria-hidden="true" set:html={footerWordmark} />
-        </a>
-        <p class="footer__tagline">
-          South Florida-based private investigation company serving clients throughout Florida.
-        </p>
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <a href="#top" class="footer__logo" aria-label={`${siteConfig.company.name} — Home`}>
+        <span aria-hidden="true" set:html={footerWordmark} />
+      </a>
+      <p class="footer__tagline">
+        South Florida-based private investigation company serving clients throughout Florida.
+      </p>
+    </div>
+
+    <span class="footer__divider" aria-hidden="true"></span>
+
+    <nav class="footer__nav" aria-label="Footer navigation">
+      <h2 class="footer__heading">Navigation</h2>
+      <ul class="footer__list">
+        {siteConfig.nav.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="footer__info">
+      <h2 class="footer__heading">Contact</h2>
+      <div class="footer__detail">
+        <span class="footer__detail-label">Direct Line</span>
+        <span class="footer__detail-value footer__detail-value--nowrap">
+          {phoneDisplay} Monday to Friday 9 a.m. to 5 p.m.
+        </span>
+      </div>
+      <div class="footer__detail">
+        <span class="footer__detail-label">Confidential Email</span>
+        <span class="footer__detail-value">{email}</span>
       </div>
 
-      <span class="footer__divider" aria-hidden="true"></span>
-
-      <nav class="footer__nav" aria-label="Footer navigation">
-        <h2 class="footer__heading">Navigation</h2>
-        <ul class="footer__list">
-          {siteConfig.nav.map((item) => (
-            <li>
-              <a href={item.href}>{item.label}</a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <div class="footer__info">
-        <h2 class="footer__heading">Contact</h2>
-        <div class="footer__detail">
-          <span class="footer__detail-label">Direct Line</span>
-          <span>{phoneDisplay} · Monday to Friday 9 a.m. to 5 p.m.</span>
-        </div>
-        <div class="footer__detail">
-          <span class="footer__detail-label">Confidential Email</span>
-          <span>{email}</span>
-        </div>
-
-        <h2 class="footer__heading footer__heading--coverage">Coverage</h2>
-        <p class="footer__coverage">{siteConfig.company.coverageArea}</p>
-      </div>
-
-      <span class="footer__divider" aria-hidden="true"></span>
-
-      <div class="footer__social">
-        <SocialLink network="instagram" href={siteConfig.social.instagram} />
-        <SocialLink network="tiktok" href={siteConfig.social.tiktok} />
-        <SocialLink network="linkedin" href={siteConfig.social.linkedin} />
-        <SocialLink network="facebook" href={siteConfig.social.facebook} />
+      <div class="footer__detail">
+        <span class="footer__detail-label">Coverage</span>
+        <p class="footer__coverage">{coverage}</p>
       </div>
     </div>
-  </Container>
+
+    <span class="footer__divider" aria-hidden="true"></span>
+
+    <div class="footer__social">
+      <SocialLink network="instagram" href={siteConfig.social.instagram} />
+      <SocialLink network="tiktok" href={siteConfig.social.tiktok} />
+      <SocialLink network="linkedin" href={siteConfig.social.linkedin} />
+      <SocialLink network="facebook" href={siteConfig.social.facebook} />
+    </div>
+  </div>
 </footer>
 
 <style>
   .footer {
+    --u: 1px;
+    container-type: inline-size;
     background-color: var(--color-cream);
     color: var(--color-bg);
     border-top: 1px solid rgba(184, 147, 90, 0.15);
@@ -84,6 +90,8 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
   }
 
   .footer__grid {
+    width: min(calc(var(--u) * 1200), 100% - 3rem);
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -129,13 +137,9 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     font-family: var(--font-body);
     font-weight: 400;
     font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.17em;
+    /* "Navigation" / "Contact" van en tipo título en Figma (no en mayúsculas). */
+    letter-spacing: 0.1667em;
     color: var(--color-gold-deep);
-  }
-
-  .footer__heading--coverage {
-    margin-top: 0.5rem;
   }
 
   .footer__list {
@@ -173,6 +177,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
 
   .footer__coverage {
     max-width: 18rem;
+    margin: 0;
     opacity: 0.55;
   }
 
@@ -183,7 +188,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
 
   @media (min-width: 768px) {
     /* La fila de redes va en la columna de Navigation, debajo de la lista (pedido #2 del
-         frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
+             frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
     .footer__grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
@@ -245,6 +250,107 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     /* Los divisores cortos solo existen en la versión mobile de Figma (440px). */
     .footer__divider {
       display: none;
+    }
+  }
+
+  /* --- Desktop (≥1024px): medidas reales del Footer 53:427 (1549×314) en unidades del
+       frame de 1549px — escala por encima de ese ancho, como el resto de la página. --- */
+  @media (min-width: 1024px) {
+    .footer {
+      --u: max(1px, 100cqi / 1549);
+      padding: calc(var(--u) * 64) 0 0;
+      font-size: calc(var(--u) * 14);
+    }
+
+    /* Container de 1200px (536/268/268 con 64px de separación), 48px de aire abajo y
+           línea dorada al 10% que cierra el footer. */
+    /* minmax(0,1fr): el teléfono en una línea (322px) no debe ensanchar su columna. */
+    .footer__grid {
+      grid-template-columns: 2fr minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: calc(var(--u) * 64);
+      padding-bottom: calc(var(--u) * 48);
+      border-bottom: 1px solid rgba(184, 147, 90, 0.1);
+    }
+
+    .footer__brand {
+      gap: 0;
+    }
+
+    .footer__logo {
+      width: calc(var(--u) * 182);
+    }
+
+    /* Frase (53:443): Inter 13.5px/24.3px en una caja de 209px, 20px bajo el logo. */
+    .footer__tagline {
+      max-width: calc(var(--u) * 209);
+      margin: 0;
+      padding-top: calc(var(--u) * 20);
+      font-size: calc(var(--u) * 13.5);
+      line-height: calc(var(--u) * 24.3);
+    }
+
+    /* Títulos de columna: Inter 12px/15px, tracking 2px, #835B1E. */
+    .footer__heading {
+      font-size: calc(var(--u) * 12);
+      line-height: calc(var(--u) * 15);
+    }
+
+    /* Links: Inter 14px/21px al 85%, el primero 20px bajo el título y 12px entre sí. */
+    .footer__list {
+      padding-top: calc(var(--u) * 20);
+      gap: calc(var(--u) * 12);
+    }
+
+    .footer__list a {
+      font-size: calc(var(--u) * 14);
+      line-height: calc(var(--u) * 21);
+    }
+
+    .footer__social {
+      margin-top: calc(var(--u) * 24);
+      gap: calc(var(--u) * 16);
+    }
+
+    .footer__social :global(.social-link) {
+      width: calc(var(--u) * 22);
+      height: calc(var(--u) * 22);
+    }
+
+    /* Columna de contacto: bloques a 20px (el primero) y 16px del anterior; etiqueta
+           Inter 12px/15px tracking 1.5px + 4px; valor Inter 14px/21px. El teléfono con el
+           horario va en una línea aunque exceda la columna (caja de 322px en Figma). */
+    .footer__info {
+      gap: 0;
+    }
+
+    .footer__detail {
+      gap: calc(var(--u) * 4);
+      padding-top: calc(var(--u) * 16);
+    }
+
+    .footer__heading + .footer__detail {
+      padding-top: calc(var(--u) * 20);
+    }
+
+    .footer__detail-label {
+      font-size: calc(var(--u) * 12);
+      line-height: calc(var(--u) * 15);
+    }
+
+    .footer__detail-value {
+      font-size: calc(var(--u) * 14);
+      line-height: calc(var(--u) * 21);
+    }
+
+    .footer__detail-value--nowrap {
+      white-space: nowrap;
+    }
+
+    /* Cobertura (53:474): Inter 13px/20.8px al 55% en caja de 232px. */
+    .footer__coverage {
+      max-width: calc(var(--u) * 232);
+      font-size: calc(var(--u) * 13);
+      line-height: calc(var(--u) * 20.8);
     }
   }
 </style>
