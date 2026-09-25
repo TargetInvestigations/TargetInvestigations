@@ -1,237 +1,377 @@
 ---
+/**
+ * About (instancia 322:1221 del componente 322:865 en Figma). Variantes del componente:
+ * "Variant3" = colapsado (la que usa la página) y "Variant2" = expandido; el click en
+ * "Show more" (ON_CLICK → CHANGE_TO 322:1096) cambia entre ambas.
+ *
+ * Desktop (≥1024px): contenedor de 1200px en 2 columnas de 560px (80px de separación).
+ * Izquierda: kicker, heading (caja de 388px → 3 renglones) y bio (Meet Andrea Roa + 3
+ * párrafos). Derecha: panel de stats 2×2 y la cita. Debajo, alineado al borde derecho
+ * de la sección, el toggle "Show more"; al abrirlo aparecen el texto extendido (735px)
+ * y la foto de Andrea (406×487, borde degradado dorado de 1px).
+ *
+ * Mobile (<1024px, frame 419:1424): el mismo contenido reducido a ~70% (factor
+ * `--s: 0.697`, medido en Figma) — kicker y heading centrados, stats, bio. El frame
+ * mobile no tiene cita, toggle ni foto: se ocultan la cita y la foto, pero el toggle se
+ * conserva para no perder el texto extendido en mobile (decisión nuestra, ver CLAUDE.md).
+ *
+ * Unidades: `--u` = 1px del frame de Figma de 1549px (escala por encima de 1549px de
+ * ancho, igual que Hero/Services); `.about` es el contenedor de `cqi`.
+ */
 import { Image } from 'astro:assets';
 import StatBadges from './StatBadges.astro';
 import aboutPhoto from '../images/about.png';
 import { siteConfig } from '../config/site';
+
+const { name, founder } = siteConfig.company;
 ---
 
 <div class="about">
-  <div class="about__intro">
-    <p class="about__kicker">About</p>
-    <h2 class="about__heading">Built on one simple principle: the truth doesn't negotiate.</h2>
+  <div class="about__grid">
+    <div class="about__main">
+      <p class="about__kicker">About</p>
+      <h2 class="about__heading">Built on one simple principle: the truth doesn't negotiate.</h2>
+      <div class="about__bio">
+        <p class="about__lead">Meet {founder}</p>
+        <p>
+          For more than a decade, {founder} has been dedicated to the private investigative
+          profession, building her experience around one fundamental principle: when the truth
+          matters, the facts matter.
+        </p>
+        <p>
+          As the founder and Principal Private Investigator of {name}, Andrea brings a professional,
+          discreet, and detail-oriented approach to every assignment. Her commitment is to provide
+          clients with reliable information, carefully documented evidence, and investigative
+          support they can trust when important decisions are at stake.
+        </p>
+        <p>
+          Andrea understands that every investigation is different. Some involve deeply personal
+          family matters. Others involve businesses, attorneys, financial concerns, insurance
+          claims, or complex civil disputes. Regardless of the circumstances, her approach remains
+          the same: listen carefully, investigate responsibly, protect confidentiality, and pursue
+          the facts.
+        </p>
+      </div>
+    </div>
+
+    <div class="about__side">
+      <StatBadges />
+      <blockquote class="about__quote">
+        "Our goal is simple: to build a company clients can trust when the truth matters most."
+      </blockquote>
+    </div>
   </div>
 
-  <div class="about__grid">
-    <div class="about__text">
-      <p class="about__lead">Meet {siteConfig.company.founder}</p>
-      <p>
-        For more than a decade, Andrea Roa has been dedicated to the private investigative
-        profession, building her experience around one fundamental principle: when the truth
-        matters, the facts matter.
-      </p>
-      <p>
-        As the founder and Principal Private Investigator of {siteConfig.company.name}, Andrea
-        brings a professional, discreet, and detail-oriented approach to every assignment. Her
-        commitment is to provide clients with reliable information, carefully documented evidence,
-        and investigative support they can trust when important decisions are at stake.
-      </p>
-      <p>
-        Andrea understands that every investigation is different. Some involve deeply personal
-        family matters. Others involve businesses, attorneys, financial concerns, insurance claims,
-        or complex civil disputes. Regardless of the circumstances, her approach remains the same:
-        listen carefully, investigate responsibly, protect confidentiality, and pursue the facts.
-      </p>
+  <details class="about__more">
+    <summary class="about__toggle">
+      <span class="about__toggle-label about__toggle-label--closed">Show more</span>
+      <span class="about__toggle-label about__toggle-label--open">Show less</span>
+      <svg class="about__toggle-icon" viewBox="0 0 14 12" aria-hidden="true">
+        <path d="M1 1l6 10 6-10" fill="none" stroke="currentColor" stroke-width="1.2"></path>
+      </svg>
+    </summary>
 
-      <details class="about__more">
-        <summary>
-          <span class="about__more-label about__more-label--closed">Show more</span>
-          <span class="about__more-label about__more-label--open">Show less</span>
-        </summary>
-        <p class="about__lead">More Than an Investigation</p>
+    <div class="about__extra">
+      <div class="about__bio about__bio--extra">
+        <p class="about__lead about__lead--caps">More than an investigation</p>
         <p>
-          {siteConfig.company.name} was created with a broader vision: to build a professional
-          investigative resource that can serve not only individuals and families, but also law
-          firms, attorneys, businesses, organizations, and the community.
+          {name} was created with a broader vision: to build a professional investigative resource
+          that can serve not only individuals and families, but also law firms, attorneys,
+          businesses, organizations, and the community.
         </p>
         <p>
           Together with her daughter, an attorney, Andrea has developed a collaborative network
           designed to connect investigative services with legal and professional resources when
-          appropriate. This collaboration allows {siteConfig.company.name} to provide investigative
-          support that can complement the work of attorneys and other professionals, including
-          fact-finding, witness location, background research, surveillance, financial investigative
-          support, evidence documentation, and other specialized investigative services.
+          appropriate.
         </p>
         <p>
-          Our goal is simple: to help attorneys, organizations, businesses, families, and
+          This collaboration allows {name} to provide investigative support that can complement the
+          work of attorneys and other professionals, including fact-finding, witness location,
+          background research, surveillance, financial investigative support, evidence
+          documentation, and other specialized investigative services.
+        </p>
+        <p>
+          Our goal is simple: To help attorneys, organizations, businesses, families, and
           individuals obtain the information and investigative support they need to make informed
           decisions and address challenging circumstances with greater clarity.
         </p>
-        <p class="about__lead">Our Commitment</p>
+        <p class="about__lead about__lead--caps">Our commitment</p>
         <p>
-          At {siteConfig.company.name}, we believe that professional investigation is about more
-          than finding information. It is about knowing where to look, asking the right questions,
-          recognizing what matters, documenting the facts, and handling sensitive information with
-          discretion and integrity.
+          At {name}, we believe that professional investigation is about more than finding
+          information.
         </p>
-      </details>
-    </div>
+        <p>
+          It is about knowing where to look, asking the right questions, recognizing what matters,
+          documenting the facts, and handling sensitive information with discretion and integrity.
+        </p>
+      </div>
 
-    <div class="about__stats">
-      <StatBadges />
+      <div class="about__photo">
+        <Image
+          src={aboutPhoto}
+          alt={`${founder}, founder and Principal Private Investigator of ${name}`}
+          widths={[406, 609, 812, 1145]}
+          sizes="(min-width: 1549px) 26.2vw, 406px"
+          loading="lazy"
+        />
+      </div>
     </div>
-
-    <blockquote class="about__quote">
-      "Our goal is simple: to build a company clients can trust when the truth matters most."
-    </blockquote>
-
-    <div class="about__photo">
-      <Image
-        src={aboutPhoto}
-        alt={`${siteConfig.company.founder}, founder and Principal Private Investigator of ${siteConfig.company.name}`}
-        widths={[350, 500]}
-        sizes="25vw"
-        loading="lazy"
-      />
-    </div>
-  </div>
+  </details>
 </div>
 
 <style>
-  .about__intro {
-    text-align: center;
-    max-width: 40rem;
+  .about {
+    --u: 1px;
+    --s: 0.697;
+    container-type: inline-size;
+    /* Mobile: kicker a 29px del borde superior (Container:margin 419:1424). */
+    padding: 1.8125rem 0 1.5rem;
+  }
+
+  .about__grid {
+    width: min(calc(var(--u) * 404), 100% - 2.25rem);
     margin-inline: auto;
-    margin-bottom: 2.5rem;
   }
 
-  .about__kicker {
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-gold);
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .about__heading {
-    font-size: 1.75rem;
+  .about__main {
+    display: contents;
   }
 
   .about__grid {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
   }
 
-  /* En mobile Figma no muestra la foto de About (solo stats + bio); en desktop sí. */
-  .about__stats {
+  /* Kicker (322:1341 / 419:1429): Inter Bold 16px, tracking 2.2px, dorado. */
+  .about__kicker {
     order: 1;
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: calc(var(--u) * 16 * var(--s));
+    line-height: 1.03;
+    letter-spacing: 0.1375em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    text-align: center;
   }
 
-  .about__text {
+  /* Heading (322:1343 / 419:1431): Fraunces Medium; mobile 26px centrado en 342px. */
+  .about__heading {
     order: 2;
+    max-width: calc(var(--u) * 342);
+    margin: 0 auto;
+    padding-top: calc(var(--u) * 14);
+    font-weight: 500;
+    font-size: calc(var(--u) * 26);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-white);
+    text-align: center;
   }
 
-  .about__quote {
+  /* En mobile los stats van entre el heading y la bio (Paragraph 419:1432). */
+  .about__side {
     order: 3;
+    padding-top: calc(var(--u) * 20);
+  }
+
+  .about__main .about__bio {
+    order: 4;
+  }
+
+  /* Bio (322:1345): Inter 16px/24px blanco al 70%, 8px entre párrafos. */
+  .about__bio p {
+    margin: 0 0 calc(var(--u) * 8 * var(--s));
+    font-size: calc(var(--u) * 16 * var(--s));
+    line-height: calc(var(--u) * 24 * var(--s));
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .about__bio > .about__lead:first-child {
+    padding-top: calc(var(--u) * 11);
+  }
+
+  /* "Meet Andrea Roa": Inter Medium #E9C37E; los subtítulos del texto extendido son
+     Inter Bold en mayúsculas (mismo color). */
+  .about__bio .about__lead {
+    font-weight: 500;
+    color: var(--color-gold-light);
+  }
+
+  .about__bio .about__lead--caps {
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  /* Cita y foto no existen en el frame mobile. */
+  .about__quote {
+    display: none;
   }
 
   .about__photo {
     display: none;
   }
 
-  .about__text p {
-    opacity: 0.85;
-    line-height: 1.7;
-    margin-bottom: 1rem;
+  /* Toggle (Frame 41, 322:1447): "Show more" Inter 16px/25px #E9C37E + flecha de trazo
+     1.2px a 14px; alineado al borde derecho. */
+  .about__more {
+    width: min(calc(var(--u) * 404), 100% - 2.25rem);
+    margin-inline: auto;
   }
 
-  .about__lead {
-    font-family: var(--font-display);
-    font-weight: 600;
-    opacity: 1 !important;
-    color: var(--color-gold);
-  }
-
-  .about__more summary {
+  .about__toggle {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--u) * 14 * var(--s));
+    width: fit-content;
+    margin-left: auto;
+    padding-block: calc(var(--u) * 8);
     cursor: pointer;
-    color: var(--color-gold);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
     list-style: none;
+    font-size: calc(var(--u) * 16 * var(--s));
+    line-height: calc(var(--u) * 25 * var(--s));
+    color: var(--color-gold-light);
   }
 
-  .about__more summary::-webkit-details-marker {
+  .about__toggle::-webkit-details-marker {
     display: none;
   }
 
-  .about__more-label--open {
+  .about__toggle:focus-visible {
+    outline: 2px solid var(--color-gold-light);
+    outline-offset: 4px;
+  }
+
+  .about__toggle-icon {
+    width: calc(var(--u) * 13.3 * var(--s));
+    height: calc(var(--u) * 11.5 * var(--s));
+    transition: transform 0.2s ease;
+  }
+
+  .about__toggle-label--open,
+  .about__more[open] .about__toggle-label--closed {
     display: none;
   }
 
-  .about__more[open] .about__more-label--closed {
-    display: none;
-  }
-
-  .about__more[open] .about__more-label--open {
+  .about__more[open] .about__toggle-label--open {
     display: inline;
   }
 
-  .about__quote {
-    margin: 0;
-    padding-left: 1rem;
-    border-left: 2px solid var(--color-gold);
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 0.95rem;
-    color: var(--color-cream);
+  .about__more[open] .about__toggle-icon {
+    transform: rotate(180deg);
   }
 
-  .about__photo :global(img) {
+  .about__extra {
     width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
   }
 
+  /* --- Desktop (≥1024px): medidas del frame de 1549px. --- */
   @media (min-width: 1024px) {
-    .about__intro {
-      text-align: left;
-      margin-inline: 0;
-      max-width: none;
+    .about {
+      --u: max(1px, 100cqi / 1549);
+      --s: 1;
+      /* Section: 96px arriba; el toggle queda 20px sobre el borde inferior. */
+      padding: calc(var(--u) * 96) 0 calc(var(--u) * 20);
     }
 
-    .about__heading {
-      font-size: 2.75rem;
-      font-weight: 600;
-      max-width: 24rem;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-    }
-
-    /* Columnas ~iguales (560px/560px con 80px de separación sobre un contenedor de
-       1200px en Figma, nodo 322:1337) — no 2fr/1fr como estaba. La columna derecha
-       apila stats → cita → foto (la foto solo aparece al expandir "Show more"). */
     .about__grid {
+      width: min(calc(var(--u) * 1200), 100% - 3rem);
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-areas: 'text stats' 'text quote' 'text photo';
-      gap: 1.5rem 5rem;
-      align-content: start;
+      column-gap: calc(var(--u) * 80);
+      align-items: start;
     }
 
-    .about__text {
-      grid-area: text;
-    }
-
-    .about__quote {
-      grid-area: quote;
-    }
-
-    /* La foto solo aparece junto con el texto extra al abrir "Show more" (nodo
-       322:1096 en Figma: el CHANGE_TO que revela el resto del bio también trae la
-       foto) — antes se mostraba siempre, sin depender del estado del acordeón. */
-    .about__photo {
-      grid-area: photo;
-      display: none;
-    }
-
-    .about__grid:has(.about__more[open]) .about__photo {
+    .about__main {
       display: block;
     }
 
-    .about__stats {
-      grid-area: stats;
+    .about__kicker {
+      text-align: left;
+    }
+
+    .about__heading {
+      max-width: calc(var(--u) * 388);
+      margin: 0;
+      padding-top: calc(var(--u) * 20);
+      font-size: calc(var(--u) * 44);
+      line-height: calc(var(--u) * 52.8);
+      text-align: left;
+    }
+
+    .about__bio > .about__lead:first-child {
+      padding-top: calc(var(--u) * 28);
+    }
+
+    .about__side {
+      padding-top: calc(var(--u) * 56);
+    }
+
+    /* Cita (322:1444): 387px, fondo #0A1929 al 5%, borde izquierdo 2px dorado, padding
+         16/20; texto Fraunces SemiBold Italic 15px/24px blanco. */
+    .about__quote {
+      display: block;
+      width: calc(var(--u) * 387);
+      /* 32px de margen + 25px de alto extra que tiene el contenedor del grid de stats
+             en Figma (355px para celdas que suman 330). */
+      margin: calc(var(--u) * 57) 0 0;
+      padding: calc(var(--u) * 16) calc(var(--u) * 20);
+      background: rgba(10, 25, 41, 0.05);
+      border-left: 2px solid var(--color-gold);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-style: italic;
+      font-size: calc(var(--u) * 15);
+      line-height: calc(var(--u) * 24);
+      color: var(--color-white);
+    }
+
+    /* El toggle se alinea al borde derecho de la sección menos 32px (Section pad). */
+    .about__more {
+      width: auto;
+      margin-inline: calc(var(--u) * 32);
+    }
+
+    /* En Figma el toggle (y=710) queda 26px por encima del final de la bio (y=736):
+         está del lado derecho, así que no choca con el texto. */
+    .about__toggle {
+      margin-top: calc(var(--u) * -26);
+      padding-block: 0;
+    }
+
+    /* Texto extendido (322:1210, 735px) + foto (322:1217, 406×487) en los extremos
+         del contenedor de 1200px, 3px debajo del toggle. */
+    .about__extra {
+      width: min(calc(var(--u) * 1200), 100%);
+      margin: calc(var(--u) * 3) auto 0;
+      padding-bottom: calc(var(--u) * 37);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: calc(var(--u) * 40);
+    }
+
+    .about__bio--extra {
+      max-width: calc(var(--u) * 735);
+    }
+
+    .about__photo {
+      display: block;
+      flex-shrink: 0;
+      width: calc(var(--u) * 406);
+      /* Borde de 1px INSIDE con degradado vertical #B0803A (abajo) → #D2A967 (arriba). */
+      padding: 1px;
+      border-radius: 2px;
+      background: linear-gradient(to top, #b0803a, #d2a967);
+    }
+
+    .about__photo :global(img) {
+      display: block;
+      width: 100%;
+      height: calc(var(--u) * 485);
+      object-fit: cover;
+      border-radius: 1px;
     }
   }
 </style>
