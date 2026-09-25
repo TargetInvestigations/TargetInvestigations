@@ -5,8 +5,9 @@
  * Navigation / Contact+Coverage apilados en la misma columna), no 4 columnas iguales
  * como estaba. En mobile (440px) Figma reduce el contenido: sin tagline, sin la lista
  * de Navigation (ya está en el menú del header), con divisores dorados cortos entre
- * bloques y una fila de íconos sociales al final que NO existe en la versión desktop
- * — asimetría real del diseño, no un error de nuestra parte.
+ * bloques y una fila de íconos sociales al final. En desktop la fila de íconos no estaba
+ * en el frame original; se agregó en la columna de Navigation por pedido explícito del
+ * frame "Cambios / Correcciones" (547:582, 2026-09-22).
  *
  * El lockup "TARGET INVESTIGATIONS" + ícono es distinto del de Header/Hero: en Figma
  * está vectorizado en navy (no el dorado con gradiente de siempre), así que se exportó
@@ -38,13 +39,11 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
       <nav class="footer__nav" aria-label="Footer navigation">
         <h2 class="footer__heading">Navigation</h2>
         <ul class="footer__list">
-          {
-            siteConfig.nav.map((item) => (
-              <li>
-                <a href={item.href}>{item.label}</a>
-              </li>
-            ))
-          }
+          {siteConfig.nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
         </ul>
       </nav>
 
@@ -183,12 +182,35 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
   }
 
   @media (min-width: 768px) {
+    /* La fila de redes va en la columna de Navigation, debajo de la lista (pedido #2 del
+         frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
     .footer__grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
-      gap: 2.5rem 4rem;
+      grid-template-areas:
+        'brand nav info'
+        'brand social info';
+      grid-template-rows: auto 1fr;
+      gap: 0 4rem;
       text-align: left;
       align-items: start;
+    }
+
+    .footer__brand {
+      grid-area: brand;
+    }
+
+    .footer__nav {
+      grid-area: nav;
+    }
+
+    .footer__info {
+      grid-area: info;
+    }
+
+    .footer__social {
+      grid-area: social;
+      margin-top: 1.25rem;
     }
 
     .footer__brand {
@@ -220,10 +242,8 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
       max-width: none;
     }
 
-    /* Los divisores cortos y la fila de redes sociales solo existen en la versión
-       mobile de Figma (440px) — en desktop (1549px) no aparecen en el diseño real. */
-    .footer__divider,
-    .footer__social {
+    /* Los divisores cortos solo existen en la versión mobile de Figma (440px). */
+    .footer__divider {
       display: none;
     }
   }

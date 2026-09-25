@@ -6,6 +6,15 @@ import { siteConfig } from '../config/site';
 ---
 
 <header class="header">
+  <!-- Barra "We speak spanish!" (Rectangle 21/30 + texto 270:303 en Figma, pedido #1 del
+       frame "Cambios / Correcciones" 547:582): encima del nav, con el texto cruzando
+       lentamente de izquierda a derecha. Texto tal cual el nodo de Figma. -->
+  <div class="header__announce">
+    <p class="header__announce-track">
+      <span class="header__announce-text">We speak spanish!</span>
+    </p>
+  </div>
+
   <Container size="wide">
     <div class="header__bar">
       <a href="#top" class="header__logo" aria-label={`${siteConfig.company.name} — Home`}>
@@ -45,6 +54,58 @@ import { siteConfig } from '../config/site';
     background-color: rgba(11, 33, 63, 0.86);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* 40px de alto, fondo #E9C37E (Rectangle 30, la capa visible encima de Rectangle 21),
+     texto Inter SemiBold 18.77px en #03122A (nodo 270:303). */
+  .header__announce {
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background-color: var(--color-gold-light);
+  }
+
+  /* El track mide el ancho de la barra y se desplaza de 0 a +100%; el texto va corrido
+     -100% de su propio ancho, así que entra desde fuera por la izquierda y sale por
+     completo por la derecha antes de volver a empezar. Solo se anima `transform`. */
+  .header__announce-track {
+    width: 100%;
+    margin: 0;
+    white-space: nowrap;
+    animation: header-announce 7s linear infinite;
+  }
+
+  .header__announce-text {
+    display: inline-block;
+    transform: translateX(-100%);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1.1733rem;
+    line-height: 1;
+    color: #03122a;
+  }
+
+  @keyframes header-announce {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Sin movimiento: el texto queda fijo y centrado (el reset global solo acortaría la
+     animación, dejando el texto fuera de la barra). */
+  @media (prefers-reduced-motion: reduce) {
+    .header__announce-track {
+      animation: none;
+      text-align: center;
+    }
+
+    .header__announce-text {
+      transform: none;
+    }
   }
 
   .header__bar {
@@ -88,27 +149,41 @@ import { siteConfig } from '../config/site';
     display: none;
   }
 
-  .header__nav-toggle-icon,
-  .header__nav-toggle-icon::before,
-  .header__nav-toggle-icon::after {
+  /* Ícono de 2 líneas (Component 22, 341:1615 en Figma): 21.6×2.4px cada una, #E9C37E,
+     separadas ~8.4px de borde superior a borde superior. La variante "Variant2" del
+     mismo componente es una X (líneas rotadas ±45°) — se usa para el estado abierto. */
+  .header__nav-toggle-icon {
+    position: relative;
     display: block;
-    width: 1.5rem;
-    height: 2px;
-    background-color: var(--color-gold-light);
+    width: 1.35rem;
+    height: 0.675rem;
   }
 
   .header__nav-toggle-icon::before,
   .header__nav-toggle-icon::after {
     content: '';
-    position: relative;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 0.15rem;
+    background-color: var(--color-gold-light);
+    transition: transform 0.3s ease-out;
   }
 
   .header__nav-toggle-icon::before {
-    top: 6px;
+    top: 0;
   }
 
   .header__nav-toggle-icon::after {
-    top: 2px;
+    bottom: 0;
+  }
+
+  .header__nav-toggle[open] .header__nav-toggle-icon::before {
+    transform: translateY(0.2625rem) rotate(45deg);
+  }
+
+  .header__nav-toggle[open] .header__nav-toggle-icon::after {
+    transform: translateY(-0.2625rem) rotate(-45deg);
   }
 
   .header__nav {
@@ -174,6 +249,11 @@ import { siteConfig } from '../config/site';
      en el pseudo-elemento ::details-content, no solo con display:none. Forzar display en el
      hijo no alcanza; hay que anular ::details-content directamente. */
   @media (min-width: 1024px) {
+    /* Misma velocidad aproximada (~85px/s) que en mobile, sobre un recorrido más largo. */
+    .header__announce-track {
+      animation-duration: 20s;
+    }
+
     .header__nav-toggle-btn {
       display: none;
     }
