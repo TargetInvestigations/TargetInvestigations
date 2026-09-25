@@ -1,51 +1,76 @@
 ---
+/**
+ * Una categoría de servicio (fila de "Frame 108" en Figma, p. ej. 447:778).
+ *
+ * - Mobile (<1024px, nodo 450:1587): acordeón nativo <details> — círculo numerado
+ *   (NumberBadge), título Fraunces 18px y chevron; divisor degradado debajo del título
+ *   (no debajo del número). Figma no define el estado abierto: se muestra descripción +
+ *   bullets, sin fotos (en el frame mobile las fotos solo aparecen arriba de la lista).
+ * - Desktop (≥1024px): fila estática (siempre abierta) de 1060px, texto de 325px y
+ *   fotos propias de cada categoría en los extremos (SPACE_BETWEEN, centradas en
+ *   vertical). Categorías impares: texto izq. + una foto de 546×368; pares: dos fotos
+ *   de 269×368 izq. + texto der. Sin bordes redondeados (no los hay en Figma).
+ *
+ * El título va dos veces en el DOM (en el <summary> para mobile y en la columna de
+ * texto para desktop) porque en desktop tiene que vivir dentro de la columna de texto,
+ * que en filas pares está a la derecha; en cada breakpoint uno de los dos tiene
+ * `display:none`, así que lectores de pantalla y buscadores solo ven uno.
+ *
+ * Medidas en `--u` (1px del frame de Figma de 1549px), definido en Services.astro.
+ */
 import { Image } from 'astro:assets';
-import imageA from '../images/service-1.png';
-import imageB from '../images/service-2.png';
+import type { ImageMetadata } from 'astro';
 
 interface Props {
+  number: number;
   title: string;
   description: string;
   bullets: string[];
+  images: ImageMetadata[];
   reverse?: boolean;
 }
 
-const { title, description, bullets, reverse = false } = Astro.props;
+const { number, title, description, bullets, images, reverse = false } = Astro.props;
+const wide = images.length === 1;
 ---
 
 <details class="service-item" data-reverse={reverse}>
   <summary class="service-item__summary">
+    <span class="service-item__number" aria-hidden="true">
+      {number}
+    </span>
     <h3 class="service-item__title">{title}</h3>
-    <span class="service-item__chevron" aria-hidden="true"></span>
+    <svg class="service-item__chevron" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+    </svg>
   </summary>
 
   <div class="service-item__body">
     <div class="service-item__text">
+      <h3 class="service-item__title service-item__title--desktop">{title}</h3>
       <p class="service-item__description">{description}</p>
       <ul class="service-item__bullets">
         {bullets.map((bullet) => (
-          <li>{bullet}</li>
+          <li>
+            <span class="service-item__diamond" aria-hidden="true">
+              ◆
+            </span>
+            {bullet}
+          </li>
         ))}
       </ul>
     </div>
 
-    <div class="service-item__images">
-      <Image
-        src={imageA}
-        alt=""
-        role="presentation"
-        widths={[300, 500]}
-        sizes="(min-width: 1024px) 25vw, 45vw"
-        loading="lazy"
-      />
-      <Image
-        src={imageB}
-        alt=""
-        role="presentation"
-        widths={[300, 500]}
-        sizes="(min-width: 1024px) 25vw, 45vw"
-        loading="lazy"
-      />
+    <div class:list={['service-item__images', wide && 'service-item__images--wide']}>
+      {images.map((img) => (
+        <Image
+          src={img}
+          alt=""
+          widths={wide ? [546, 820, 1092, 1365] : [269, 404, 538, 673]}
+          sizes={wide ? '(min-width: 1549px) 35.25vw, 546px' : '(min-width: 1549px) 17.37vw, 269px'}
+          loading="lazy"
+        />
+      ))}
     </div>
   </div>
 </details>
@@ -53,25 +78,26 @@ const { title, description, bullets, reverse = false } = Astro.props;
 <style>
   .service-item {
     position: relative;
-    padding-block: 1.25rem;
   }
 
-  /* Línea divisoria entre categorías (nodo 447:863 en Figma): degradado navy→dorado→navy,
-     más "presente" al centro y difuminada hacia los extremos — no un borde uniforme. */
+  /* Divisor (MobileDivider 450:1602): degradado navy→dorado→navy de ~2px, solo bajo
+     la columna del título (empieza después del número: 22px + 12px de separación). */
   .service-item::after {
     content: '';
     position: absolute;
-    inset-inline: 0;
+    left: 2.125rem;
+    right: 0;
     bottom: 0;
     height: 2px;
-    background: linear-gradient(to right, var(--color-bg) 0%, var(--color-gold-light) 52%, var(--color-bg) 100%);
+    background: linear-gradient(to right, #0b2240 0%, var(--color-gold-light) 50%, #0b213f 100%);
   }
 
   .service-item__summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: 1.375rem 1fr 1rem;
+    column-gap: 0.75rem;
+    align-items: start;
+    padding-block: 1rem;
     cursor: pointer;
     list-style: none;
   }
@@ -80,90 +106,112 @@ const { title, description, bullets, reverse = false } = Astro.props;
     display: none;
   }
 
+  /* NumberBadge (450:1589): círculo de 22px, borde 1px dorado al 40%, número Inter 10px. */
+  .service-item__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.375rem;
+    height: 1.375rem;
+    margin-top: 2px;
+    border: 1px solid rgba(184, 147, 90, 0.4);
+    border-radius: 50%;
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    line-height: 1;
+    color: var(--color-gold);
+  }
+
   .service-item__title {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
     letter-spacing: -0.01em;
+    color: var(--color-white);
     margin: 0;
   }
 
-  .service-item__chevron {
-    flex-shrink: 0;
-    width: 0.55rem;
-    height: 0.55rem;
-    border-right: 2px solid var(--color-gold);
-    border-bottom: 2px solid var(--color-gold);
-    transform: rotate(45deg);
-    transition: transform 0.15s ease;
+  .service-item__title--desktop {
+    display: none;
   }
 
-  .service-item[open] > .service-item__summary .service-item__chevron {
-    transform: rotate(-135deg);
+  /* ChevronIcon (450:1600): trazo 1.5px dorado, 6px debajo del borde superior del título. */
+  .service-item__chevron {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.375rem;
+    color: var(--color-gold);
+    transition: transform 0.2s ease;
+  }
+
+  .service-item[open] .service-item__chevron {
+    transform: rotate(180deg);
   }
 
   .service-item__body {
-    padding-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    padding: 0 0 1rem 2.125rem;
   }
 
+  /* Tipografía de la columna de texto (447:786 / 447:794): descripción Inter 14px/25.2px
+     al 77%, bullets Inter 13px/19.5px al 70% con rombo dorado de 10px, fila con 6px
+     de padding vertical y borde inferior blanco al 6%. */
   .service-item__description {
-    font-size: 0.875rem;
-    line-height: 1.8;
-    opacity: 0.77;
-    margin-bottom: 1rem;
+    margin: 0;
+    padding-top: calc(var(--u) * 10);
+    font-size: calc(var(--u) * 14);
+    line-height: calc(var(--u) * 25.2);
+    color: rgba(255, 255, 255, 0.77);
   }
 
   .service-item__bullets {
     list-style: none;
     margin: 0;
-    padding: 0;
-    display: grid;
-    font-size: 0.9rem;
-    opacity: 0.85;
+    padding: calc(var(--u) * 10) 0 0;
   }
 
+  /* Cada fila mide 33px en Figma (el texto de 19.5px ocupa una caja de 20px). */
   .service-item__bullets li {
-    padding-block: 0.5rem;
+    box-sizing: border-box;
+    min-height: calc(var(--u) * 33);
+    display: flex;
+    align-items: center;
+    gap: calc(var(--u) * 10);
+    padding-block: calc(var(--u) * 6);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: calc(var(--u) * 13);
+    line-height: calc(var(--u) * 19.5);
+    color: rgba(255, 255, 255, 0.7);
   }
 
-  .service-item__bullets li:last-child {
-    border-bottom: none;
-  }
-
-  .service-item__bullets li::before {
-    content: '◆';
+  .service-item__diamond {
+    flex-shrink: 0;
+    font-size: calc(var(--u) * 10);
+    line-height: calc(var(--u) * 15);
     color: var(--color-gold);
-    font-size: 0.6rem;
-    margin-right: 0.5rem;
   }
 
+  /* Las fotos por categoría no existen en el frame mobile. */
   .service-item__images {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    display: none;
   }
 
-  .service-item__images :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 0.5rem;
-    aspect-ratio: 3 / 4;
-  }
-
-  /* --- Desktop: zigzag estático (siempre "abierto"), sin comportamiento de acordeón ---
-     Nota: hay que anular ::details-content (Chromium moderno), no solo el display del hijo. */
+  /* --- Desktop: fila estática (siempre abierta). Hay que anular ::details-content
+       (Chromium moderno oculta el contenido cerrado de <details> ahí), no solo el
+       display del hijo. --- */
   @media (min-width: 1024px) {
-    .service-item__summary {
-      cursor: default;
-      pointer-events: none;
+    .service-item {
+      padding-bottom: calc(var(--u) * 34);
     }
 
-    .service-item__chevron {
+    /* Divisor entre categorías (447:863): 1060×2px, dorado claro al 52%. */
+    .service-item::after {
+      left: 0;
+      height: calc(var(--u) * 2);
+      background: linear-gradient(to right, #0b2240 0%, var(--color-gold-light) 52%, #0b213f 100%);
+    }
+
+    .service-item__summary {
       display: none;
     }
 
@@ -174,18 +222,43 @@ const { title, description, bullets, reverse = false } = Astro.props;
     }
 
     .service-item__body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: calc(var(--u) * 24);
+      padding: 0 calc(var(--u) * 1);
     }
 
     .service-item[data-reverse='true'] .service-item__body {
-      direction: rtl;
+      flex-direction: row-reverse;
     }
 
-    .service-item[data-reverse='true'] .service-item__body > * {
-      direction: ltr;
+    .service-item__text {
+      width: calc(var(--u) * 325);
+      flex-shrink: 0;
+    }
+
+    .service-item__title--desktop {
+      display: block;
+      font-size: calc(var(--u) * 22);
+      line-height: calc(var(--u) * 33);
+    }
+
+    .service-item__images {
+      display: flex;
+      gap: calc(var(--u) * 11);
+      flex-shrink: 0;
+    }
+
+    .service-item__images :global(img) {
+      display: block;
+      width: calc(var(--u) * 269);
+      height: calc(var(--u) * 368);
+      object-fit: cover;
+    }
+
+    .service-item__images--wide :global(img) {
+      width: calc(var(--u) * 546);
     }
   }
 </style>

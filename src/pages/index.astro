@@ -20,9 +20,7 @@ import Footer from '../components/Footer.astro';
     </Section>
 
     <Section tone="dark" id="services" aria-label="Services">
-      <Container size="default">
-        <Services />
-      </Container>
+      <Services />
     </Section>
 
     <Section tone="dark" id="about" aria-label="About">
@@ -67,6 +65,12 @@ import Footer from '../components/Footer.astro';
      mismo estilo que la línea de abajo. En desktop (nodo 185:815) es sólida, sin
      degradado — sí es una diferencia real entre breakpoints, no un descuido. */
   :global(#services) {
+    /* Services controla su propio espaciado y ancho (medidas de Figma en Services.astro). */
+    padding-block: 0;
+    /* Fill real de la Section 53:138: GRADIENT_RADIAL #0C2342→#02111F, centro en
+         87%/1.7%, elipse enorme (~8130×7065px sobre 1549×4944) — en la práctica se
+         oscurece suavemente de arriba a abajo. */
+    background: radial-gradient(525% 143% at 87% 1.7%, #0c2342 0%, #02111f 100%);
     border-top: 4px solid transparent;
     border-image: linear-gradient(to right, var(--color-bg) 0%, #836e47 51%, var(--color-bg) 100%) 1;
   }
@@ -82,10 +86,15 @@ import Footer from '../components/Footer.astro';
      distinta de la línea sólida de arriba — se "apaga" hacia los extremos. */
   :global(#about) {
     border-top: 4px solid transparent;
-    border-image: linear-gradient(to right, var(--color-bg) 0%, var(--color-gold) 50%, var(--color-bg) 100%) 1;
+    border-image: linear-gradient(
+        to right,
+        var(--color-bg) 0%,
+        var(--color-gold) 50%,
+        var(--color-bg) 100%
+      )
+      1;
     /* Fondo radial propio de esta sección (nodo 322:1221 en Figma), distinto del navy
-       plano del resto de secciones oscuras. */
+         plano del resto de secciones oscuras. */
     background: radial-gradient(140% 100% at 85% 0%, #0d2743 0%, #021124 100%);
   }
-
 </style>

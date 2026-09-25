@@ -1,9 +1,48 @@
 ---
 /**
- * Las 9 categorías de servicio son contenido real del cliente, extraído del
- * archivo de Figma (frame "Frame 108" dentro de la sección de servicios).
+ * Sección de servicios (Section 53:138 desktop / frame "Mobile" 450:1571). Las 9
+ * categorías son contenido real del cliente, extraído de "Frame 108".
+ *
+ * Fotos: cada categoría tiene las suyas (13 en total), exportadas de Figma con el
+ * recorte exacto de cada nodo (render del nodo, no la imagen original, porque los
+ * rellenos usan imageTransform). El mobile tiene además 2 fotos propias arriba de la
+ * lista (HeroImages 450:1579).
+ *
+ * Unidades: `--u` = 1px del frame de Figma de 1549px. Hasta 1549px de ancho vale 1px
+ * (medidas reales de Figma, p. ej. en 1366); por encima escala con el ancho de la
+ * sección (`cqi`), igual que la réplica del Hero, para que a 1920 se vea como el
+ * diseño escalado.
  */
+import { Image } from 'astro:assets';
 import ServiceItem from './ServiceItem.astro';
+import img01 from '../images/services/01-background.jpg';
+import img02a from '../images/services/02-family-a.jpg';
+import img02b from '../images/services/02-family-b.jpg';
+import img03 from '../images/services/03-business.jpg';
+import img04a from '../images/services/04-locate-a.jpg';
+import img04b from '../images/services/04-locate-b.jpg';
+import img05 from '../images/services/05-fraud.jpg';
+import img06a from '../images/services/06-forensic-a.jpg';
+import img06b from '../images/services/06-forensic-b.jpg';
+import img07 from '../images/services/07-civil.jpg';
+import img08a from '../images/services/08-injury-a.jpg';
+import img08b from '../images/services/08-injury-b.jpg';
+import img09 from '../images/services/09-property.jpg';
+import mobileTopA from '../images/services/mobile-top-a.jpg';
+import mobileTopB from '../images/services/mobile-top-b.jpg';
+
+// Mismo orden que `services`: impares una foto ancha, pares dos fotos verticales.
+const images = [
+  [img01],
+  [img02a, img02b],
+  [img03],
+  [img04a, img04b],
+  [img05],
+  [img06a, img06b],
+  [img07],
+  [img08a, img08b],
+  [img09],
+];
 
 const services = [
   {
@@ -161,54 +200,112 @@ const services = [
     <h2 class="services__heading">What situation are you facing?</h2>
   </div>
 
+  <div class="services__mobile-images" aria-hidden="true">
+    <Image src={mobileTopA} alt="" widths={[215, 430, 645]} sizes="50vw" loading="lazy" />
+    <Image src={mobileTopB} alt="" widths={[215, 430, 645]} sizes="50vw" loading="lazy" />
+  </div>
+
   <div class="services__list">
     {services.map((service, i) => (
-      <ServiceItem {...service} reverse={i % 2 === 1} />
+      <ServiceItem {...service} number={i + 1} images={images[i]} reverse={i % 2 === 1} />
     ))}
   </div>
 </div>
 
 <style>
+  /* Mobile (frame 450:1571): kicker a 40px del borde, 40px de aire al final; filas
+     con 24px de margen lateral y fotos del encabezado casi a sangre (5px). */
+  .services {
+    --u: 1px;
+    container-type: inline-size;
+    padding: 2.5rem 1.5rem;
+  }
+
   .services__intro {
     text-align: center;
-    max-width: 32rem;
-    margin-inline: auto;
-    margin-bottom: 2rem;
   }
 
+  /* Kicker (450:1574): Inter 10px, tracking 1.2px, dorado. */
   .services__kicker {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    line-height: 1.5;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: var(--color-gold);
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
   }
 
+  /* Heading (450:1577): Fraunces SemiBold 26.5px/30.4px. */
   .services__heading {
-    font-size: 1.75rem;
+    font-weight: 600;
+    font-size: 1.65625rem;
+    line-height: 1.147;
+    letter-spacing: -0.02em;
+    color: var(--color-white);
+  }
+
+  /* HeroImages (450:1579): 2 fotos de 215×180 sin separación, a 5px de los bordes. */
+  .services__mobile-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 1.75rem calc(5px - 1.5rem) 1.25rem;
+  }
+
+  .services__mobile-images :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 215 / 180;
+    object-fit: cover;
   }
 
   @media (min-width: 1024px) {
-    .services__intro {
-      text-align: left;
-      margin-inline: 0;
-      max-width: 22rem;
+    /* 1px del frame de Figma; escala solo por encima de 1549px de ancho. */
+    .services {
+      --u: max(1px, 100cqi / 1549);
+      /* Sin padding lateral: `cqi` se mide sobre el content-box, y con padding la
+             escala quedaba por debajo de la de Figma. El margen lateral lo ponen los hijos. */
+      padding: calc(var(--u) * 60) 0 calc(var(--u) * 15);
     }
 
-    /* Tamaños reales medidos en Figma (nodos 53:145/53:147): kicker 19px con
-       letter-spacing 0.23em, heading 49px — el heading envuelve a 2 líneas porque
-       su caja mide ~342px, no por un <br> manual. */
+    .services__mobile-images {
+      display: none;
+    }
+
+    /* Encabezado (53:140): contenedor de 1167px; kicker Inter Bold 19px/33px con
+         tracking 4.4px; heading Fraunces SemiBold 49px/56.4px en una caja de ~342px
+         (por eso ocupa dos líneas), 20.4px debajo del kicker. */
+    .services__intro {
+      width: min(calc(var(--u) * 1167), 100% - 3rem);
+      margin-inline: auto;
+      text-align: left;
+    }
+
     .services__kicker {
-      font-size: 1.1875rem;
+      margin: 0;
       font-weight: 700;
+      font-size: calc(var(--u) * 19);
+      line-height: calc(var(--u) * 33);
       letter-spacing: 0.23em;
     }
 
     .services__heading {
-      font-size: 3rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
+      /* 342px en Figma; la Fraunces web mide ~2% más ancho y "are you facing?"
+             saltaba a una tercera línea — 352px mantiene los 2 renglones del diseño. */
+      max-width: calc(var(--u) * 352);
+      padding-top: calc(var(--u) * 20.4);
+      font-size: calc(var(--u) * 49);
+      line-height: calc(var(--u) * 56.4);
+    }
+
+    /* Lista (Frame 108): 1060px de ancho, 34px debajo del heading, 32px entre filas. */
+    .services__list {
+      width: min(calc(var(--u) * 1060), 100% - 3rem);
+      margin: calc(var(--u) * 34) auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--u) * 32);
     }
   }
 </style>
