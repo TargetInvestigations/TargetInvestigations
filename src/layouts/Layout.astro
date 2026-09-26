@@ -31,8 +31,20 @@ const {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
 
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
-    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
+    <!-- Favicons de la marca (entregados por el cliente): bronce oscuro para pestañas en
+         modo claro, dorado claro para modo oscuro; el navegador elige según su tema. -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href={`${import.meta.env.BASE_URL}favicon-light.svg`}
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href={`${import.meta.env.BASE_URL}favicon-dark.svg`}
+      media="(prefers-color-scheme: dark)"
+    />
   </head>
   <body>
     <slot />

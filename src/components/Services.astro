@@ -3,10 +3,10 @@
  * Sección de servicios (Section 53:138 desktop / frame "Mobile" 450:1571). Las 9
  * categorías son contenido real del cliente, extraído de "Frame 108".
  *
- * Fotos: cada categoría tiene las suyas (13 en total), exportadas de Figma con el
- * recorte exacto de cada nodo (render del nodo, no la imagen original, porque los
- * rellenos usan imageTransform). El mobile tiene además 2 fotos propias arriba de la
- * lista (HeroImages 450:1579).
+ * Fotos: cada categoría tiene las suyas (13 en total, PNG entregados por el cliente a
+ * ~1.5× del tamaño del diseño: 816×552 las anchas, ~404×552 las verticales). El mobile
+ * tiene además 2 fotos propias arriba de la lista (HeroImages 450:1579, todavía en JPG
+ * exportado de Figma).
  *
  * Unidades: `--u` = 1px del frame de Figma de 1549px. Hasta 1549px de ancho vale 1px
  * (medidas reales de Figma, p. ej. en 1366); por encima escala con el ancho de la
@@ -15,19 +15,19 @@
  */
 import { Image } from 'astro:assets';
 import ServiceItem from './ServiceItem.astro';
-import img01 from '../images/services/01-background.jpg';
-import img02a from '../images/services/02-family-a.jpg';
-import img02b from '../images/services/02-family-b.jpg';
-import img03 from '../images/services/03-business.jpg';
-import img04a from '../images/services/04-locate-a.jpg';
-import img04b from '../images/services/04-locate-b.jpg';
-import img05 from '../images/services/05-fraud.jpg';
-import img06a from '../images/services/06-forensic-a.jpg';
-import img06b from '../images/services/06-forensic-b.jpg';
-import img07 from '../images/services/07-civil.jpg';
-import img08a from '../images/services/08-injury-a.jpg';
-import img08b from '../images/services/08-injury-b.jpg';
-import img09 from '../images/services/09-property.jpg';
+import img01 from '../images/services/01-background.png';
+import img02a from '../images/services/02-family-a.png';
+import img02b from '../images/services/02-family-b.png';
+import img03 from '../images/services/03-business.png';
+import img04a from '../images/services/04-locate-a.png';
+import img04b from '../images/services/04-locate-b.png';
+import img05 from '../images/services/05-fraud.png';
+import img06a from '../images/services/06-forensic-a.png';
+import img06b from '../images/services/06-forensic-b.png';
+import img07 from '../images/services/07-civil.png';
+import img08a from '../images/services/08-injury-a.png';
+import img08b from '../images/services/08-injury-b.png';
+import img09 from '../images/services/09-property.png';
 import mobileTopA from '../images/services/mobile-top-a.jpg';
 import mobileTopB from '../images/services/mobile-top-b.jpg';
 
@@ -265,7 +265,7 @@ const services = [
     .services {
       --u: max(1px, 100cqi / 1549);
       /* Sin padding lateral: `cqi` se mide sobre el content-box, y con padding la
-             escala quedaba por debajo de la de Figma. El margen lateral lo ponen los hijos. */
+                 escala quedaba por debajo de la de Figma. El margen lateral lo ponen los hijos. */
       padding: calc(var(--u) * 60) 0 calc(var(--u) * 15);
     }
 
@@ -274,8 +274,8 @@ const services = [
     }
 
     /* Encabezado (53:140): contenedor de 1167px; kicker Inter Bold 19px/33px con
-         tracking 4.4px; heading Fraunces SemiBold 49px/56.4px en una caja de ~342px
-         (por eso ocupa dos líneas), 20.4px debajo del kicker. */
+           tracking 4.4px; heading Fraunces SemiBold 49px/56.4px en una caja de ~342px
+           (por eso ocupa dos líneas), 20.4px debajo del kicker. */
     .services__intro {
       width: min(calc(var(--u) * 1167), 100% - 3rem);
       margin-inline: auto;
@@ -292,7 +292,7 @@ const services = [
 
     .services__heading {
       /* 342px en Figma; la Fraunces web mide ~2% más ancho y "are you facing?"
-             saltaba a una tercera línea — 352px mantiene los 2 renglones del diseño. */
+                 saltaba a una tercera línea — 352px mantiene los 2 renglones del diseño. */
       max-width: calc(var(--u) * 352);
       padding-top: calc(var(--u) * 20.4);
       font-size: calc(var(--u) * 49);
