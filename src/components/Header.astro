@@ -50,10 +50,11 @@ import { siteConfig } from '../config/site';
     position: sticky;
     top: 0;
     z-index: 50;
-    /* Fondo navy translúcido + desenfoque (nodo 53:481 en Figma): sin borde inferior. */
-    background-color: rgba(11, 33, 63, 0.86);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    /* Mobile (Rectangle 26, 341:1654): #0A1E3A al 74% + blur 6.7px. Desktop (53:481):
+         navy al 86% + blur 8px (ver media query). Sin borde inferior en ambos. */
+    background-color: rgba(10, 30, 58, 0.74);
+    backdrop-filter: blur(6.7px);
+    -webkit-backdrop-filter: blur(6.7px);
   }
 
   /* 40px de alto, fondo #E9C37E (Rectangle 30, la capa visible encima de Rectangle 21),
@@ -113,13 +114,15 @@ import { siteConfig } from '../config/site';
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-block: 0.75rem;
+    /* Mobile: barra de 54px con el logo de 35px (Icon 341:1663 en y=9). Alto fijo para
+         que el área táctil de 40px de la hamburguesa no la agrande. */
+    height: 3.375rem;
   }
 
   .header__logo {
     display: block;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 2.1875rem;
+    height: 2.1875rem;
     flex-shrink: 0;
   }
 
@@ -249,6 +252,22 @@ import { siteConfig } from '../config/site';
      en el pseudo-elemento ::details-content, no solo con display:none. Forzar display en el
      hijo no alcanza; hay que anular ::details-content directamente. */
   @media (min-width: 1024px) {
+    .header {
+      background-color: rgba(11, 33, 63, 0.86);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .header__bar {
+      height: auto;
+      padding-block: 0.75rem;
+    }
+
+    .header__logo {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+
     /* Misma velocidad aproximada (~85px/s) que en mobile, sobre un recorrido más largo. */
     .header__announce-track {
       animation-duration: 20s;

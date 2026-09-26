@@ -81,8 +81,11 @@ const values = [
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.5rem;
+    /* Mobile (Group 41, 399:523): grupo compacto y centrado, ~72px entre centros sobre
+         440 de ancho (16.4%). */
+    grid-template-columns: repeat(5, min(16.4vw, 5.5rem));
+    justify-content: center;
+    gap: 0;
     text-align: center;
   }
 
@@ -92,10 +95,12 @@ const values = [
   .value-badges::before {
     content: '';
     position: absolute;
-    top: 1.05rem;
-    left: 0;
-    right: 0;
-    height: 1px;
+    /* Mobile (Ellipse 4, 399:442): 381px de ancho sobre 440 (86.6%), trazo de 2px. */
+    top: calc(1.15625rem - 1px);
+    left: 50%;
+    width: min(86.6vw, 30rem);
+    transform: translateX(-50%);
+    height: 2px;
     z-index: 0;
     background: linear-gradient(
       to right,
@@ -112,13 +117,15 @@ const values = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.35rem;
+    /* Mobile: la etiqueta queda ~10px debajo del círculo (frame de 68px en Figma). */
+    gap: 0.625rem;
   }
 
+  /* Mobile (Group 33 dentro de 399:483): círculo de 37px. */
   .value-badges__icon {
     position: relative;
-    width: 2.1rem;
-    height: 2.1rem;
+    width: 2.3125rem;
+    height: 2.3125rem;
   }
 
   .value-badges__icon-face {
@@ -155,13 +162,25 @@ const values = [
 
   @media (min-width: 1024px) {
     .value-badges {
+      grid-template-columns: repeat(5, 1fr);
+      justify-content: normal;
       gap: 1.5rem;
     }
 
+    .value-badges__item {
+      gap: 0.35rem;
+    }
+
     /* Icono más grande en desktop (nodo 175:730) — la línea conectora (::before,
-         definida en el estilo base) se re-centra a la mitad del nuevo tamaño. */
+           definida en el estilo base) se re-centra a la mitad del nuevo tamaño. */
     .value-badges::before {
       top: 1.25rem;
+      /* Reset de la línea mobile: a todo el ancho y de 1px (layout aprobado a 1366). */
+      left: 0;
+      right: 0;
+      width: auto;
+      transform: none;
+      height: 1px;
     }
 
     .value-badges__icon {
