@@ -155,6 +155,95 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     font-size: 1.15rem;
   }
 
+  /* --- Mobile (<768px): medidas del frame mobile (Container 430:2890, 423×302). La
+       sección arranca pegada a la barra de FAQs: el círculo del ícono toca el borde
+       superior (el SVG trae ~19.6px de aire arriba para el destello, por eso el margen
+       negativo). --- */
+  @media (max-width: 767px) {
+    /* 28px de aire sobre el logo: en Figma el círculo toca la barra de FAQs, pero el
+         usuario pidió separarlo (desviación intencional, 2026-09-25). */
+    .contact-cta {
+      padding: 1.75rem 1.5rem 1.25rem;
+    }
+
+    /* Component 21 (430:2920): compás de 58px → SVG de 72px de ancho. */
+    .contact-cta__icon {
+      width: 4.5rem;
+      margin: -1.225rem 0 0;
+    }
+
+    /* Heading (430:2893): Fraunces Medium 24.8px/29.8px, 17px debajo del ícono. */
+    .contact-cta__heading {
+      margin: 0;
+      padding-top: 1.0625rem;
+      font-size: 1.55rem;
+      line-height: 1.2;
+    }
+
+    /* Párrafo (430:2895): Inter 10.8px/19.5px al 55% en caja de 352px, 12.7px debajo. */
+    .contact-cta__lead {
+      max-width: 22rem;
+      margin: 0;
+      padding-top: 0.79375rem;
+      font-size: 0.675rem;
+      line-height: 1.806;
+    }
+
+    /* Botón (430:2897): 265×43, radio 4.25, texto Inter Bold 13.5px; 13.75px debajo.
+           Cara de WhatsApp: número 15.6px e ícono de 25px. */
+    .contact-cta :global(.contact-cta__cta) {
+      margin-top: 0.859rem;
+      min-width: 16.5625rem;
+      height: 2.6875rem;
+      padding: 0 0.75rem;
+      border-radius: 4.25px;
+    }
+
+    .contact-cta :global(.contact-cta__cta .whatsapp-cta__face) {
+      font-size: 0.84375rem;
+    }
+
+    .contact-cta :global(.contact-cta__cta .whatsapp-cta__face--whatsapp) {
+      font-weight: 500;
+      font-size: 0.975rem;
+      letter-spacing: 0.04em;
+    }
+
+    .contact-cta :global(.contact-cta__cta .whatsapp-cta__icon) {
+      width: 1.5625rem;
+      height: 1.5625rem;
+    }
+
+    /* Datos (430:2898): 25.4px debajo del botón y entre bloques, divisor de 1×24px;
+           etiqueta Inter Medium Italic 8.3px/12.5px + 5px; valor Inter Medium 13.3px/20px,
+           siempre en una línea (antes el teléfono se partía en tres). */
+    .contact-cta__details {
+      margin-top: 0;
+      padding-top: 1.5875rem;
+      gap: 1.5875rem;
+    }
+
+    .contact-cta__detail {
+      gap: 0.3125rem;
+    }
+
+    .contact-cta__divider {
+      align-self: center;
+      height: 1.5rem;
+    }
+
+    .contact-cta__label {
+      font-size: 0.51875rem;
+      line-height: 1.5;
+    }
+
+    .contact-cta__value {
+      font-size: 0.83125rem;
+      line-height: 1.5;
+      white-space: nowrap;
+    }
+  }
+
   @media (min-width: 768px) {
     .contact-cta__heading {
       font-size: 3rem;
@@ -173,7 +262,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
   /* --- Desktop (≥1024px): medidas reales de 53:400. --- */
   @media (min-width: 1024px) {
     /* 42px arriba. Abajo la Section declara 96px de padding pero recorta su contenido a
-         617px de alto (clipsContent), así que lo visible bajo los datos son 49px. */
+             617px de alto (clipsContent), así que lo visible bajo los datos son 49px. */
     .contact-cta {
       --u: max(1px, 100cqi / 1549);
       max-width: none;
@@ -187,7 +276,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     }
 
     /* Heading (53:410): Fraunces Medium 51.2px/61.4px crema, en una línea, 32px debajo
-         del ícono. */
+             del ícono. */
     .contact-cta__heading {
       margin: 0;
       padding-top: calc(var(--u) * 32);
@@ -206,7 +295,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     }
 
     /* Botón (430:2312): 502×82, radio 8, texto Inter Bold 25.6px; 26px debajo. En la
-         cara de WhatsApp: número Inter Medium 29.6px (tracking 1.18px) e ícono de 48px. */
+             cara de WhatsApp: número Inter Medium 29.6px (tracking 1.18px) e ícono de 48px. */
     .contact-cta :global(.contact-cta__cta) {
       margin-top: calc(var(--u) * 26);
       min-width: calc(var(--u) * 502);
@@ -232,8 +321,8 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     }
 
     /* Datos de contacto (53:416): 48px debajo del botón, bloques separados 48px con
-         un divisor de 1×45px dorado al 20%. Etiqueta Inter Medium Italic 10px, tracking
-         2px, dorado al 60%, 6px sobre el valor (Inter Medium 16px/24px crema). */
+             un divisor de 1×45px dorado al 20%. Etiqueta Inter Medium Italic 10px, tracking
+             2px, dorado al 60%, 6px sobre el valor (Inter Medium 16px/24px crema). */
     .contact-cta__details {
       margin-top: 0;
       padding-top: calc(var(--u) * 48);

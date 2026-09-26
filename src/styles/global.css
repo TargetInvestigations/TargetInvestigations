@@ -8,6 +8,18 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* Desplazamiento suave nativo al navegar por anclas (rápido, sin sensación de lentitud;
+     con prefers-reduced-motion el reset de abajo lo vuelve instantáneo). */
+  scroll-behavior: smooth;
+  /* El header es sticky: sin esto la sección de destino queda tapada. Barra "We speak
+     spanish!" (40px) + nav (54px mobile / 68px desktop). */
+  scroll-padding-top: 5.875rem;
+}
+
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: 6.75rem;
+  }
 }
 
 body {

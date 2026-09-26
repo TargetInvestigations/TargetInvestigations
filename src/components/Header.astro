@@ -45,13 +45,36 @@ import { siteConfig } from '../config/site';
   </Container>
 </header>
 
+<script>
+  // Menú mobile (<details>): se cierra al elegir una opción, al tocar fuera o con Escape.
+  // En desktop el nav se muestra siempre por CSS, así que cerrar el <details> no lo afecta.
+  const menu = document.querySelector<HTMLDetailsElement>('.header__nav-toggle');
+
+  if (menu) {
+    menu.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a')) menu.open = false;
+    });
+
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+  }
+</script>
+
 <style>
   .header {
     position: sticky;
     top: 0;
     z-index: 50;
     /* Mobile (Rectangle 26, 341:1654): #0A1E3A al 74% + blur 6.7px. Desktop (53:481):
-         navy al 86% + blur 8px (ver media query). Sin borde inferior en ambos. */
+           navy al 86% + blur 8px (ver media query). Sin borde inferior en ambos. */
     background-color: rgba(10, 30, 58, 0.74);
     backdrop-filter: blur(6.7px);
     -webkit-backdrop-filter: blur(6.7px);
@@ -115,7 +138,7 @@ import { siteConfig } from '../config/site';
     justify-content: space-between;
     gap: 1rem;
     /* Mobile: barra de 54px con el logo de 35px (Icon 341:1663 en y=9). Alto fijo para
-         que el área táctil de 40px de la hamburguesa no la agrande. */
+           que el área táctil de 40px de la hamburguesa no la agrande. */
     height: 3.375rem;
   }
 
