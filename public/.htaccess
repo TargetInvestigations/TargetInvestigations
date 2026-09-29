@@ -1,0 +1,36 @@
+# Configuración del servidor en Hostinger (LiteSpeed, compatible con Apache).
+# Se versiona aquí y se sube con cada deploy: si hPanel escribe reglas propias en este
+# archivo (p. ej. "Force HTTPS"), el siguiente deploy las reemplaza por estas.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Una sola URL canónica: HTTPS y sin www. Se excluye /.well-known/ para no interferir
+  # con la emisión/renovación del certificado SSL.
+  RewriteCond %{REQUEST_URI} !^/\.well-known/
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://targetinvestigationsagency.com%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Caché del navegador: el HTML se revalida siempre (los cambios se ven al instante tras
+# cada deploy); CSS, JS, imágenes y fuentes que genera Astro llevan un hash en el nombre
+# y cambian de nombre cuando cambian, así que pueden cachearse un año.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 week"
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>

@@ -13,6 +13,14 @@ const {
   title = `${siteConfig.company.name} | Private Investigation Services in South Florida`,
   description = `${siteConfig.company.name} provides discreet, professional private investigation services serving ${siteConfig.company.coverageArea}.`,
 } = Astro.props;
+
+// URL canónica sobre el dominio de producción (`site` en astro.config.mjs).
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+// GA4 solo en el build de producción (no mide las visitas de `astro dev`) y solo si el ID
+// tiene el formato de un Measurement ID ("G-XXXXXXXXXX"); sin ID no se carga nada.
+const ga4Id = siteConfig.analytics.ga4MeasurementId;
+const analyticsId = import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(ga4Id ?? '') ? ga4Id : null;
 ---
 
 <!doctype html>
@@ -26,8 +34,11 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <!-- Open Graph: pendiente completar og:url/og:image reales cuando haya dominio y assets exportados de Figma -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph: pendiente og:image (imagen de vista previa al compartir el link). -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
 
@@ -45,6 +56,28 @@ const {
       href={`${import.meta.env.BASE_URL}favicon-dark.svg`}
       media="(prefers-color-scheme: dark)"
     />
+
+    <!-- Google Analytics 4 (cuenta de la empresa). `gtag` queda en window para poder
+         registrar eventos propios más adelante (p. ej. clicks en WhatsApp/teléfono). -->
+    {analyticsId && (
+      <>
+        <script
+          is:inline
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}
+        ></script>
+        <script is:inline define:vars={{ analyticsId }}>
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () {
+            // gtag.js exige el objeto `arguments` tal cual: con un array (rest params) no registra nada.
+            // eslint-disable-next-line prefer-rest-params
+            window.dataLayer.push(arguments);
+          };
+          window.gtag('js', new Date());
+          window.gtag('config', analyticsId);
+        </script>
+      </>
+    )}
   </head>
   <body>
     <slot />

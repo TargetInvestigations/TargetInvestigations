@@ -172,12 +172,13 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 
 ## FASE 11 — Hosting y dominio
 
-- [ ] Selección de proveedor (pendiente de definir con el usuario)
-- [ ] Configuración de dominio/DNS
-- [ ] HTTPS
-- [ ] Redirects (www / non-www)
-- [ ] Canonical definitivo
-- [ ] Variables de entorno de producción
+- [x] Selección de proveedor — Hostinger, plan Business (2026-09-28)
+- [~] Configuración de dominio/DNS — `targetinvestigationsagency.com` comprado en Hostinger; falta agregarlo como sitio en hPanel
+- [~] HTTPS — `.htaccess` fuerza HTTPS; falta activar el certificado en hPanel
+- [x] Redirects (www / non-www) — `public/.htaccess`, todo a `https://targetinvestigationsagency.com`
+- [x] Canonical definitivo — `<link rel="canonical">` + `og:url` desde `site`
+- [~] Variables de entorno de producción — secrets `HOSTINGER_SSH_*` y variable `PUBLIC_GA4_MEASUREMENT_ID` pendientes de cargar en GitHub
+- [x] Deploy automático — GitHub Actions: check + lint + build + rsync por SSH en cada push a `main`
 
 ---
 

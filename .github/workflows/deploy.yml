@@ -1,5 +1,6 @@
-name: Deploy to GitHub Pages
+name: Deploy to Hostinger
 
+# Cada push a main: valida (check + lint), compila y sube `dist/` a Hostinger por SSH.
 on:
   push:
     branches: [main]
@@ -7,28 +8,67 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
+# Un deploy a la vez; no se cancela uno en curso para no dejar la subida a medias.
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: deploy-hostinger
+  cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: withastro/action@v3
-        with:
-          node-version: 22
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: production
+      url: https://targetinvestigationsagency.com
+    env:
+      # Measurement ID de GA4 (no es secreto: queda visible en el HTML). Se define en
+      # Settings → Secrets and variables → Actions → Variables; si no existe, el sitio
+      # se publica sin Analytics.
+      PUBLIC_GA4_MEASUREMENT_ID: ${{ vars.PUBLIC_GA4_MEASUREMENT_ID }}
+      # Carpeta del sitio dentro de la cuenta de Hostinger (relativa al home del usuario
+      # SSH). Lleva el dominio en la ruta a propósito: la cuenta aloja otros proyectos y
+      # la subida borra lo que no esté en `dist/`, así que nunca debe apuntar a otra carpeta.
+      DEPLOY_PATH: domains/targetinvestigationsagency.com/public_html
+      SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
+      SSH_PORT: ${{ secrets.HOSTINGER_SSH_PORT }}
+      SSH_USER: ${{ secrets.HOSTINGER_SSH_USER }}
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run check
+      - run: npm run lint
+      - run: npm run build
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+        run: |
+          if [ -z "$SSH_KEY" ] || [ -z "$SSH_HOST" ] || [ -z "$SSH_PORT" ] || [ -z "$SSH_USER" ]; then
+            echo "::error::Faltan los secrets HOSTINGER_SSH_KEY / _HOST / _PORT / _USER del repositorio."
+            exit 1
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Upload to Hostinger
+        run: |
+          SSH="ssh -p $SSH_PORT -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes"
+          # La carpeta la crea Hostinger al agregar el dominio; si no existe, algo está mal
+          # configurado y es mejor fallar que crearla o subir a otro lado.
+          if ! $SSH "$SSH_USER@$SSH_HOST" "test -d '$DEPLOY_PATH'"; then
+            echo "::error::No existe $DEPLOY_PATH en el hosting."
+            exit 1
+          fi
+          # --delete quita del servidor lo que ya no está en el build; .well-known queda
+          # fuera porque lo usa el certificado SSL. --delay-updates reemplaza los archivos
+          # al final, así la página no queda a medio actualizar durante la subida.
+          rsync -rlptz --delete-after --delay-updates --exclude='.well-known/' \
+            --chmod=D755,F644 -e "$SSH" dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
