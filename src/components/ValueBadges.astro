@@ -82,7 +82,7 @@ const values = [
     padding: 0;
     display: grid;
     /* Mobile (Group 41, 399:523): grupo compacto y centrado, ~72px entre centros sobre
-         440 de ancho (16.4%). */
+           440 de ancho (16.4%). */
     grid-template-columns: repeat(5, min(16.4vw, 5.5rem));
     justify-content: center;
     gap: 0;
@@ -146,12 +146,16 @@ const values = [
   }
 
   /* Nodo real "Discretion" (I175:694;175:603 desktop / 399:483 mobile): Inter Bold,
-     fill #E9C37E — no Fraunces ni crema. Mobile 11.6px. */
+     fill #E9C37E — no Fraunces ni crema. Mobile 11.6px a 440 de ancho. Por debajo de
+     440 las columnas se achican con `vw`, así que la letra también (2.636vw = 11.6/440):
+     con un tamaño fijo, a 360px (Android típico) las etiquetas se pegaban entre sí y a
+     320 se montaban (pedido 4 del frame "Cambios / Correcciones"). */
   .value-badges__label {
     font-family: var(--font-body);
     font-weight: 700;
     color: var(--color-gold-light);
-    font-size: 0.725rem;
+    font-size: clamp(0.5rem, 2.636vw, 0.725rem);
+    white-space: nowrap;
     transition: opacity 0.25s ease;
   }
 
@@ -172,7 +176,7 @@ const values = [
     }
 
     /* Icono más grande en desktop (nodo 175:730) — la línea conectora (::before,
-           definida en el estilo base) se re-centra a la mitad del nuevo tamaño. */
+             definida en el estilo base) se re-centra a la mitad del nuevo tamaño. */
     .value-badges::before {
       top: 1.25rem;
       /* Reset de la línea mobile: a todo el ancho y de 1px (layout aprobado a 1366). */

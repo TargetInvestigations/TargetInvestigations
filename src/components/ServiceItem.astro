@@ -92,6 +92,12 @@ const wide = images.length === 1;
     background: linear-gradient(to right, #0b2240 0%, var(--color-gold-light) 50%, #0b213f 100%);
   }
 
+  /* La última categoría no lleva divisor: quedaría duplicado con la línea de cambio de
+     sección (pedido 1 del frame "Cambios / Correcciones" 547:582). */
+  .service-item:last-child::after {
+    display: none;
+  }
+
   .service-item__summary {
     display: grid;
     grid-template-columns: 1.375rem 1fr 1rem;

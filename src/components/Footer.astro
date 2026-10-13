@@ -188,7 +188,7 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
 
   @media (min-width: 768px) {
     /* La fila de redes va en la columna de Navigation, debajo de la lista (pedido #2 del
-             frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
+               frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
     .footer__grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
@@ -263,7 +263,7 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     }
 
     /* Container de 1200px (536/268/268 con 64px de separación), 48px de aire abajo y
-           línea dorada al 10% que cierra el footer. */
+             línea dorada al 10% que cierra el footer. */
     /* minmax(0,1fr): el teléfono en una línea (322px) no debe ensanchar su columna. */
     .footer__grid {
       grid-template-columns: 2fr minmax(0, 1fr) minmax(0, 1fr);
@@ -317,8 +317,8 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     }
 
     /* Columna de contacto: bloques a 20px (el primero) y 16px del anterior; etiqueta
-           Inter 12px/15px tracking 1.5px + 4px; valor Inter 14px/21px. El teléfono con el
-           horario va en una línea aunque exceda la columna (caja de 322px en Figma). */
+             Inter 12px/15px tracking 1.5px + 4px; valor Inter 14px/21px. El teléfono con el
+             horario va en una línea aunque exceda la columna (caja de 322px en Figma). */
     .footer__info {
       gap: 0;
     }
@@ -342,8 +342,13 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
       line-height: calc(var(--u) * 21);
     }
 
-    .footer__detail-value--nowrap {
-      white-space: nowrap;
+    /* En una línea como en Figma (322px, más ancha que su columna de 268) solo desde
+           1366px: por debajo se salía de la pantalla (86px a 1024, 14px a 1280) y ahí se
+           parte dentro de su columna. */
+    @media (min-width: 1366px) {
+      .footer__detail-value--nowrap {
+        white-space: nowrap;
+      }
     }
 
     /* Cobertura (53:474): Inter 13px/20.8px al 55% en caja de 232px. */

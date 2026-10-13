@@ -1,12 +1,12 @@
 ---
 /**
- * Sección de servicios (Section 53:138 desktop / frame "Mobile" 450:1571). Las 9
+ * Sección de servicios (Section 53:138 desktop / frame "Mobile" 450:1571). Las 10
  * categorías son contenido real del cliente, extraído de "Frame 108".
  *
- * Fotos: cada categoría tiene las suyas (13 en total, PNG entregados por el cliente a
- * ~1.5× del tamaño del diseño: 816×552 las anchas, ~404×552 las verticales). El mobile
- * tiene además 2 fotos propias arriba de la lista (HeroImages 450:1579, todavía en JPG
- * exportado de Figma).
+ * Fotos: cada categoría tiene las suyas (15 en total, PNG entregados por el cliente a
+ * ~1.5× del tamaño del diseño: ~816×552 las anchas, ~404×552 las verticales). El mobile
+ * tiene además una foto propia arriba de la lista (HeroImages 450:1579, 430×310,
+ * exportada de Figma).
  *
  * Unidades: `--u` = 1px del frame de Figma de 1549px. Hasta 1549px de ancho vale 1px
  * (medidas reales de Figma, p. ej. en 1366); por encima escala con el ancho de la
@@ -28,8 +28,9 @@ import img07 from '../images/services/07-civil.png';
 import img08a from '../images/services/08-injury-a.png';
 import img08b from '../images/services/08-injury-b.png';
 import img09 from '../images/services/09-property.png';
-import mobileTopA from '../images/services/mobile-top-a.jpg';
-import mobileTopB from '../images/services/mobile-top-b.jpg';
+import img10a from '../images/services/10-bugs-a.png';
+import img10b from '../images/services/10-bugs-b.png';
+import mobileTop from '../images/services/mobile-top.png';
 
 // Mismo orden que `services`: impares una foto ancha, pares dos fotos verticales.
 const images = [
@@ -42,6 +43,7 @@ const images = [
   [img07],
   [img08a, img08b],
   [img09],
+  [img10a, img10b],
 ];
 
 const services = [
@@ -191,6 +193,21 @@ const services = [
       'Investigative Research & Intelligence Reports',
     ],
   },
+  {
+    title: 'Bugs Detector & Technical Surveillance Detection',
+    description:
+      'Professional detection services to identify hidden cameras, microphones, GPS trackers, wireless signals, and other potential surveillance devices.',
+    bullets: [
+      'Hidden Camera Detection',
+      'Hidden Microphone Detection',
+      'GPS Tracker Detection',
+      'Wireless Signal Detection',
+      'Electronic Surveillance Detection',
+      'Vehicle Inspections',
+      'Home & Office Inspections',
+      'Commercial & Warehouse Inspections',
+    ],
+  },
 ];
 ---
 
@@ -201,8 +218,13 @@ const services = [
   </div>
 
   <div class="services__mobile-images" aria-hidden="true">
-    <Image src={mobileTopA} alt="" widths={[215, 430, 645]} sizes="50vw" loading="lazy" />
-    <Image src={mobileTopB} alt="" widths={[215, 430, 645]} sizes="50vw" loading="lazy" />
+    <Image
+      src={mobileTop}
+      alt=""
+      widths={[430, 860, 1290]}
+      sizes="calc(100vw - 10px)"
+      loading="lazy"
+    />
   </div>
 
   <div class="services__list">
@@ -245,18 +267,17 @@ const services = [
     color: var(--color-white);
   }
 
-  /* HeroImages (450:1579): 2 fotos de 215×180 sin separación, a 5px de los bordes. */
+  /* HeroImages (450:1579): una foto de 430×310 a 5px de los bordes, 23px por encima
+     de la lista. */
   .services__mobile-images {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin: 1.75rem calc(5px - 1.5rem) 1.25rem;
+    margin: 1.75rem calc(5px - 1.5rem) 1.4375rem;
   }
 
   .services__mobile-images :global(img) {
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 215 / 180;
+    aspect-ratio: 430 / 310;
     object-fit: cover;
   }
 
@@ -265,7 +286,7 @@ const services = [
     .services {
       --u: max(1px, 100cqi / 1549);
       /* Sin padding lateral: `cqi` se mide sobre el content-box, y con padding la
-                 escala quedaba por debajo de la de Figma. El margen lateral lo ponen los hijos. */
+                         escala quedaba por debajo de la de Figma. El margen lateral lo ponen los hijos. */
       padding: calc(var(--u) * 60) 0 calc(var(--u) * 15);
     }
 
@@ -273,11 +294,14 @@ const services = [
       display: none;
     }
 
-    /* Encabezado (53:140): contenedor de 1167px; kicker Inter Bold 19px/33px con
-           tracking 4.4px; heading Fraunces SemiBold 49px/56.4px en una caja de ~342px
-           (por eso ocupa dos líneas), 20.4px debajo del kicker. */
+    /* Encabezado (53:140): kicker Inter Bold 19px/33px con tracking 4.4px; heading
+         Fraunces SemiBold 49px/56.4px en una caja de ~342px (por eso ocupa dos líneas),
+         20.4px debajo del kicker. En Figma (actualizado 2026-10-13) los dos van en una
+         columna de 331px centrada en la página, con el texto alineado a la izquierda
+         dentro de ella (antes la columna iba al borde izquierdo del contenedor de 1167px).
+         El heading (352px, ver abajo) sobresale un poco a la derecha, como en Figma. */
     .services__intro {
-      width: min(calc(var(--u) * 1167), 100% - 3rem);
+      width: calc(var(--u) * 331);
       margin-inline: auto;
       text-align: left;
     }
@@ -288,12 +312,16 @@ const services = [
       font-size: calc(var(--u) * 19);
       line-height: calc(var(--u) * 33);
       letter-spacing: 0.23em;
+      /* Una línea aunque mida algo más que la columna de 331px (la Inter web es más
+         ancha): sobresale a la derecha, el borde izquierdo queda donde en Figma. */
+      white-space: nowrap;
     }
 
     .services__heading {
       /* 342px en Figma; la Fraunces web mide ~2% más ancho y "are you facing?"
-                 saltaba a una tercera línea — 352px mantiene los 2 renglones del diseño. */
-      max-width: calc(var(--u) * 352);
+         saltaba a una tercera línea — 352px mantiene los 2 renglones del diseño. Ancho
+         fijo (no max-width) porque la columna mide 331. */
+      width: calc(var(--u) * 352);
       padding-top: calc(var(--u) * 20.4);
       font-size: calc(var(--u) * 49);
       line-height: calc(var(--u) * 56.4);

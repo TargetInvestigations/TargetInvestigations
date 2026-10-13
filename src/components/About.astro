@@ -11,9 +11,10 @@
  * y la foto de Andrea (406×487, borde degradado dorado de 1px).
  *
  * Mobile (<1024px, frame 419:1424): el mismo contenido reducido a ~70% (factor
- * `--s: 0.697`, medido en Figma) — kicker y heading centrados, stats, bio. El frame
- * mobile no tiene cita, toggle ni foto: se ocultan la cita y la foto, pero el toggle se
- * conserva para no perder el texto extendido en mobile (decisión nuestra, ver CLAUDE.md).
+ * `--s: 0.697`, medido en Figma) — kicker y heading centrados, stats, bio y la foto de
+ * Andrea (233×280) debajo. El frame mobile no tiene cita ni toggle: se oculta la cita,
+ * pero el toggle se conserva para no perder el texto extendido en mobile (decisión
+ * nuestra, ver CLAUDE.md).
  *
  * Unidades: `--u` = 1px del frame de Figma de 1549px (escala por encima de 1549px de
  * ancho, igual que Hero/Services); `.about` es el contenedor de `cqi`.
@@ -51,6 +52,18 @@ const { name, founder } = siteConfig.company;
           the same: listen carefully, investigate responsibly, protect confidentiality, and pursue
           the facts.
         </p>
+      </div>
+
+      <!-- Foto de Andrea en mobile, siempre visible debajo de la bio (image 24, 609:599). En
+           desktop la foto vive en el texto extendido y aparece con "Show more". -->
+      <div class="about__portrait">
+        <Image
+          src={aboutPhoto}
+          alt={`${founder}, founder and Principal Private Investigator of ${name}`}
+          widths={[233, 466, 699]}
+          sizes="233px"
+          loading="lazy"
+        />
       </div>
     </div>
 
@@ -204,13 +217,33 @@ const { name, founder } = siteConfig.company;
     text-transform: uppercase;
   }
 
-  /* Cita y foto no existen en el frame mobile. */
+  /* La cita no existe en el frame mobile; la foto del texto extendido tampoco (en mobile
+     va `.about__portrait`, debajo de la bio). */
   .about__quote {
     display: none;
   }
 
   .about__photo {
     display: none;
+  }
+
+  /* Foto mobile (image 24, 609:599): 233×280 centrada, 23px debajo de la bio (17px +
+     el margen del último párrafo), con el mismo borde degradado de 1px y radio 2 que la
+     foto de desktop. */
+  .about__portrait {
+    order: 5;
+    width: calc(var(--u) * 233);
+    margin: calc(var(--u) * 17) auto 0;
+    padding: 1px;
+    border-radius: 2px;
+    background: linear-gradient(to top, #b0803a, #d2a967);
+  }
+
+  .about__portrait :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 1px;
   }
 
   /* Toggle (Frame 41, 322:1447): "Show more" Inter 16px/25px #E9C37E + flecha de trazo
@@ -287,6 +320,10 @@ const { name, founder } = siteConfig.company;
       display: block;
     }
 
+    .about__portrait {
+      display: none;
+    }
+
     .about__kicker {
       text-align: left;
     }
@@ -309,12 +346,12 @@ const { name, founder } = siteConfig.company;
     }
 
     /* Cita (322:1444): 387px, fondo #0A1929 al 5%, borde izquierdo 2px dorado, padding
-         16/20; texto Fraunces SemiBold Italic 15px/24px blanco. */
+             16/20; texto Fraunces SemiBold Italic 15px/24px blanco. */
     .about__quote {
       display: block;
       width: calc(var(--u) * 387);
       /* 32px de margen + 25px de alto extra que tiene el contenedor del grid de stats
-             en Figma (355px para celdas que suman 330). */
+                     en Figma (355px para celdas que suman 330). */
       margin: calc(var(--u) * 57) 0 0;
       padding: calc(var(--u) * 16) calc(var(--u) * 20);
       background: rgba(10, 25, 41, 0.05);
@@ -334,14 +371,14 @@ const { name, founder } = siteConfig.company;
     }
 
     /* En Figma el toggle (y=710) queda 26px por encima del final de la bio (y=736):
-         está del lado derecho, así que no choca con el texto. */
+             está del lado derecho, así que no choca con el texto. */
     .about__toggle {
       margin-top: calc(var(--u) * -26);
       padding-block: 0;
     }
 
     /* Texto extendido (322:1210, 735px) + foto (322:1217, 406×487) en los extremos
-         del contenedor de 1200px, 3px debajo del toggle. */
+             del contenedor de 1200px, 3px debajo del toggle. */
     .about__extra {
       width: min(calc(var(--u) * 1200), 100%);
       margin: calc(var(--u) * 3) auto 0;
