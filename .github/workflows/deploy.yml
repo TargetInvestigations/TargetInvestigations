@@ -56,19 +56,51 @@ jobs:
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          # Con reintentos y 15s de espera (el default es 5s): un corte de red puntual entre
+          # GitHub y Hostinger tumbó un deploy el 2026-10-12.
+          for i in 1 2 3; do
+            if ssh-keyscan -T 15 -p "$SSH_PORT" "$SSH_HOST" > ~/.ssh/known_hosts 2>/dev/null \
+              && [ -s ~/.ssh/known_hosts ]; then
+              break
+            fi
+            echo "ssh-keyscan falló (intento $i); reintentando en 15s…"
+            sleep 15
+          done
+          if [ ! -s ~/.ssh/known_hosts ]; then
+            echo "::error::No se pudo contactar el servidor SSH de Hostinger."
+            exit 1
+          fi
 
       - name: Upload to Hostinger
         run: |
-          SSH="ssh -p $SSH_PORT -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes"
+          SSH="ssh -p $SSH_PORT -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o ConnectTimeout=30 -o ServerAliveInterval=15"
           # La carpeta la crea Hostinger al agregar el dominio; si no existe, algo está mal
-          # configurado y es mejor fallar que crearla o subir a otro lado.
-          if ! $SSH "$SSH_USER@$SSH_HOST" "test -d '$DEPLOY_PATH'"; then
+          # configurado y es mejor fallar que crearla o subir a otro lado. El código 255 de
+          # ssh es un error de conexión (se reintenta), no "la carpeta no existe".
+          for i in 1 2 3; do
+            rc=0
+            $SSH "$SSH_USER@$SSH_HOST" "test -d '$DEPLOY_PATH'" || rc=$?
+            [ "$rc" -ne 255 ] && break
+            echo "Sin conexión SSH (intento $i); reintentando en 15s…"
+            sleep 15
+          done
+          if [ "$rc" -eq 255 ]; then
+            echo "::error::No se pudo conectar por SSH a Hostinger."
+            exit 1
+          elif [ "$rc" -ne 0 ]; then
             echo "::error::No existe $DEPLOY_PATH en el hosting."
             exit 1
           fi
           # --delete quita del servidor lo que ya no está en el build; .well-known queda
           # fuera porque lo usa el certificado SSL. --delay-updates reemplaza los archivos
           # al final, así la página no queda a medio actualizar durante la subida.
-          rsync -rlptz --delete-after --delay-updates --exclude='.well-known/' \
-            --chmod=D755,F644 -e "$SSH" dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+          for i in 1 2 3; do
+            if rsync -rlptz --delete-after --delay-updates --exclude='.well-known/' \
+              --chmod=D755,F644 -e "$SSH" dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"; then
+              exit 0
+            fi
+            echo "rsync falló (intento $i); reintentando en 15s…"
+            sleep 15
+          done
+          echo "::error::No se pudo subir el sitio a Hostinger."
+          exit 1
