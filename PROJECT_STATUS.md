@@ -114,17 +114,17 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 
 ## FASE 6 — SEO técnico
 
-- [ ] Titles y descriptions por página
-- [ ] Jerarquía H1-H6
-- [ ] Canonical URLs
-- [ ] URLs amigables
-- [ ] sitemap.xml
-- [ ] robots.txt
-- [ ] Open Graph / metadata social
-- [ ] ALT en imágenes
-- [ ] JSON-LD / Schema.org donde aplique
-- [ ] Enlaces internos
-- [ ] Verificación de indexabilidad
+- [x] Titles y descriptions por página — una sola página; title + description en `Layout.astro`
+- [x] Jerarquía H1-H6 — h1 único (logo), h2 por sección (FAQs pasó de span a h2), h3 por servicio
+- [x] Canonical URLs — `https://targetinvestigationsagency.com/`
+- [x] URLs amigables — una sola URL, secciones con anclas
+- [x] sitemap.xml — `public/sitemap.xml`
+- [x] robots.txt — con línea `Sitemap:`
+- [x] Open Graph / metadata social — og:* + Twitter card + `og-image.jpg` 1200×630
+- [x] ALT en imágenes — 21 imágenes revisadas
+- [x] JSON-LD / Schema.org donde aplique — ProfessionalService + WebSite + FAQPage (`StructuredData.astro`)
+- [x] Enlaces internos — anclas del menú verificadas
+- [~] Verificación de indexabilidad — sin noindex, robots permite todo, HTTPS + canónica; falta confirmarlo en Search Console (requiere la cuenta del cliente)
 
 ---
 

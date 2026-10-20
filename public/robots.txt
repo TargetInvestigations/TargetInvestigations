@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemap: se agregará en la Fase 6 (SEO técnico) una vez definido el dominio de producción.
+Sitemap: https://targetinvestigationsagency.com/sitemap.xml

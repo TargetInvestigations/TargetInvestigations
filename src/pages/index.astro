@@ -8,9 +8,12 @@ import About from '../components/About.astro';
 import ContactCta from '../components/ContactCta.astro';
 import FaqPanel from '../components/FaqPanel.astro';
 import Footer from '../components/Footer.astro';
+import StructuredData from '../components/StructuredData.astro';
 ---
 
 <Layout>
+  <StructuredData slot="head" />
+
   <Header />
 
   <main id="top">

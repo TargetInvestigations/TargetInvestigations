@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sitio de una sola página: si se agregan páginas, sumarlas aquí (o pasar a @astrojs/sitemap). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://targetinvestigationsagency.com/</loc>
+  </url>
+</urlset>

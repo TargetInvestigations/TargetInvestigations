@@ -1,0 +1,80 @@
+---
+/**
+ * Datos estructurados (JSON-LD, schema.org) para buscadores: el negocio
+ * (ProfessionalService, subtipo de LocalBusiness), el sitio (WebSite) y las 20 preguntas
+ * frecuentes (FAQPage, mismo contenido que el panel visible).
+ *
+ * Solo datos reales del cliente: teléfono, email y redes se agregan automáticamente
+ * cuando dejen de ser `null` en `src/config/site.ts`; mientras tanto se omiten (no se
+ * publican los placeholders de Figma). Sin dirección postal ni `priceRange` porque el
+ * cliente no los ha definido.
+ */
+import { getImage } from 'astro:assets';
+import logo from '../images/logo-lockup.png';
+import { faqs } from '../data/faqs';
+import { siteConfig } from '../config/site';
+
+const { company, contact, social } = siteConfig;
+const siteUrl = new URL('/', Astro.site).href;
+const absolute = (path: string) => new URL(path, Astro.site).href;
+
+const logoImg = await getImage({ src: logo, width: 600, format: 'png' });
+
+const sameAs = Object.values(social).filter((url): url is string => Boolean(url));
+
+const business = {
+  '@type': 'ProfessionalService',
+  '@id': `${siteUrl}#business`,
+  name: company.name,
+  slogan: company.tagline,
+  description: `${company.name} provides discreet, professional private investigation services serving ${company.coverageArea}.`,
+  url: siteUrl,
+  logo: absolute(logoImg.src),
+  image: absolute('/og-image.jpg'),
+  founder: {
+    '@type': 'Person',
+    name: company.founder,
+    jobTitle: 'Principal Private Investigator',
+  },
+  areaServed: [
+    { '@type': 'City', name: 'West Palm Beach, FL' },
+    { '@type': 'City', name: 'Boca Raton, FL' },
+    { '@type': 'AdministrativeArea', name: 'Palm Beach County, FL' },
+    { '@type': 'AdministrativeArea', name: 'Broward County, FL' },
+    { '@type': 'AdministrativeArea', name: 'Miami-Dade County, FL' },
+    { '@type': 'State', name: 'Florida' },
+  ],
+  // "We speak spanish!" (barra del header).
+  knowsLanguage: ['en', 'es'],
+  ...(contact.phoneDisplay && { telephone: contact.phoneDisplay }),
+  ...(contact.email && { email: contact.email }),
+  ...(sameAs.length > 0 && { sameAs }),
+};
+
+const website = {
+  '@type': 'WebSite',
+  '@id': `${siteUrl}#website`,
+  url: siteUrl,
+  name: company.name,
+  inLanguage: 'en',
+  publisher: { '@id': `${siteUrl}#business` },
+};
+
+const faqPage = {
+  '@type': 'FAQPage',
+  '@id': `${siteUrl}#faqs`,
+  mainEntity: faqs.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+};
+
+// `<` escapado: el JSON va dentro de un <script> y no debe poder cerrarlo.
+const json = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [business, website, faqPage],
+}).replace(/</g, '\\u003c');
+---
+
+<script is:inline type="application/ld+json" set:html={json} />
