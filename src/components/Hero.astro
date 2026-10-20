@@ -132,13 +132,15 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
   }
 
   /* `Rectangle 8` (341:1662): empieza al 37.5% de la caja de la foto y mide el 60.2%;
-     navy #091E39 opaco en su 17% inferior y transparente arriba. */
+     navy #091E39 opaco en su 17% inferior y transparente arriba. Se prolonga hasta el
+     borde inferior de la caja (el tramo opaco pasa a 20% de 62.5%; arriba queda igual):
+     la foto del fotógrafo llega al borde y, a 375–390px (iPhone), el Hero termina en ese
+     2.3% final — se veía una franja de foto sin oscurecer sobre la línea dorada. */
   .hero__photo-fade {
     display: block;
     position: absolute;
-    inset: 37.5% 0 auto;
-    height: 60.2%;
-    background: linear-gradient(to top, #091e39 0%, #091e39 17%, rgba(9, 30, 57, 0) 100%);
+    inset: 37.5% 0 0;
+    background: linear-gradient(to top, #091e39 0%, #091e39 20%, rgba(9, 30, 57, 0) 100%);
   }
 
   /* Íconos (Group 41, 399:523): empiezan 93px antes del borde inferior de la foto y el
