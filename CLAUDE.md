@@ -116,11 +116,11 @@
 | Google Search Console | Pendiente — requiere dominio + hosting + cuenta del cliente | Se configura tras tener dominio y hosting definitivos. |
 | WhatsApp | Pendiente — requiere número del cliente | No inventar número. Centralizar en configuración única (no hardcodear en múltiples archivos). |
 | Redes sociales | Pendiente — requiere URLs del cliente | Centralizar en configuración. No inventar URLs. |
-| Dominio | Comprado (2026-09-28) | `targetinvestigationsagency.com`, en la cuenta de Hostinger del cliente. URL canónica: `https://targetinvestigationsagency.com` (sin www; el `.htaccess` redirige www y http). |
+| Dominio | **Nuevo: `apexintelagency.com`** (2026-11-14) + `targetinvestigationsagency.com` temporal | Ambos en la misma cuenta de Hostinger. Se publica el mismo build en los dos; la URL canónica (y og:url/og:image/JSON-LD/robots/sitemap) es **`https://apexintelagency.com`** en ambos (`site` en `astro.config.mjs`). El `.htaccess` fuerza https y quita www conservando el dominio de entrada. Cuando se abandone `targetinvestigationsagency.com`: quitar su línea de `DEPLOY_PATHS` y poner ahí una redirección 301 a apex. Se viene un cambio de marca/visual (nombre de empresa incluido). |
 | Hosting | Resuelto — en producción desde 2026-09-28 | Hostinger, plan Business (la cuenta también aloja `flix2kids.com`, en su propia carpeta). Este sitio vive en `~/domains/targetinvestigationsagency.com/public_html`. Hostinger no compila Astro: GitHub Actions compila y sube `dist/` por SSH (rsync). La preview de GitHub Pages quedó dada de baja (404). |
 | SSL/HTTPS | Resuelto (2026-09-28) | "Lifetime SSL" de Hostinger, activo; el certificado cubre el dominio y `www`. El `.htaccess` fuerza HTTPS y excluye `/.well-known/`. Hostinger sirve detrás de su CDN (`Server: hcdn`). |
 | GitHub | Resuelto — 2026-09-19 | Repositorio en `https://github.com/TargetInvestigations/TargetInvestigations`, rama `main`. |
-| GitHub Actions | Resuelto (2026-09-28) | `.github/workflows/deploy.yml` ("Deploy to Hostinger"): en cada push a `main` corre `check` + `lint` + `build` y sube a Hostinger con rsync por SSH. Secrets cargados: `HOSTINGER_SSH_KEY` (llave ed25519 exclusiva de deploy; la pública está en hPanel → SSH Access, la privada solo en GitHub), `HOSTINGER_SSH_HOST`, `HOSTINGER_SSH_PORT`, `HOSTINGER_SSH_USER`. Variable opcional: `PUBLIC_GA4_MEASUREMENT_ID`. |
+| GitHub Actions | Resuelto (2026-09-28; multi-dominio desde 2026-11-14) | `.github/workflows/deploy.yml` ("Deploy to Hostinger"): en cada push a `main` corre `check` + `lint` + `build` y sube a Hostinger con rsync por SSH a cada carpeta de `DEPLOY_PATHS` (primero verifica que existan todas; si falta una no sube a ninguna). Secrets cargados: `HOSTINGER_SSH_KEY` (llave ed25519 exclusiva de deploy; la pública está en hPanel → SSH Access, la privada solo en GitHub), `HOSTINGER_SSH_HOST`, `HOSTINGER_SSH_PORT`, `HOSTINGER_SSH_USER`. Variable opcional: `PUBLIC_GA4_MEASUREMENT_ID`. |
 
 ---
 
@@ -427,3 +427,10 @@ _(Se irá completando a medida que se tomen decisiones de arquitectura/diseño/s
   5. **`public/sitemap.xml`** (una URL: el sitio es de una sola página; si se agregan páginas, sumarlas o pasar a `@astrojs/sitemap`) y **`robots.txt`** con la línea `Sitemap:`.
   - Pendiente fuera de esta fase: Search Console (enviar el sitemap ahí) y los datos de contacto reales, que completarán el JSON-LD.
 
+
+- **2026-11-14: Segundo dominio — `apexintelagency.com`.** El cliente compró `apexintelagency.com` en la misma cuenta de Hostinger. Más adelante cambiarán la marca, el nombre de la empresa y la parte visual; por ahora el sitio actual se publica **en los dos dominios** hasta que se abandone `targetinvestigationsagency.com`.
+  1. **Canónica = apex en ambos** (decisión del usuario): `site: 'https://apexintelagency.com'`. Un solo build para los dos dominios, así Google concentra todo en el dominio que se queda y no ve dos sitios duplicados que se declaran oficiales cada uno.
+  2. **`robots.txt` y `sitemap.xml`** dejan de ser archivos fijos en `public/`: ahora son endpoints (`src/pages/robots.txt.ts`, `src/pages/sitemap.xml.ts`) que toman la URL de `site`. El dominio vive en un solo lugar.
+  3. **`.htaccess`:** la redirección a https sin www ya no tiene el dominio escrito; usa `%{HTTP_HOST}` y conserva el dominio por el que se entró (sirve para los dos).
+  4. **`deploy.yml`:** `DEPLOY_PATH` pasa a `DEPLOY_PATHS` (una carpeta por línea, cada una con su dominio en la ruta). Primero comprueba que existan todas las carpetas y después sube a cada una con los mismos reintentos. Los secrets SSH son los mismos (misma cuenta).
+  5. GA4: es la misma propiedad para ambos dominios (los informes los separan por hostname).

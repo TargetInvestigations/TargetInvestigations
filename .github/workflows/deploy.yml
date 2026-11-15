@@ -1,6 +1,7 @@
 name: Deploy to Hostinger
 
 # Cada push a main: valida (check + lint), compila y sube `dist/` a Hostinger por SSH.
+# El mismo build se publica en todos los dominios de DEPLOY_PATHS (misma cuenta de Hostinger).
 on:
   push:
     branches: [main]
@@ -19,16 +20,20 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://targetinvestigationsagency.com
+      url: https://apexintelagency.com
     env:
       # Measurement ID de GA4 (no es secreto: queda visible en el HTML). Se define en
       # Settings → Secrets and variables → Actions → Variables; si no existe, el sitio
       # se publica sin Analytics.
       PUBLIC_GA4_MEASUREMENT_ID: ${{ vars.PUBLIC_GA4_MEASUREMENT_ID }}
-      # Carpeta del sitio dentro de la cuenta de Hostinger (relativa al home del usuario
-      # SSH). Lleva el dominio en la ruta a propósito: la cuenta aloja otros proyectos y
-      # la subida borra lo que no esté en `dist/`, así que nunca debe apuntar a otra carpeta.
-      DEPLOY_PATH: domains/targetinvestigationsagency.com/public_html
+      # Carpetas de los sitios dentro de la cuenta de Hostinger (relativas al home del usuario
+      # SSH), una por línea. Llevan el dominio en la ruta a propósito: la cuenta aloja otros
+      # proyectos y la subida borra lo que no esté en `dist/`, así que nunca deben apuntar a
+      # otra carpeta. targetinvestigationsagency.com se mantiene temporalmente, hasta el
+      # cambio de marca; para dejar de publicarlo basta con quitar su línea.
+      DEPLOY_PATHS: |
+        domains/apexintelagency.com/public_html
+        domains/targetinvestigationsagency.com/public_html
       SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
       SSH_PORT: ${{ secrets.HOSTINGER_SSH_PORT }}
       SSH_USER: ${{ secrets.HOSTINGER_SSH_USER }}
@@ -74,33 +79,46 @@ jobs:
       - name: Upload to Hostinger
         run: |
           SSH="ssh -p $SSH_PORT -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o ConnectTimeout=30 -o ServerAliveInterval=15"
-          # La carpeta la crea Hostinger al agregar el dominio; si no existe, algo está mal
-          # configurado y es mejor fallar que crearla o subir a otro lado. El código 255 de
-          # ssh es un error de conexión (se reintenta), no "la carpeta no existe".
-          for i in 1 2 3; do
-            rc=0
-            $SSH "$SSH_USER@$SSH_HOST" "test -d '$DEPLOY_PATH'" || rc=$?
-            [ "$rc" -ne 255 ] && break
-            echo "Sin conexión SSH (intento $i); reintentando en 15s…"
-            sleep 15
+          # Una ruta por línea, sin espacios: el shell las separa solo.
+          PATHS=$DEPLOY_PATHS
+
+          # Antes de subir nada se comprueba que existan TODAS las carpetas: las crea Hostinger
+          # al agregar cada dominio como sitio; si falta una, algo está mal configurado y es
+          # mejor fallar que crearla, subir a otro lado o dejar un dominio actualizado y el
+          # otro no. El código 255 de ssh es un error de conexión (se reintenta).
+          for path in $PATHS; do
+            for i in 1 2 3; do
+              rc=0
+              $SSH "$SSH_USER@$SSH_HOST" "test -d '$path'" || rc=$?
+              [ "$rc" -ne 255 ] && break
+              echo "Sin conexión SSH (intento $i); reintentando en 15s…"
+              sleep 15
+            done
+            if [ "$rc" -eq 255 ]; then
+              echo "::error::No se pudo conectar por SSH a Hostinger."
+              exit 1
+            elif [ "$rc" -ne 0 ]; then
+              echo "::error::No existe $path en el hosting (¿el dominio está agregado como sitio en hPanel?)."
+              exit 1
+            fi
           done
-          if [ "$rc" -eq 255 ]; then
-            echo "::error::No se pudo conectar por SSH a Hostinger."
-            exit 1
-          elif [ "$rc" -ne 0 ]; then
-            echo "::error::No existe $DEPLOY_PATH en el hosting."
-            exit 1
-          fi
+
           # --delete quita del servidor lo que ya no está en el build; .well-known queda
           # fuera porque lo usa el certificado SSL. --delay-updates reemplaza los archivos
           # al final, así la página no queda a medio actualizar durante la subida.
-          for i in 1 2 3; do
-            if rsync -rlptz --delete-after --delay-updates --exclude='.well-known/' \
-              --chmod=D755,F644 -e "$SSH" dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"; then
-              exit 0
+          for path in $PATHS; do
+            ok=0
+            for i in 1 2 3; do
+              if rsync -rlptz --delete-after --delay-updates --exclude='.well-known/'                 --chmod=D755,F644 -e "$SSH" dist/ "$SSH_USER@$SSH_HOST:$path/"; then
+                ok=1
+                break
+              fi
+              echo "rsync a $path falló (intento $i); reintentando en 15s…"
+              sleep 15
+            done
+            if [ "$ok" -ne 1 ]; then
+              echo "::error::No se pudo subir el sitio a $path."
+              exit 1
             fi
-            echo "rsync falló (intento $i); reintentando en 15s…"
-            sleep 15
+            echo "Publicado en $path"
           done
-          echo "::error::No se pudo subir el sitio a Hostinger."
-          exit 1
