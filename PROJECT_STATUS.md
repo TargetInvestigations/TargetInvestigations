@@ -124,7 +124,7 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 - [x] ALT en imágenes — 21 imágenes revisadas
 - [x] JSON-LD / Schema.org donde aplique — ProfessionalService + WebSite + FAQPage (`StructuredData.astro`)
 - [x] Enlaces internos — anclas del menú verificadas
-- [~] Verificación de indexabilidad — sin noindex, robots permite todo, HTTPS + canónica; falta confirmarlo en Search Console (requiere la cuenta del cliente)
+- [x] Verificación de indexabilidad — sin noindex, robots permite todo, HTTPS + canónica; sitemap leído por Search Console
 
 ---
 
@@ -157,7 +157,7 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 - [~] Redes sociales — íconos listos (Instagram, TikTok, LinkedIn, Facebook); **faltan las URLs del cliente**
 - [x] Google Analytics 4 — `G-52NRMJBP07` (en `site.ts`, solo mide en los dominios reales)
 - [ ] Política de privacidad que mencione Analytics (requisito de los términos de Google; texto a aprobar por el cliente)
-- [ ] Google Search Console — registrar `apexintelagency.com` y enviar el sitemap (requiere la cuenta de Google del cliente)
+- [x] Google Search Console — propiedad Dominio `apexintelagency.com` verificada por DNS; sitemap enviado (Correcto)
 - [x] Email de contacto — `info@apexintelagency.com`
 - [x] Licencia — Class A, A 3600222
 
