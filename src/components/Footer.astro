@@ -75,6 +75,11 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
       <SocialLink network="facebook" href={siteConfig.social.facebook} />
     </div>
   </div>
+
+  <!-- Línea legal (no está en Figma: se agregó con la política de privacidad, 2026-11-20). -->
+  <p class="footer__legal">
+    <a href="/privacy/">Privacy Policy</a>
+  </p>
 </footer>
 
 <style>
@@ -109,8 +114,8 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     display: block;
   }
 
-  /* La versión mobile de Figma no muestra el tagline ni la lista de Navigation
-     (ya están en el menú del header) — solo logo, contacto/cobertura y redes. */
+  /* La versión mobile de Figma no muestra el tagline ni la lista de Navigation */
+  /* (ya están en el menú del header) — solo logo, contacto/cobertura y redes. */
   .footer__tagline {
     display: none;
   }
@@ -188,9 +193,27 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     gap: 1.25rem;
   }
 
+  .footer__legal {
+    margin: 2rem 0 0;
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .footer__legal a {
+    color: var(--color-bg);
+    text-decoration: none;
+  }
+
+  .footer__legal a:hover,
+  .footer__legal a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
   @media (min-width: 768px) {
-    /* La fila de redes va en la columna de Navigation, debajo de la lista (pedido #2 del
-                     frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
+    /* La fila de redes va en la columna de Navigation, debajo de la lista (pedido #2 del */
+    /* frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
     .footer__grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
@@ -255,8 +278,8 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     }
   }
 
-  /* --- Desktop (≥1024px): medidas reales del Footer 53:427 (1549×314) en unidades del
-       frame de 1549px — escala por encima de ese ancho, como el resto de la página. --- */
+  /* --- Desktop (≥1024px): medidas reales del Footer 53:427 (1549×314) en unidades del */
+  /* frame de 1549px — escala por encima de ese ancho, como el resto de la página. --- */
   @media (min-width: 1024px) {
     .footer {
       --u: max(1px, 100cqi / 1549);
@@ -264,8 +287,8 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
       font-size: calc(var(--u) * 14);
     }
 
-    /* Container de 1200px (536/268/268 con 64px de separación), 48px de aire abajo y
-                   línea dorada al 10% que cierra el footer. */
+    /* Container de 1200px (536/268/268 con 64px de separación), 48px de aire abajo y */
+    /* línea dorada al 10% que cierra el footer. */
     /* minmax(0,1fr): el teléfono en una línea (322px) no debe ensanchar su columna. */
     .footer__grid {
       grid-template-columns: 2fr minmax(0, 1fr) minmax(0, 1fr);
@@ -313,14 +336,21 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
       gap: calc(var(--u) * 16);
     }
 
+    /* Debajo de la línea dorada que cierra el footer. */
+    .footer__legal {
+      margin: 0;
+      padding-block: calc(var(--u) * 16);
+      font-size: calc(var(--u) * 12);
+    }
+
     .footer__social :global(.social-link) {
       width: calc(var(--u) * 22);
       height: calc(var(--u) * 22);
     }
 
-    /* Columna de contacto: bloques a 20px (el primero) y 16px del anterior; etiqueta
-                   Inter 12px/15px tracking 1.5px + 4px; valor Inter 14px/21px. El teléfono con el
-                   horario va en una línea aunque exceda la columna (caja de 322px en Figma). */
+    /* Columna de contacto: bloques a 20px (el primero) y 16px del anterior; etiqueta */
+    /* Inter 12px/15px tracking 1.5px + 4px; valor Inter 14px/21px. El teléfono con el */
+    /* horario va en una línea aunque exceda la columna (caja de 322px en Figma). */
     .footer__info {
       gap: 0;
     }
@@ -344,9 +374,9 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
       line-height: calc(var(--u) * 21);
     }
 
-    /* En una línea como en Figma (322px, más ancha que su columna de 268) solo desde
-                 1366px: por debajo se salía de la pantalla (86px a 1024, 14px a 1280) y ahí se
-                 parte dentro de su columna. */
+    /* En una línea como en Figma (322px, más ancha que su columna de 268) solo desde */
+    /* 1366px: por debajo se salía de la pantalla (86px a 1024, 14px a 1280) y ahí se */
+    /* parte dentro de su columna. */
     @media (min-width: 1366px) {
       .footer__detail-value--nowrap {
         white-space: nowrap;

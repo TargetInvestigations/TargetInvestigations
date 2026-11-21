@@ -156,7 +156,7 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 - [~] WhatsApp — botón listo (hover → WhatsApp, link `wa.me` desde `site.ts`); **falta el número del cliente**
 - [~] Redes sociales — íconos listos (Instagram, TikTok, LinkedIn, Facebook); **faltan las URLs del cliente**
 - [x] Google Analytics 4 — `G-52NRMJBP07` (en `site.ts`, solo mide en los dominios reales)
-- [ ] Política de privacidad que mencione Analytics (requisito de los términos de Google; texto a aprobar por el cliente)
+- [x] Política de privacidad — página `/privacy/` + link en el footer; aprobada por el cliente y publicada (2026-11-21)
 - [x] Google Search Console — propiedad Dominio `apexintelagency.com` verificada por DNS; sitemap enviado (Correcto)
 - [x] Email de contacto — `info@apexintelagency.com`
 - [x] Licencia — Class A, A 3600222
