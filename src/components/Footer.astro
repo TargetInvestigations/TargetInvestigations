@@ -9,16 +9,15 @@
  * en el frame original; se agregó en la columna de Navigation por pedido explícito del
  * frame "Cambios / Correcciones" (547:582, 2026-09-22).
  *
- * El lockup "TARGET INVESTIGATIONS" + ícono es distinto del de Header/Hero: en Figma
- * está vectorizado en navy (no el dorado con gradiente de siempre), así que se exportó
- * tal cual como asset (`footer-wordmark.svg`) en vez de recrearlo con texto+CSS.
+ * Logo: versión horizontal en navy (#0B213F) del cliente — sobre el fondo crema, como el
+ * wordmark navy del diseño original (Header/Hero usan la versión dorada sobre oscuro).
  */
 import SocialLink from './SocialLink.astro';
-import footerWordmark from '../icons/footer-wordmark.svg?raw';
+import logoHorizontal from '../images/brand/logo-horizontal-navy.svg';
 import { siteConfig } from '../config/site';
 
 const phoneDisplay = siteConfig.contact.phoneDisplay ?? '(xxx) xxx-xxxx';
-const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
+const email = siteConfig.contact.email ?? 'xxx@apexintelagency.com';
 // Copy real del Footer en Figma (53:474 / mobile): el orden de las ciudades es distinto
 // al de `siteConfig.company.coverageArea` (que es el texto de About).
 const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Florida';
@@ -28,7 +27,7 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
   <div class="footer__grid">
     <div class="footer__brand">
       <a href="#top" class="footer__logo" aria-label={`${siteConfig.company.name} — Home`}>
-        <span aria-hidden="true" set:html={footerWordmark} />
+        <img src={logoHorizontal.src} alt="" width="1433" height="353" />
       </a>
       <p class="footer__tagline">
         South Florida-based private investigation company serving clients throughout Florida.
@@ -104,7 +103,7 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     width: 10rem;
   }
 
-  .footer__logo :global(svg) {
+  .footer__logo img {
     width: 100%;
     height: auto;
     display: block;
@@ -188,7 +187,7 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
 
   @media (min-width: 768px) {
     /* La fila de redes va en la columna de Navigation, debajo de la lista (pedido #2 del
-               frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
+                 frame "Cambios / Correcciones" 547:582). Marca e info ocupan ambas filas. */
     .footer__grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
@@ -263,7 +262,7 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     }
 
     /* Container de 1200px (536/268/268 con 64px de separación), 48px de aire abajo y
-             línea dorada al 10% que cierra el footer. */
+               línea dorada al 10% que cierra el footer. */
     /* minmax(0,1fr): el teléfono en una línea (322px) no debe ensanchar su columna. */
     .footer__grid {
       grid-template-columns: 2fr minmax(0, 1fr) minmax(0, 1fr);
@@ -317,8 +316,8 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     }
 
     /* Columna de contacto: bloques a 20px (el primero) y 16px del anterior; etiqueta
-             Inter 12px/15px tracking 1.5px + 4px; valor Inter 14px/21px. El teléfono con el
-             horario va en una línea aunque exceda la columna (caja de 322px en Figma). */
+               Inter 12px/15px tracking 1.5px + 4px; valor Inter 14px/21px. El teléfono con el
+               horario va en una línea aunque exceda la columna (caja de 322px en Figma). */
     .footer__info {
       gap: 0;
     }
@@ -343,8 +342,8 @@ const coverage = 'West Palm Beach, Boca Raton, surrounding areas, and South Flor
     }
 
     /* En una línea como en Figma (322px, más ancha que su columna de 268) solo desde
-           1366px: por debajo se salía de la pantalla (86px a 1024, 14px a 1280) y ahí se
-           parte dentro de su columna. */
+             1366px: por debajo se salía de la pantalla (86px a 1024, 14px a 1280) y ahí se
+             parte dentro de su columna. */
     @media (min-width: 1366px) {
       .footer__detail-value--nowrap {
         white-space: nowrap;

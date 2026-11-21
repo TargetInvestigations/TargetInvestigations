@@ -23,9 +23,11 @@ const ogImage = new URL('/og-image.jpg', Astro.site).href;
 const ogImageAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}`;
 
 // GA4 solo en el build de producción (no mide las visitas de `astro dev`) y solo si el ID
-// tiene el formato de un Measurement ID ("G-XXXXXXXXXX"); sin ID no se carga nada.
+// tiene el formato de un Measurement ID ("G-XXXXXXXXXX"); además, en el navegador solo se
+// activa en los dominios de `siteConfig.analytics.hostnames` (ver el script más abajo).
 const ga4Id = siteConfig.analytics.ga4MeasurementId;
-const analyticsId = import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(ga4Id ?? '') ? ga4Id : null;
+const analyticsId = import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(ga4Id) ? ga4Id : null;
+const analyticsHosts = [...siteConfig.analytics.hostnames];
 ---
 
 <!doctype html>
@@ -61,31 +63,20 @@ const analyticsId = import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(ga4Id ?? '') ? 
     <!-- Contenido extra del <head> por página (p. ej. datos estructurados JSON-LD). -->
     <slot name="head" />
 
-    <!-- Favicons de la marca (entregados por el cliente): bronce oscuro para pestañas en
-         modo claro, dorado claro para modo oscuro; el navegador elige según su tema. -->
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href={`${import.meta.env.BASE_URL}favicon-light.svg`}
-      media="(prefers-color-scheme: light)"
-    />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href={`${import.meta.env.BASE_URL}favicon-dark.svg`}
-      media="(prefers-color-scheme: dark)"
-    />
+    <!-- Favicons de Apex Intel Agency (entregados por el cliente). El ícono lleva fondo
+         azul propio, así que sirve igual en pestañas claras y oscuras. El .ico cubre
+         navegadores sin soporte de SVG y el apple-touch-icon, iOS (pantalla de inicio). -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Google Analytics 4 (cuenta de la empresa). `gtag` queda en window para poder
-         registrar eventos propios más adelante (p. ej. clicks en WhatsApp/teléfono). -->
+    <!-- Google Analytics 4. gtag.js se inserta solo si la página se sirve desde uno de los
+         dominios reales (siteConfig.analytics.hostnames): en local no se carga nada. `gtag`
+         queda en window para registrar eventos propios más adelante (p. ej. clicks en
+         WhatsApp/teléfono). -->
     {analyticsId && (
-      <>
-        <script
-          is:inline
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}
-        ></script>
-        <script is:inline define:vars={{ analyticsId }}>
+      <script is:inline define:vars={{ analyticsId, analyticsHosts }}>
+        if (analyticsHosts.includes(location.hostname)) {
           window.dataLayer = window.dataLayer || [];
           window.gtag = function () {
             // gtag.js exige el objeto `arguments` tal cual: con un array (rest params) no registra nada.
@@ -94,8 +85,12 @@ const analyticsId = import.meta.env.PROD && /^G-[A-Z0-9]+$/.test(ga4Id ?? '') ? 
           };
           window.gtag('js', new Date());
           window.gtag('config', analyticsId);
-        </script>
-      </>
+          const tag = document.createElement('script');
+          tag.async = true;
+          tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(analyticsId);
+          document.head.appendChild(tag);
+        }
+      </script>
     )}
   </head>
   <body>

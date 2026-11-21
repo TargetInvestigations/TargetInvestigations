@@ -12,32 +12,27 @@
  *   que a cualquier ancho la composición es el diseño escalado. Como en Figma, la
  *   Section empieza en y=0 de la página y el nav de vidrio se superpone a ella.
  *
- * El lockup de marca (ícono/TARGET con destellos/INVESTIGATIONS/tagline/subtítulo) es
- * el PNG definitivo entregado por el cliente ("Logo-TARGET definitivo", = frame "Logo"
- * 644:582 de 625×463, el mismo en todos los breakpoints), no una recreación con texto —
- * replicarlo letra por letra no conseguía los detalles de brillo del diseño. El texto va
- * en el `alt`, dentro del <h1>.
+ * El lockup de marca es el logo vertical de Apex Intel Agency entregado por el cliente
+ * (SVG, versión color para fondo oscuro, viewBox recortado al contenido), el mismo en
+ * todos los breakpoints. Ocupa el lugar del lockup anterior (frame "Logo" 644:582 de
+ * 625×463) con su misma altura —es más angosto (1.201:1 vs 1.35:1) y va centrado—, así
+ * que el botón y el resto del Hero no se mueven. El texto va en el `alt`, dentro del <h1>.
  *
  * Foto: el fotógrafo sobre el skyline (relleno actual de 174:113, con el cielo
  * transparente) en todos los breakpoints. El frame mobile de Figma todavía tiene la
  * foto anterior; el cliente confirmó que mobile también lleva la nueva (2026-10-12) — el
  * encuadre mobile es nuestro (ver más abajo).
  */
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import Container from './Container.astro';
 import ValueBadges from './ValueBadges.astro';
 import WhatsAppCta from './WhatsAppCta.astro';
 import heroPhoto from '../images/hero-desktop.png';
 import heroSky from '../images/hero-sky.png';
-import logo from '../images/logo-lockup.png';
+import logo from '../images/brand/logo-vertical.svg';
 import { siteConfig } from '../config/site';
 
-const logoImg = await getImage({
-  src: logo,
-  widths: [366, 448, 732, 896, 1250],
-  format: 'webp',
-});
-const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. Private Investigations · Intelligence · Due Diligence`;
+const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}`;
 ---
 
 <div class="hero">
@@ -49,16 +44,7 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
   <Container size="wide" class="hero__top">
     <div class="hero__lockup">
       <h1 class="hero__logo">
-        <img
-          src={logoImg.src}
-          srcset={logoImg.srcSet.attribute}
-          sizes="(min-width: 1440px) 41vw, (min-width: 1024px) 28rem, min(83.2vw, 23rem)"
-          alt={logoAlt}
-          width={logo.width}
-          height={logo.height}
-          loading="eager"
-          decoding="async"
-        />
+        <img src={logo.src} alt={logoAlt} width="1082" height="901" loading="eager" />
       </h1>
 
       <WhatsAppCta class="hero__cta" />
@@ -86,20 +72,20 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
   .hero {
     position: relative;
     /* El solape negativo de ValueBadges sobre la foto (margin-top:-21%) hace que la
-                 foto, un elemento anterior en el flujo normal, pinte más abajo de donde el
-                 propio flujo termina calculando la altura de `.hero` — sin recortar esto la
-                 foto se desborda visualmente sobre la sección de Services. */
+                   foto, un elemento anterior en el flujo normal, pinte más abajo de donde el
+                   propio flujo termina calculando la altura de `.hero` — sin recortar esto la
+                   foto se desborda visualmente sobre la sección de Services. */
     overflow: hidden;
     /* 36px entre el header y el logo (frame "Logo" 341:1573 en y=36 del Hero mobile). */
     padding-top: 2.25rem;
     /* Sin padding-bottom: en el nodo real la línea divisoria con Services empieza
-                 apenas termina la foto. */
+                   apenas termina la foto. */
     padding-bottom: 0;
     /* Alto de la caja de la foto mobile: 381px sobre 440 de ancho (86.6%), con tope
-               para anchos de tablet que todavía usan este layout. */
+                 para anchos de tablet que todavía usan este layout. */
     --photo-h: min(86.65vw, 32.5rem);
     /* Fondo radial de `Frame 41` (341:1660): #4C6684 → #0C2342 (61%) → #021124, centro
-               en 40%/53%. */
+                 en 40%/53%. */
     background: radial-gradient(120% 68% at 40% 53%, #4c6684 0%, #0c2342 61%, #021124 100%);
   }
 
@@ -154,7 +140,7 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
 
   /* Mobile: logo 366px de ancho sobre 440 (83.2%), botón ~21px debajo del subtítulo
      (10px bajo el frame "Logo" 341:1573, que traía ~11px de aire bajo el subtítulo; el
-     PNG definitivo no lo trae), foto 10px debajo del botón (399:599 / 341:1572). */
+     logo actual no lo trae), foto 10px debajo del botón (399:599 / 341:1572). */
   .hero__lockup {
     display: flex;
     flex-direction: column;
@@ -169,11 +155,14 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     margin: 0;
   }
 
+  /* Misma altura que el lockup anterior (1250/926) sobre el ancho de `.hero__logo`:
+     1.201 / 1.35 = 88.96% del ancho, centrado. */
   .hero__logo img {
     display: block;
-    width: 100%;
+    width: 88.96%;
     height: auto;
-    aspect-ratio: 1250 / 926;
+    margin-inline: auto;
+    aspect-ratio: 1082 / 901;
   }
 
   /* Tamaño del CTA en el Hero (nodo 399:561 en Figma). El comportamiento hover→WhatsApp
@@ -208,7 +197,7 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
       overflow: visible;
       padding-block: 0;
       /* Piso de 47rem: a anchos ~1024-1300px el bloque logo+botón (anclado arriba) no
-                             debe solaparse con la fila de íconos (anclada abajo). */
+                                 debe solaparse con la fila de íconos (anclada abajo). */
       min-height: clamp(47rem, 52vw, 50rem);
     }
 
@@ -239,8 +228,8 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* El fotógrafo va al 100% de opacidad (174:113 ya no tiene la opacidad 0.7 de la
-                 foto anterior). La mitad superior de la imagen es transparente, así que se ancla
-                 abajo: persona y skyline quedan sobre la fila de íconos, como en Figma. */
+                   foto anterior). La mitad superior de la imagen es transparente, así que se ancla
+                   abajo: persona y skyline quedan sobre la fila de íconos, como en Figma. */
     .hero__photo :global(img) {
       inset: 0;
       width: 100%;
@@ -262,8 +251,8 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* Centro del lockup al ~63% del ancho, como en Figma (el logo se corrió hacia el
-                 centro: x=665.7 en vez de 717 sobre 1549, pedido 5 del frame 547:582). Botón a
-                 ~35px del subtítulo (48.5px sobre 625 de ancho en Figma). */
+                   centro: x=665.7 en vez de 717 sobre 1549, pedido 5 del frame 547:582). Botón a
+                   ~35px del subtítulo (48.5px sobre 625 de ancho en Figma). */
     .hero__lockup {
       max-width: 34rem;
       margin-left: calc(63.1% - 17rem);
@@ -292,7 +281,7 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* Capa recortada al Hero (clipsContent de la Section) — la textura sobresale
-                 43px por arriba y 9px por la izquierda en Figma. */
+                   43px por arriba y 9px por la izquierda en Figma. */
     .hero__sky {
       display: block;
       position: absolute;
@@ -302,9 +291,9 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* Relleno real de 179:813: blend LINEAR_DODGE (suma de luz = `plus-lighter`),
-                 filtros exposure -0.1 / contrast +0.16 / saturation -0.67, e imageTransform que
-                 recorta el 2.9% izquierdo de la imagen (por eso el <img> es más ancho que la
-                 caja de 1146px y arranca antes). */
+                   filtros exposure -0.1 / contrast +0.16 / saturation -0.67, e imageTransform que
+                   recorta el 2.9% izquierdo de la imagen (por eso el <img> es más ancho que la
+                   caja de 1146px y arranca antes). */
     .hero__sky :global(img) {
       position: absolute;
       left: calc(var(--u) * -43.2);
@@ -318,11 +307,11 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* Foto (174:113): rectángulo en y=271 de 1549×713 con un imageTransform que muestra
-                 el 93.5% izquierdo y el 76.5% inferior de la imagen → la imagen completa mide
-                 1657×933 y arranca en x=0, y=51.6 (−77.4 respecto de esta caja, que empieza en
-                 y=129 para que los degradados de abajo conserven sus proporciones). La parte que
-                 recorta el rectángulo arriba es transparente, así que basta recortar a la
-                 derecha (clipsContent de la Section). Opacidad 1. */
+                   el 93.5% izquierdo y el 76.5% inferior de la imagen → la imagen completa mide
+                   1657×933 y arranca en x=0, y=51.6 (−77.4 respecto de esta caja, que empieza en
+                   y=129 para que los degradados de abajo conserven sus proporciones). La parte que
+                   recorta el rectángulo arriba es transparente, así que basta recortar a la
+                   derecha (clipsContent de la Section). Opacidad 1. */
     .hero__photo {
       inset: calc(var(--u) * 129) 0 0 0;
       overflow: hidden;
@@ -337,9 +326,9 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* Capas sobre la foto: degradados `Rectangle 7` (53:62, y=680 h=321) y `Rectangle 8`
-                 (187:844, y=801 h=199) y brillo dorado radial al 6% (53:64). Alturas y posiciones
-                 relativas a la caja de la foto. (El tinte de 53:63 tiene sus dos paradas en la
-                 posición 0 → no se ve en Figma, así que no se replica.) */
+                   (187:844, y=801 h=199) y brillo dorado radial al 6% (53:64). Alturas y posiciones
+                   relativas a la caja de la foto. (El tinte de 53:63 tiene sus dos paradas en la
+                   posición 0 → no se ve en Figma, así que no se replica.) */
     .hero__photo-fade {
       background:
         linear-gradient(to top, #03132b, rgba(9, 30, 57, 0)) bottom / 100% 36.8% no-repeat,
@@ -352,8 +341,8 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* Alto 0 (anclado arriba): el lockup se posiciona dentro con coordenadas del
-                 frame. Con `inset:0` esta capa (z-index 2) tapaba la fila de íconos y bloqueaba
-                 su hover. */
+                   frame. Con `inset:0` esta capa (z-index 2) tapaba la fila de íconos y bloqueaba
+                   su hover. */
     .hero > :global(.hero__top) {
       inset: 0 0 auto 0;
       max-width: none;
@@ -361,7 +350,7 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* Frame "Logo" 175:759: x=665.7, y=151, 625px de ancho; el PNG (625×463) termina en
-                 y=614 y el botón (399:561) empieza en y=662.4. */
+                   y=614 y el botón (399:561) empieza en y=662.4. */
     .hero__lockup {
       position: absolute;
       left: calc(var(--u) * 665.7);
@@ -394,7 +383,7 @@ const logoAlt = `${siteConfig.company.name} — ${siteConfig.company.tagline}. P
     }
 
     /* Fila de ValueBadges (Group 38): círculos en y=834. El tamaño interno de la fila
-                 vive en ValueBadges.astro (mismas unidades). */
+                   vive en ValueBadges.astro (mismas unidades). */
     .hero > :global(.hero__bottom) {
       inset: calc(var(--u) * 830) 0 auto 0;
       max-width: none;

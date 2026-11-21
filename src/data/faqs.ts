@@ -71,7 +71,7 @@ export const faqs: Faq[] = [
   },
   {
     q: 'Do you provide forensic accounting and financial investigative support?',
-    a: 'Yes. TARGET INVESTIGATIONS coordinates specialized forensic accounting and financial investigative support through qualified professionals when required. Services may include fraud investigations, asset tracing, hidden asset analysis, business valuation, and litigation support.',
+    a: 'Yes. Apex Intel Agency coordinates specialized forensic accounting and financial investigative support through qualified professionals when required. Services may include fraud investigations, asset tracing, hidden asset analysis, business valuation, and litigation support.',
   },
   {
     q: 'How much does forensic accounting cost?',
@@ -79,7 +79,7 @@ export const faqs: Faq[] = [
   },
   {
     q: 'Can you guarantee results?',
-    a: 'No ethical investigator can guarantee a specific outcome. What we can guarantee is a professional, discreet, and thorough approach to obtaining the facts. The Truth Is Our Target.',
+    a: 'No ethical investigator can guarantee a specific outcome. What we can guarantee is a professional, discreet, and thorough approach to obtaining the facts. Intelligence Built for Results.',
   },
   {
     q: 'What information should I provide before starting an investigation?',
@@ -87,6 +87,6 @@ export const faqs: Faq[] = [
   },
   {
     q: 'How do I get started?',
-    a: "Simply contact TARGET INVESTIGATIONS for a confidential consultation. Tell us about your situation, provide the information you have, and we will discuss the investigative options available. Don't live with questions. Get the facts. The Truth Is Our Target.",
+    a: "Simply contact Apex Intel Agency for a confidential consultation. Tell us about your situation, provide the information you have, and we will discuss the investigative options available. Don't live with questions. Get the facts. Intelligence Built for Results.",
   },
 ];

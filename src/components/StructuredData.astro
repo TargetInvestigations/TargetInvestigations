@@ -10,7 +10,8 @@
  * cliente no los ha definido.
  */
 import { getImage } from 'astro:assets';
-import logo from '../images/logo-lockup.png';
+// Logo vertical con fondo azul (cuadrado, 1080×1080): Google pide un logo raster.
+import logo from '../images/brand/logo-social.png';
 import { faqs } from '../data/faqs';
 import { siteConfig } from '../config/site';
 
@@ -77,4 +78,4 @@ const json = JSON.stringify({
 }).replace(/</g, '\\u003c');
 ---
 
-<script is:inline type="application/ld+json" set:html={json} />
+<script is:inline type="application/ld+json" set:html={json}></script>

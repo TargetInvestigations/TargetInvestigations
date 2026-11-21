@@ -8,12 +8,13 @@
 
 export const siteConfig = {
   company: {
-    name: 'TARGET INVESTIGATIONS',
-    tagline: 'The truth is our target',
+    name: 'Apex Intel Agency',
+    // Eslogan del logo.
+    tagline: 'Intelligence built for results',
     founder: 'Andrea Roa',
     coverageArea: 'Boca Raton, West Palm Beach, surrounding areas, and South Florida',
-    // Número de licencia de investigador privado. Placeholder en Figma ("Licensed & Insured # A------").
-    licenseNumber: null as string | null,
+    // Número de licencia de investigador privado (Class A), entregado por el cliente.
+    licenseNumber: 'A 3600222' as string | null,
   },
 
   contact: {
@@ -21,8 +22,8 @@ export const siteConfig = {
     phoneDisplay: null as string | null,
     // Número en formato E.164 para el link wa.me (sin '+' ni espacios), ej. "15551234567".
     whatsappNumber: null as string | null,
-    // Placeholder en Figma: "xxx@targetinvestigations.com". Pendiente del cliente.
-    email: null as string | null,
+    // Email de contacto de la empresa (entregado por el cliente, 2026-11-20).
+    email: 'info@apexintelagency.com' as string | null,
   },
 
   social: {
@@ -34,9 +35,13 @@ export const siteConfig = {
   },
 
   analytics: {
-    // Google Analytics 4 Measurement ID (ej. "G-XXXXXXXXXX"). Se define vía variable de entorno
-    // cuando el cliente entregue el acceso a su propia cuenta de Google. Ver CLAUDE.md.
-    ga4MeasurementId: import.meta.env.PUBLIC_GA4_MEASUREMENT_ID ?? null,
+    // Google Analytics 4 — propiedad "apexintelagency.com" (cuenta "Apex Intel Agency"). No es
+    // secreto: queda visible en el HTML. La variable de entorno PUBLIC_GA4_MEASUREMENT_ID, si
+    // existe, tiene prioridad (p. ej. para probar con otra propiedad).
+    ga4MeasurementId: (import.meta.env.PUBLIC_GA4_MEASUREMENT_ID || 'G-52NRMJBP07') as string,
+    // Solo se mide en estos dominios: así no cuentan como visitas las pruebas locales
+    // (`astro preview`) ni copias del sitio en otros hosts.
+    hostnames: ['apexintelagency.com', 'targetinvestigationsagency.com'],
   },
 
   // Navegación principal. El sitio es de una sola página: estos son anchors, no rutas.

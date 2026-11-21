@@ -21,7 +21,7 @@
  */
 import { Image } from 'astro:assets';
 import StatBadges from './StatBadges.astro';
-import aboutPhoto from '../images/about.png';
+import aboutPhoto from '../images/about.jpg';
 import { siteConfig } from '../config/site';
 
 const { name, founder } = siteConfig.company;
@@ -346,12 +346,12 @@ const { name, founder } = siteConfig.company;
     }
 
     /* Cita (322:1444): 387px, fondo #0A1929 al 5%, borde izquierdo 2px dorado, padding
-             16/20; texto Fraunces SemiBold Italic 15px/24px blanco. */
+               16/20; texto Fraunces SemiBold Italic 15px/24px blanco. */
     .about__quote {
       display: block;
       width: calc(var(--u) * 387);
       /* 32px de margen + 25px de alto extra que tiene el contenedor del grid de stats
-                     en Figma (355px para celdas que suman 330). */
+                         en Figma (355px para celdas que suman 330). */
       margin: calc(var(--u) * 57) 0 0;
       padding: calc(var(--u) * 16) calc(var(--u) * 20);
       background: rgba(10, 25, 41, 0.05);
@@ -371,14 +371,14 @@ const { name, founder } = siteConfig.company;
     }
 
     /* En Figma el toggle (y=710) queda 26px por encima del final de la bio (y=736):
-             está del lado derecho, así que no choca con el texto. */
+               está del lado derecho, así que no choca con el texto. */
     .about__toggle {
       margin-top: calc(var(--u) * -26);
       padding-block: 0;
     }
 
     /* Texto extendido (322:1210, 735px) + foto (322:1217, 406×487) en los extremos
-             del contenedor de 1200px, 3px debajo del toggle. */
+               del contenedor de 1200px, 3px debajo del toggle. */
     .about__extra {
       width: min(calc(var(--u) * 1200), 100%);
       margin: calc(var(--u) * 3) auto 0;

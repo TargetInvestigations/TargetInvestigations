@@ -86,7 +86,7 @@ Leyenda: `[ ]` Pendiente · `[~]` En progreso · `[x]` Completado · `[!]` Bloqu
 - Revisión visual fina adicional por parte del usuario (colores exactos, espaciados, detalles menores que la comparación automatizada no capta perfectamente).
 - Auditoría formal de Lighthouse (Fase 7).
 
-**Validado en este entorno:** `npm run check`/`lint`/`format:check` limpios, `npm run build` genera `dist/` sin errores (incluye generación de imágenes optimizadas), servidor de desarrollo probado con `curl` — el único `<h1>` de la página es la tagline real ("The truth is our target"), hay 31 elementos `<details>` (1 menú mobile + 9 acordeones de servicio + 20 FAQs + 1 "show more" de About), y las imágenes incluyen `width`/`height`/`srcset`/`loading` correctos.
+**Validado en este entorno:** `npm run check`/`lint`/`format:check` limpios, `npm run build` genera `dist/` sin errores (incluye generación de imágenes optimizadas), servidor de desarrollo probado con `curl` — el único `<h1>` de la página es la tagline real (en ese momento, el eslogan de la marca anterior), hay 31 elementos `<details>` (1 menú mobile + 9 acordeones de servicio + 20 FAQs + 1 "show more" de About), y las imágenes incluyen `width`/`height`/`srcset`/`loading` correctos.
 
 **FASE 3 COMPLETADA** (implementación). QA visual formal queda pendiente por limitación de herramientas de este entorno.
 
@@ -116,7 +116,7 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 
 - [x] Titles y descriptions por página — una sola página; title + description en `Layout.astro`
 - [x] Jerarquía H1-H6 — h1 único (logo), h2 por sección (FAQs pasó de span a h2), h3 por servicio
-- [x] Canonical URLs — `https://targetinvestigationsagency.com/`
+- [x] Canonical URLs — `https://apexintelagency.com/` (canónica en ambos dominios)
 - [x] URLs amigables — una sola URL, secciones con anclas
 - [x] sitemap.xml — `public/sitemap.xml`
 - [x] robots.txt — con línea `Sitemap:`
@@ -153,32 +153,35 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 
 ## FASE 9 — Integraciones
 
-- [ ] WhatsApp (botón, wa.me, mensaje predefinido)
-- [ ] Redes sociales
-- [ ] Google Analytics 4
-- [ ] Google Search Console
+- [~] WhatsApp — botón listo (hover → WhatsApp, link `wa.me` desde `site.ts`); **falta el número del cliente**
+- [~] Redes sociales — íconos listos (Instagram, TikTok, LinkedIn, Facebook); **faltan las URLs del cliente**
+- [x] Google Analytics 4 — `G-52NRMJBP07` (en `site.ts`, solo mide en los dominios reales)
+- [ ] Política de privacidad que mencione Analytics (requisito de los términos de Google; texto a aprobar por el cliente)
+- [ ] Google Search Console — registrar `apexintelagency.com` y enviar el sitemap (requiere la cuenta de Google del cliente)
+- [x] Email de contacto — `info@apexintelagency.com`
+- [x] Licencia — Class A, A 3600222
 
 ---
 
 ## FASE 10 — CI/CD
 
-- [ ] Inicializar repositorio Git
-- [ ] `.gitignore`
-- [ ] README inicial
-- [ ] GitHub Actions: install + lint + typecheck + build
-- [ ] Configuración de secrets/variables (GitHub Actions Secrets)
+- [x] Repositorio Git
+- [x] `.gitignore`
+- [x] README inicial
+- [x] GitHub Actions: install + check + lint + build + deploy (`deploy.yml`)
+- [x] Secrets/variables (`HOSTINGER_SSH_*`)
 
 ---
 
 ## FASE 11 — Hosting y dominio
 
 - [x] Selección de proveedor — Hostinger, plan Business (2026-09-28)
-- [~] Configuración de dominio/DNS — `targetinvestigationsagency.com` comprado en Hostinger; falta agregarlo como sitio en hPanel
-- [~] HTTPS — `.htaccess` fuerza HTTPS; falta activar el certificado en hPanel
-- [x] Redirects (www / non-www) — `public/.htaccess`, todo a `https://targetinvestigationsagency.com`
-- [x] Canonical definitivo — `<link rel="canonical">` + `og:url` desde `site`
-- [~] Variables de entorno de producción — secrets `HOSTINGER_SSH_*` y variable `PUBLIC_GA4_MEASUREMENT_ID` pendientes de cargar en GitHub
-- [x] Deploy automático — GitHub Actions: check + lint + build + rsync por SSH en cada push a `main`
+- [x] Dominio — `apexintelagency.com` (oficial) + `targetinvestigationsagency.com` (temporal, mismo build)
+- [x] HTTPS — SSL activo en ambos dominios (con `www`)
+- [x] Redirects (www / non-www, http → https) — `public/.htaccess`, conservando el dominio de entrada
+- [x] Canonical definitivo — `https://apexintelagency.com`
+- [x] Deploy automático — GitHub Actions, rsync por SSH a ambas carpetas en cada push a `main`
+- [ ] Dar de baja `targetinvestigationsagency.com` cuando el cliente lo decida (quitarlo de `DEPLOY_PATHS` + redirección 301 a apex)
 
 ---
 

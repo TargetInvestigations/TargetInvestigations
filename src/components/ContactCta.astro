@@ -2,10 +2,9 @@
 /**
  * CTA final "Need clarity about your situation?" (Section 53:400 en Figma, 1549×617).
  *
- * - Ícono (Component 21, 274:689, instancia 279:714 de 135×149): el compás con "T" de
- *   la marca; en hover aparece un destello de 4 puntas que crece desde el centro
- *   (ON_HOVER → CHANGE_TO 274:688, Smart Animate 0.3s ease-out). SVG exportado de la
- *   variante con destello (`contact-mark.svg`), con el destello aislado en `.sparkle`.
+ * - Ícono: el de la marca Apex Intel Agency (A + lupa, versión color), 135u de ancho en
+ *   el lugar del compás de Figma (Component 21). El destello en hover del diseño anterior
+ *   era parte de ese ícono y se quitó con el cambio de marca (2026-11-20).
  * - Botón: mismo componente que el CTA del Hero (swap a WhatsApp en hover,
  *   WhatsAppCta.astro), más grande aquí (instancia 430:2312: 502×82, radio 8).
  *
@@ -14,15 +13,15 @@
  * la ronda de mobile).
  */
 import WhatsAppCta from './WhatsAppCta.astro';
-import contactMark from '../icons/contact-mark.svg?raw';
+import logoIcon from '../images/brand/logo-icon.svg';
 import { siteConfig } from '../config/site';
 
 const phoneDisplay = siteConfig.contact.phoneDisplay ?? '(xxx) xxx-xxxx';
-const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
+const email = siteConfig.contact.email ?? 'xxx@apexintelagency.com';
 ---
 
 <div class="contact-cta">
-  <span class="contact-cta__icon" aria-hidden="true" set:html={contactMark} />
+  <img class="contact-cta__icon" src={logoIcon.src} alt="" width="900" height="796" />
 
   <h2 class="contact-cta__heading">Need clarity about your situation?</h2>
   <p class="contact-cta__lead">
@@ -64,28 +63,8 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     margin-bottom: 1.5rem;
   }
 
-  .contact-cta__icon :global(svg) {
-    width: 100%;
+  .contact-cta__icon {
     height: auto;
-    display: block;
-    overflow: visible;
-  }
-
-  /* Destello (274:687): en reposo invisible y reducido al centro (variante 274:690:
-     20×26 con opacidad 0); en hover crece a tamaño completo. */
-  .contact-cta__icon :global(.sparkle) {
-    opacity: 0;
-    transform: scale(0.25);
-    transform-box: fill-box;
-    transform-origin: center;
-    transition:
-      opacity 0.3s ease-out,
-      transform 0.3s ease-out;
-  }
-
-  .contact-cta__icon:hover :global(.sparkle) {
-    opacity: 1;
-    transform: scale(1);
   }
 
   .contact-cta__heading {
@@ -156,20 +135,18 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
   }
 
   /* --- Mobile (<768px): medidas del frame mobile (Container 430:2890, 423×302). La
-       sección arranca pegada a la barra de FAQs: el círculo del ícono toca el borde
-       superior (el SVG trae ~19.6px de aire arriba para el destello, por eso el margen
-       negativo). --- */
+       sección arranca pegada a la barra de FAQs. --- */
   @media (max-width: 767px) {
     /* 28px de aire sobre el logo: en Figma el círculo toca la barra de FAQs, pero el
-           usuario pidió separarlo (desviación intencional, 2026-09-25). */
+             usuario pidió separarlo (desviación intencional, 2026-09-25). */
     .contact-cta {
       padding: 1.75rem 1.5rem 1.25rem;
     }
 
-    /* Component 21 (430:2920): compás de 58px → SVG de 72px de ancho. */
+    /* Ícono de 72px de ancho (lugar de Component 21, 430:2920). */
     .contact-cta__icon {
       width: 4.5rem;
-      margin: -1.225rem 0 0;
+      margin: 0;
     }
 
     /* Heading (430:2893): Fraunces Medium 24.8px/29.8px, 17px debajo del ícono. */
@@ -190,7 +167,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     }
 
     /* Botón (430:2897): 265×43, radio 4.25, texto Inter Bold 13.5px; 13.75px debajo.
-             Cara de WhatsApp: número 15.6px e ícono de 25px. */
+               Cara de WhatsApp: número 15.6px e ícono de 25px. */
     .contact-cta :global(.contact-cta__cta) {
       margin-top: 0.859rem;
       min-width: 16.5625rem;
@@ -215,10 +192,10 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     }
 
     /* Datos (430:2898): 25.4px debajo del botón y entre bloques, divisor de 1×24px;
-             etiqueta Inter Medium Italic 8.3px/12.5px + 5px; valor Inter Medium 13.3px/20px,
-             siempre en una línea (antes el teléfono se partía en tres). */
+               etiqueta Inter Medium Italic 8.3px/12.5px + 5px; valor Inter Medium 13.3px/20px,
+               siempre en una línea (antes el teléfono se partía en tres). */
     /* La separación se achica con el ancho por debajo de 440px (25.4px a 440, ~17px a 320):
-             con los valores sin cortes de línea, a 320px se desbordaba 9px. */
+               con los valores sin cortes de línea, a 320px se desbordaba 9px. */
     .contact-cta__details {
       margin-top: 0;
       padding-top: 1.5875rem;
@@ -264,21 +241,22 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
   /* --- Desktop (≥1024px): medidas reales de 53:400. --- */
   @media (min-width: 1024px) {
     /* 42px arriba. Abajo la Section declara 96px de padding pero recorta su contenido a
-               617px de alto (clipsContent), así que lo visible bajo los datos son 49px. */
+                 617px de alto (clipsContent), así que lo visible bajo los datos son 49px. */
     .contact-cta {
       --u: max(1px, 100cqi / 1549);
       max-width: none;
       padding: calc(var(--u) * 42) 0 calc(var(--u) * 49);
     }
 
-    /* Instancia de 135×149 (el SVG de 99×110 escalado ×1.364). */
+    /* 135u de ancho (119u de alto); el compás anterior ocupaba una caja de 135×149 con
+                 el destello arriba: los 30u de diferencia van arriba para no mover el resto. */
     .contact-cta__icon {
       width: calc(var(--u) * 135);
-      margin-bottom: 0;
+      margin: calc(var(--u) * 30) 0 0;
     }
 
     /* Heading (53:410): Fraunces Medium 51.2px/61.4px crema, en una línea, 32px debajo
-               del ícono. */
+                 del ícono. */
     .contact-cta__heading {
       margin: 0;
       padding-top: calc(var(--u) * 32);
@@ -297,7 +275,7 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     }
 
     /* Botón (430:2312): 502×82, radio 8, texto Inter Bold 25.6px; 26px debajo. En la
-               cara de WhatsApp: número Inter Medium 29.6px (tracking 1.18px) e ícono de 48px. */
+                 cara de WhatsApp: número Inter Medium 29.6px (tracking 1.18px) e ícono de 48px. */
     .contact-cta :global(.contact-cta__cta) {
       margin-top: calc(var(--u) * 26);
       min-width: calc(var(--u) * 502);
@@ -323,8 +301,8 @@ const email = siteConfig.contact.email ?? 'xxx@targetinvestigations.com';
     }
 
     /* Datos de contacto (53:416): 48px debajo del botón, bloques separados 48px con
-               un divisor de 1×45px dorado al 20%. Etiqueta Inter Medium Italic 10px, tracking
-               2px, dorado al 60%, 6px sobre el valor (Inter Medium 16px/24px crema). */
+                 un divisor de 1×45px dorado al 20%. Etiqueta Inter Medium Italic 10px, tracking
+                 2px, dorado al 60%, 6px sobre el valor (Inter Medium 16px/24px crema). */
     .contact-cta__details {
       margin-top: 0;
       padding-top: calc(var(--u) * 48);

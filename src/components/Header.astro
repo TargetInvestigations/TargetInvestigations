@@ -1,7 +1,7 @@
 ---
 import Container from './Container.astro';
 import Button from './Button.astro';
-import logoMark from '../icons/logo-mark.svg?raw';
+import logoIcon from '../images/brand/logo-icon.svg';
 import { siteConfig } from '../config/site';
 ---
 
@@ -18,7 +18,9 @@ import { siteConfig } from '../config/site';
   <Container size="wide">
     <div class="header__bar">
       <a href="#top" class="header__logo" aria-label={`${siteConfig.company.name} — Home`}>
-        <span aria-hidden="true" set:html={logoMark} />
+        <!-- Ícono de la marca (A + lupa). Como <img> y no incrustado: los SVG del cliente
+             (Illustrator) traen clases genéricas (.st0…) que chocarían entre logos. -->
+        <img src={logoIcon.src} alt="" width="900" height="796" />
       </a>
 
       <details class="header__nav-toggle">
@@ -74,7 +76,7 @@ import { siteConfig } from '../config/site';
     top: 0;
     z-index: 50;
     /* Mobile (Rectangle 26, 341:1654): #0A1E3A al 74% + blur 6.7px. Desktop (53:481):
-           navy al 86% + blur 8px (ver media query). Sin borde inferior en ambos. */
+             navy al 86% + blur 8px (ver media query). Sin borde inferior en ambos. */
     background-color: rgba(10, 30, 58, 0.74);
     backdrop-filter: blur(6.7px);
     -webkit-backdrop-filter: blur(6.7px);
@@ -138,7 +140,7 @@ import { siteConfig } from '../config/site';
     justify-content: space-between;
     gap: 1rem;
     /* Mobile: barra de 54px con el logo de 35px (Icon 341:1663 en y=9). Alto fijo para
-           que el área táctil de 40px de la hamburguesa no la agrande. */
+             que el área táctil de 40px de la hamburguesa no la agrande. */
     height: 3.375rem;
   }
 
@@ -149,15 +151,11 @@ import { siteConfig } from '../config/site';
     flex-shrink: 0;
   }
 
-  .header__logo span {
+  .header__logo img {
     display: block;
     width: 100%;
     height: 100%;
-  }
-
-  .header__logo :global(svg) {
-    width: 100%;
-    height: 100%;
+    object-fit: contain;
   }
 
   /* --- Toggle de menú mobile, sin JavaScript (elemento <details>) --- */

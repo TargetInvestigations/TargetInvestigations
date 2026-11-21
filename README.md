@@ -1,6 +1,6 @@
-# TARGET INVESTIGATIONS — Sitio web
+# Apex Intel Agency — Sitio web
 
-Sitio web corporativo de TARGET INVESTIGATIONS, firma de investigación privada en South Florida (West Palm Beach, Boca Raton y alrededores).
+Sitio web corporativo de Apex Intel Agency, firma de investigación privada en South Florida (West Palm Beach, Boca Raton y alrededores).
 
 > Ver [`CLAUDE.md`](./CLAUDE.md) para las reglas del proyecto, el detalle de la auditoría de Figma y las decisiones de arquitectura. Ver [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) para el estado de avance por fases.
 
