@@ -44,12 +44,14 @@ export const siteConfig = {
     hostnames: ['apexintelagency.com', 'targetinvestigationsagency.com'],
   },
 
-  // Navegación principal. El sitio es de una sola página: estos son anchors, no rutas.
+  // Navegación principal: anclas del home. Llevan "/" delante para que también funcionen
+  // desde otras páginas (p. ej. /privacy/); dentro del home siguen siendo un desplazamiento
+  // suave a la sección, sin recargar.
   nav: [
-    { label: 'Home', href: '#top' },
-    { label: 'Services', href: '#services' },
-    { label: 'About', href: '#about' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Home', href: '/#top' },
+    { label: 'Services', href: '/#services' },
+    { label: 'About', href: '/#about' },
+    { label: 'Contact', href: '/#contact' },
   ],
 } as const;
 

@@ -205,7 +205,7 @@ const { name, founder } = siteConfig.company;
     padding-top: calc(var(--u) * 11);
   }
 
-  /* "Meet Andrea Roa": Inter Medium #E9C37E; los subtítulos del texto extendido son
+  /* "Meet Andrea Roa": Inter Medium #e5b54d; los subtítulos del texto extendido son
      Inter Bold en mayúsculas (mismo color). */
   .about__bio .about__lead {
     font-weight: 500;
@@ -236,7 +236,7 @@ const { name, founder } = siteConfig.company;
     margin: calc(var(--u) * 17) auto 0;
     padding: 1px;
     border-radius: 2px;
-    background: linear-gradient(to top, #b0803a, #d2a967);
+    background: var(--color-gold);
   }
 
   .about__portrait :global(img) {
@@ -246,7 +246,7 @@ const { name, founder } = siteConfig.company;
     border-radius: 1px;
   }
 
-  /* Toggle (Frame 41, 322:1447): "Show more" Inter 16px/25px #E9C37E + flecha de trazo
+  /* Toggle (Frame 41, 322:1447): "Show more" Inter 16px/25px #e5b54d + flecha de trazo
      1.2px a 14px; alineado al borde derecho. */
   .about__more {
     width: min(calc(var(--u) * 404), 100% - 2.25rem);
@@ -346,12 +346,12 @@ const { name, founder } = siteConfig.company;
     }
 
     /* Cita (322:1444): 387px, fondo #0A1929 al 5%, borde izquierdo 2px dorado, padding
-               16/20; texto Fraunces SemiBold Italic 15px/24px blanco. */
+                 16/20; texto Fraunces SemiBold Italic 15px/24px blanco. */
     .about__quote {
       display: block;
       width: calc(var(--u) * 387);
       /* 32px de margen + 25px de alto extra que tiene el contenedor del grid de stats
-                         en Figma (355px para celdas que suman 330). */
+                             en Figma (355px para celdas que suman 330). */
       margin: calc(var(--u) * 57) 0 0;
       padding: calc(var(--u) * 16) calc(var(--u) * 20);
       background: rgba(10, 25, 41, 0.05);
@@ -371,14 +371,14 @@ const { name, founder } = siteConfig.company;
     }
 
     /* En Figma el toggle (y=710) queda 26px por encima del final de la bio (y=736):
-               está del lado derecho, así que no choca con el texto. */
+                 está del lado derecho, así que no choca con el texto. */
     .about__toggle {
       margin-top: calc(var(--u) * -26);
       padding-block: 0;
     }
 
     /* Texto extendido (322:1210, 735px) + foto (322:1217, 406×487) en los extremos
-               del contenedor de 1200px, 3px debajo del toggle. */
+                 del contenedor de 1200px, 3px debajo del toggle. */
     .about__extra {
       width: min(calc(var(--u) * 1200), 100%);
       margin: calc(var(--u) * 3) auto 0;
@@ -397,10 +397,10 @@ const { name, founder } = siteConfig.company;
       display: block;
       flex-shrink: 0;
       width: calc(var(--u) * 406);
-      /* Borde de 1px INSIDE con degradado vertical #B0803A (abajo) → #D2A967 (arriba). */
+      /* Borde de 1px INSIDE en el dorado de la marca (antes un degradado de dos dorados). */
       padding: 1px;
       border-radius: 2px;
-      background: linear-gradient(to top, #b0803a, #d2a967);
+      background: var(--color-gold);
     }
 
     .about__photo :global(img) {

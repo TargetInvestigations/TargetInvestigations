@@ -43,7 +43,7 @@ const { href, variant = 'solid', external = false } = Astro.props;
   }
 
   .button--solid {
-    background: var(--gradient-button);
+    background: var(--color-gold);
     color: var(--color-bg-alt);
   }
 
@@ -62,9 +62,10 @@ const { href, variant = 'solid', external = false } = Astro.props;
     padding: 0.5625rem 1.25rem;
   }
 
+  /* Texto navy al rellenarse: el blanco sobre #e5b54d no tiene contraste suficiente. */
   .button--ghost:hover {
     background-color: var(--color-gold);
-    color: var(--color-white);
+    color: var(--color-bg);
   }
 
   .button:focus-visible {
