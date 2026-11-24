@@ -39,9 +39,9 @@ export const siteConfig = {
     // secreto: queda visible en el HTML. La variable de entorno PUBLIC_GA4_MEASUREMENT_ID, si
     // existe, tiene prioridad (p. ej. para probar con otra propiedad).
     ga4MeasurementId: (import.meta.env.PUBLIC_GA4_MEASUREMENT_ID || 'G-52NRMJBP07') as string,
-    // Solo se mide en estos dominios: así no cuentan como visitas las pruebas locales
+    // Solo se mide en el dominio oficial: así no cuentan como visitas las pruebas locales
     // (`astro preview`) ni copias del sitio en otros hosts.
-    hostnames: ['apexintelagency.com', 'targetinvestigationsagency.com'],
+    hostnames: ['apexintelagency.com'],
   },
 
   // Navegación principal: anclas del home. Llevan "/" delante para que también funcionen

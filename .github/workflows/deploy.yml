@@ -1,7 +1,7 @@
 name: Deploy to Hostinger
 
 # Cada push a main: valida (check + lint), compila y sube `dist/` a Hostinger por SSH.
-# El mismo build se publica en todos los dominios de DEPLOY_PATHS (misma cuenta de Hostinger).
+# El sitio se publica en apexintelagency.com; el dominio anterior solo recibe una redirección.
 on:
   push:
     branches: [main]
@@ -26,14 +26,12 @@ jobs:
       # Settings → Secrets and variables → Actions → Variables; si no existe, el sitio
       # se publica sin Analytics.
       PUBLIC_GA4_MEASUREMENT_ID: ${{ vars.PUBLIC_GA4_MEASUREMENT_ID }}
-      # Carpetas de los sitios dentro de la cuenta de Hostinger (relativas al home del usuario
-      # SSH), una por línea. Llevan el dominio en la ruta a propósito: la cuenta aloja otros
-      # proyectos y la subida borra lo que no esté en `dist/`, así que nunca deben apuntar a
-      # otra carpeta. targetinvestigationsagency.com se mantiene temporalmente, hasta el
-      # cambio de marca; para dejar de publicarlo basta con quitar su línea.
-      DEPLOY_PATHS: |
-        domains/apexintelagency.com/public_html
-        domains/targetinvestigationsagency.com/public_html
+      # Carpetas dentro de la cuenta de Hostinger (relativas al home del usuario SSH). Llevan
+      # el dominio en la ruta a propósito: la cuenta aloja otros proyectos y la subida borra
+      # lo que no esté en el origen, así que nunca deben apuntar a otra carpeta.
+      SITE_PATH: domains/apexintelagency.com/public_html
+      # Dominio anterior: solo el .htaccess con la redirección 301 (redirects/…).
+      REDIRECT_PATH: domains/targetinvestigationsagency.com/public_html
       SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
       SSH_PORT: ${{ secrets.HOSTINGER_SSH_PORT }}
       SSH_USER: ${{ secrets.HOSTINGER_SSH_USER }}
@@ -79,14 +77,17 @@ jobs:
       - name: Upload to Hostinger
         run: |
           SSH="ssh -p $SSH_PORT -i $HOME/.ssh/deploy_key -o IdentitiesOnly=yes -o ConnectTimeout=30 -o ServerAliveInterval=15"
-          # Una ruta por línea, sin espacios: el shell las separa solo.
-          PATHS=$DEPLOY_PATHS
+          REDIRECT_SRC=redirects/targetinvestigationsagency.com
+
+          # Sin estos archivos, --delete dejaría la carpeta de destino vacía.
+          test -s dist/index.html
+          test -s "$REDIRECT_SRC/.htaccess"
 
           # Antes de subir nada se comprueba que existan TODAS las carpetas: las crea Hostinger
           # al agregar cada dominio como sitio; si falta una, algo está mal configurado y es
           # mejor fallar que crearla, subir a otro lado o dejar un dominio actualizado y el
           # otro no. El código 255 de ssh es un error de conexión (se reintenta).
-          for path in $PATHS; do
+          for path in "$SITE_PATH" "$REDIRECT_PATH"; do
             for i in 1 2 3; do
               rc=0
               $SSH "$SSH_USER@$SSH_HOST" "test -d '$path'" || rc=$?
@@ -103,22 +104,23 @@ jobs:
             fi
           done
 
-          # --delete quita del servidor lo que ya no está en el build; .well-known queda
+          # --delete quita del servidor lo que ya no está en el origen; .well-known queda
           # fuera porque lo usa el certificado SSL. --delay-updates reemplaza los archivos
           # al final, así la página no queda a medio actualizar durante la subida.
-          for path in $PATHS; do
-            ok=0
+          upload() {
             for i in 1 2 3; do
-              if rsync -rlptz --delete-after --delay-updates --exclude='.well-known/'                 --chmod=D755,F644 -e "$SSH" dist/ "$SSH_USER@$SSH_HOST:$path/"; then
-                ok=1
-                break
+              if rsync -rlptz --delete-after --delay-updates --exclude='.well-known/' \
+                --chmod=D755,F644 -e "$SSH" "$1/" "$SSH_USER@$SSH_HOST:$2/"; then
+                echo "Publicado en $2"
+                return 0
               fi
-              echo "rsync a $path falló (intento $i); reintentando en 15s…"
+              echo "rsync a $2 falló (intento $i); reintentando en 15s…"
               sleep 15
             done
-            if [ "$ok" -ne 1 ]; then
-              echo "::error::No se pudo subir el sitio a $path."
-              exit 1
-            fi
-            echo "Publicado en $path"
-          done
+            echo "::error::No se pudo subir a $2."
+            exit 1
+          }
+
+          # Primero el sitio y después la redirección hacia él.
+          upload dist "$SITE_PATH"
+          upload "$REDIRECT_SRC" "$REDIRECT_PATH"

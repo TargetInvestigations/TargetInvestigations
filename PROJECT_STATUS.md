@@ -176,12 +176,13 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 ## FASE 11 — Hosting y dominio
 
 - [x] Selección de proveedor — Hostinger, plan Business (2026-09-28)
-- [x] Dominio — `apexintelagency.com` (oficial) + `targetinvestigationsagency.com` (temporal, mismo build)
+- [x] Dominio — `apexintelagency.com` (oficial); `targetinvestigationsagency.com` redirige a él (301)
 - [x] HTTPS — SSL activo en ambos dominios (con `www`)
 - [x] Redirects (www / non-www, http → https) — `public/.htaccess`, conservando el dominio de entrada
 - [x] Canonical definitivo — `https://apexintelagency.com`
 - [x] Deploy automático — GitHub Actions, rsync por SSH a ambas carpetas en cada push a `main`
-- [ ] Dar de baja `targetinvestigationsagency.com` cuando el cliente lo decida (quitarlo de `DEPLOY_PATHS` + redirección 301 a apex)
+- [x] `targetinvestigationsagency.com` dado de baja como sitio: redirección 301 a apex (2026-11-23)
+- [ ] Cambio de dirección en Search Console (dominio anterior → apex) y mantener el dominio anterior renovado al menos un año
 
 ---
 

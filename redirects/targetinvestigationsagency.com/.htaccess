@@ -1,0 +1,11 @@
+# Dominio anterior (targetinvestigationsagency.com): solo redirige al sitio oficial. Es lo
+# único que el deploy deja en su carpeta de Hostinger. Mantenerlo mientras el dominio exista.
+
+Options -Indexes
+
+RewriteEngine On
+
+# 301 permanente conservando la ruta (/privacy/ -> /privacy/), para http, https, con y sin
+# www. Se excluye /.well-known/ para no interferir con la renovación del certificado SSL.
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule ^ https://apexintelagency.com%{REQUEST_URI} [L,R=301]

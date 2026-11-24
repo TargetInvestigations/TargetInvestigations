@@ -7,9 +7,8 @@ Options -Indexes
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # HTTPS y sin www, conservando el dominio por el que se entró: el mismo archivo se sube
-  # a apexintelagency.com y a targetinvestigationsagency.com. Se excluye /.well-known/ para
-  # no interferir con la emisión/renovación del certificado SSL.
+  # HTTPS y sin www. Se excluye /.well-known/ para no interferir con la emisión/renovación
+  # del certificado SSL. (El dominio anterior tiene su propio .htaccess en redirects/.)
   RewriteCond %{REQUEST_URI} !^/\.well-known/
   RewriteCond %{HTTPS} off [OR]
   RewriteCond %{HTTP_HOST} ^www\. [NC]
