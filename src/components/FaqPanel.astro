@@ -8,16 +8,19 @@
  * blanca) al pasar el mouse (interacción ON_HOVER real de cada tarjeta, nodo 216:384).
  *
  * Las 20 preguntas son contenido real del cliente (ver CLAUDE.md), incluidas tarifas
- * reales. Se agrupan en filas de 4 para reproducir el tablero real; en mobile (donde
+ * reales. Sin numeración (pedido del cliente, 2026-11-28; en Figma van numeradas). La 20
+ * ("How do I get started?") lleva debajo de la respuesta el mismo botón de consulta del
+ * resto del sitio (WhatsAppCta: hoy lleva a #contact, con el número irá a WhatsApp).
+ * Se agrupan en filas de 4 para reproducir el tablero real; en mobile (donde
  * Figma no define un estado abierto explícito) se apilan en una sola columna dentro
  * de cada fila — decisión de responsive propia, documentada en CLAUDE.md.
  */
+import WhatsAppCta from './WhatsAppCta.astro';
 import { faqs } from '../data/faqs';
 
-// Cada pregunta va numerada en Figma ("1. How much does…"); se agrupan en filas de 4.
-const numbered = faqs.map((item, i) => ({ ...item, q: `${i + 1}. ${item.q}` }));
+// Filas de 4, como el tablero de Figma.
 const rows = [];
-for (let i = 0; i < numbered.length; i += 4) rows.push(numbered.slice(i, i + 4));
+for (let i = 0; i < faqs.length; i += 4) rows.push(faqs.slice(i, i + 4));
 ---
 
 <details class="faq-panel">
@@ -48,7 +51,10 @@ for (let i = 0; i < numbered.length; i += 4) rows.push(numbered.slice(i, i + 4))
                 {item.q}
               </button>
               <div class="faq-item__answer-wrap">
-                <p class="faq-item__answer">{item.a}</p>
+                <div class="faq-item__answer-body">
+                  <p class="faq-item__answer">{item.a}</p>
+                  {item.cta && <WhatsAppCta class="faq-item__cta" />}
+                </div>
               </div>
             </div>
           ))}
@@ -165,8 +171,8 @@ for (let i = 0; i < numbered.length; i += 4) rows.push(numbered.slice(i, i + 4))
     outline-offset: 3px;
   }
 
-  /* Respuesta: Inter Medium Italic 13px/19.5px blanca, 12px debajo de la pregunta;
-     aparece en hover/focus (ON_HOVER → CHANGE_TO de cada tarjeta, p. ej. 216:351). */
+  /* Respuesta: Inter Medium Italic 13px/19.5px blanca, 12px debajo de la pregunta; */
+  /* aparece en hover/focus (ON_HOVER → CHANGE_TO de cada tarjeta, p. ej. 216:351). */
   .faq-item__answer-wrap {
     display: grid;
     grid-template-rows: 0fr;
@@ -176,8 +182,12 @@ for (let i = 0; i < numbered.length; i += 4) rows.push(numbered.slice(i, i + 4))
       opacity 0.2s ease;
   }
 
-  .faq-item__answer-wrap > .faq-item__answer {
+  .faq-item__answer-body {
     overflow: hidden;
+    min-height: 0;
+  }
+
+  .faq-item__answer {
     margin: 0;
     padding-top: calc(var(--u) * 12);
     font-family: var(--font-body);
@@ -188,23 +198,46 @@ for (let i = 0; i < numbered.length; i += 4) rows.push(numbered.slice(i, i + 4))
     color: var(--color-white);
   }
 
+  /* Botón de la pregunta 20: a lo ancho de la tarjeta (196px en desktop) y en dos */
+  /* líneas si hace falta, 12px debajo de la respuesta. `.faq-item` delante para ganarle */
+  /* al padding base de WhatsAppCta. */
+  .faq-item :global(.faq-item__cta) {
+    display: flex;
+    width: 100%;
+    margin-top: calc(var(--u) * 12);
+    padding: calc(var(--u) * 10) calc(var(--u) * 12);
+  }
+
+  .faq-item :global(.faq-item__cta .whatsapp-cta__face) {
+    white-space: normal;
+    font-size: calc(var(--u) * 13);
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .faq-item :global(.faq-item__cta .whatsapp-cta__icon) {
+    flex-shrink: 0;
+    width: calc(var(--u) * 18);
+    height: calc(var(--u) * 18);
+  }
+
   .faq-item:hover .faq-item__answer-wrap,
   .faq-item:focus-within .faq-item__answer-wrap {
     grid-template-rows: 1fr;
     opacity: 1;
   }
 
-  /* --- Desktop (≥1024px): medidas del componente Group 39 (200:870 cerrado /
-       200:872 abierto) en unidades del frame de 1549px — escala por encima de ese
-       ancho, como el resto de secciones. --- */
+  /* --- Desktop (≥1024px): medidas del componente Group 39 (200:870 cerrado / */
+  /* 200:872 abierto) en unidades del frame de 1549px — escala por encima de ese */
+  /* ancho, como el resto de secciones. --- */
   @media (min-width: 1024px) {
     .faq-panel {
       --u: max(1px, 100cqi / 1549);
     }
 
-    /* Cerrado: barra de 117px, "FAQs" Fraunces SemiBold 44px/52.8px navy y triángulo
-             en los extremos de una caja de 1081px. Abierto: el título baja a 34px del borde
-             superior y las filas empiezan 57px debajo. */
+    /* Cerrado: barra de 117px, "FAQs" Fraunces SemiBold 44px/52.8px navy y triángulo */
+    /* en los extremos de una caja de 1081px. Abierto: el título baja a 34px del borde */
+    /* superior y las filas empiezan 57px debajo. */
     .faq-panel__summary-inner {
       max-width: min(calc(var(--u) * 1081), 100% - 3rem);
       padding: calc(var(--u) * 32) 0;
@@ -231,8 +264,8 @@ for (let i = 0; i < numbered.length; i += 4) rows.push(numbered.slice(i, i + 4))
       gap: calc(var(--u) * 13);
     }
 
-    /* Cada fila (Frame 75…99): padding 24/50/3 (13 abajo en la primera), tarjetas de
-             196px centradas con 30px + línea + 30px entre ellas. */
+    /* Cada fila (Frame 75…99): padding 24/50/3 (13 abajo en la primera), tarjetas de */
+    /* 196px centradas con 30px + línea + 30px entre ellas. */
     .faq-row {
       flex-direction: row;
       justify-content: center;

@@ -115,7 +115,7 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 ## FASE 6 — SEO técnico
 
 - [x] Titles y descriptions por página — una sola página; title + description en `Layout.astro`
-- [x] Jerarquía H1-H6 — h1 único (logo), h2 por sección (FAQs pasó de span a h2), h3 por servicio
+- [x] Jerarquía H1-H6 — h1 único (desde 2026-11-28 el texto "Private Investigators Serving the South Florida" del Hero; antes, el logo), h2 por sección (FAQs pasó de span a h2), h3 por servicio
 - [x] Canonical URLs — `https://apexintelagency.com/` (canónica en ambos dominios)
 - [x] URLs amigables — una sola URL, secciones con anclas
 - [x] sitemap.xml — `public/sitemap.xml`
@@ -210,3 +210,4 @@ Confirmado en Fase 0: el sitio es de **una sola página** (Home/Services/About/C
 - **2026-09-18 (mañana):** Sesión inicial. Se recibieron las instrucciones del proyecto. Se creó `CLAUDE.md` y este archivo. Carpeta de proyecto vacía, sin Git inicializado. **Bloqueado en Fase 0** por falta de acceso a Figma.
 - **2026-09-18 (tarde):** Usuario proporcionó un Personal Access Token de Figma y el link del archivo. Se auditó el archivo completo vía API REST (estructura, contenido real, colores, tipografías, componentes) y se verificó visualmente con capturas exportadas. Se presentó el reporte de Fase 0 y el usuario confirmó las 3 decisiones abiertas (versión de referencia, sitio de una sola página, tablet interpolado). **Fase 0 completada.**
 - **2026-09-18 (noche):** Usuario confirmó Astro como stack. Se instaló Node.js LTS (no estaba presente en la máquina) vía winget con autorización del usuario. Se hizo scaffolding del proyecto Astro (template `minimal`, TS strict), se configuró ESLint+Prettier+astro check, se crearon los design tokens (`src/styles/tokens.css`), el layout base con SEO/fuentes (`src/layouts/Layout.astro`), y la configuración centralizada del sitio (`src/config/site.ts`). Se validó todo el pipeline (`check`/`lint`/`format:check`/`build`/dev server). Usuario configuró su identidad de git y se hizo el commit inicial (`651b2b7`). **Fase 1 completada.**
+- **2026-11-28:** Logo nuevo de Apex (paquete del cliente) y favicons claro/oscuro; Hero con el texto de Figma "Private Investigators Serving the South Florida", logo más chico y "LIC A3600222", ajustado al alto de la pantalla para que el fotógrafo y los íconos se vean al cargar (de 360×640 a 1920×953); tarjetas del About ("Tri-County Area…", "Licensed A3600222 & Insured"); FAQs sin numeración y con botón de consulta en la 20; servicios mobile sin número. Fuente nueva: Montserrat (autohospedada). Ver `CLAUDE.md`.

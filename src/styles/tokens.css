@@ -25,6 +25,8 @@
   /* Tipografía */
   --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --font-body: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+  /* Montserrat: texto de arriba del Hero y "LIC" bajo el logo (Figma 657:669 / 659:846). */
+  --font-label: 'Montserrat Variable', 'Montserrat', 'Inter Variable', sans-serif;
 
   /* Escala tipográfica (aproximada, ver nota arriba — pendiente de validar en Fase 2) */
   --text-nav: 13px;

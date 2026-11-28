@@ -6,6 +6,8 @@
 export interface Faq {
   q: string;
   a: string;
+  /** Muestra el botón "Request a Confidential Consultation" debajo de la respuesta. */
+  cta?: boolean;
 }
 
 export const faqs: Faq[] = [
@@ -88,5 +90,6 @@ export const faqs: Faq[] = [
   {
     q: 'How do I get started?',
     a: "Simply contact Apex Intel Agency for a confidential consultation. Tell us about your situation, provide the information you have, and we will discuss the investigative options available. Don't live with questions. Get the facts. Intelligence Built for Results.",
+    cta: true,
   },
 ];

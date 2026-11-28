@@ -4,29 +4,34 @@
  * 279×164 (#163155, padding 36/28) separadas por 2px de hueco — sin líneas doradas
  * entre celdas (el hueco deja ver el fondo de la sección). Valor Fraunces Medium 42px
  * dorado; etiqueta Inter SemiBold 14px crema; leyenda Inter Medium Italic 11px dorada
- * al 60%. La celda del mapa lleva la dirección (Inter SemiBold 14px/16px, caja de
- * ~123px) + leyenda a la izquierda y el contorno de Florida (89×83) a la derecha.
+ * al 60%. La celda del mapa lleva la zona de cobertura (Inter SemiBold 14px/16px, caja
+ * de 108px) + leyenda a la izquierda y el contorno de Florida (89×83) a la derecha.
  *
  * Usa `--u` y `--s` de About.astro (mobile = desktop × 0.697, como en Figma).
  */
 import { siteConfig } from '../config/site';
 import floridaMap from '../icons/florida-map.svg?raw';
 
-// En Figma (322:1371) la dirección lleva un salto de línea manual después de la primera
-// ciudad ("Boca Raton," / "West Palm Beach, …").
-const [firstPlace, ...otherPlaces] = siteConfig.company.coverageArea.split(', ');
-
+// Texto de la licencia pedido por el cliente (2026-11-28); en Figma sigue el placeholder
+// "Licensed & Insured # A------".
 const licenseLabel = siteConfig.company.licenseNumber
-  ? `Licensed & Insured # ${siteConfig.company.licenseNumber}`
-  : 'Licensed & Insured # A------';
+  ? `Licensed ${siteConfig.company.licenseNumber} & Insured`
+  : 'Licensed & Insured';
 ---
 
 <ul class="stat-badges">
   <li class="stat-badges__item stat-badges__item--map">
     <div class="stat-badges__address-block">
+      <!-- Texto de Figma (322:1371, actualizado 2026-11) con sus mismos cortes de línea (la
+           caja de Figma mide 108px; con la Inter web el corte automático salía distinto). -->
       <span class="stat-badges__address">
-        {firstPlace},<br />
-        {otherPlaces.join(', ')}
+        Tri-County Area
+        <br />
+        Palm Beach,
+        <br />
+        Broward &amp;
+        <br />
+        Miami-Dade
       </span>
       <span class="stat-badges__caption">Nationwide Florida</span>
     </div>
@@ -92,6 +97,7 @@ const licenseLabel = siteConfig.company.licenseNumber
   }
 
   .stat-badges__address {
+    white-space: nowrap;
     font-family: var(--font-body);
     font-weight: 600;
     font-size: calc(var(--u) * 14 * var(--s));

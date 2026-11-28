@@ -2,9 +2,9 @@
 /**
  * Una categoría de servicio (fila de "Frame 108" en Figma, p. ej. 447:778).
  *
- * - Mobile (<1024px, nodo 450:1587): acordeón nativo <details> — círculo numerado
- *   (NumberBadge), título Fraunces 18px y chevron; divisor degradado debajo del título
- *   (no debajo del número). Figma no define el estado abierto: se muestra descripción +
+ * - Mobile (<1024px, nodo 450:1587): acordeón nativo <details> — título Fraunces 18px
+ *   y chevron, con divisor degradado debajo. Sin el círculo numerado (NumberBadge) de
+ *   Figma: lo quitó el cliente (2026-11-28). Figma no define el estado abierto: se muestra descripción +
  *   bullets, sin fotos (en el frame mobile las fotos solo aparecen arriba de la lista).
  * - Desktop (≥1024px): fila estática (siempre abierta) de 1060px, texto de 325px y
  *   fotos propias de cada categoría en los extremos (SPACE_BETWEEN, centradas en
@@ -22,7 +22,6 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
-  number: number;
   title: string;
   description: string;
   bullets: string[];
@@ -30,15 +29,12 @@ interface Props {
   reverse?: boolean;
 }
 
-const { number, title, description, bullets, images, reverse = false } = Astro.props;
+const { title, description, bullets, images, reverse = false } = Astro.props;
 const wide = images.length === 1;
 ---
 
 <details class="service-item" data-reverse={reverse}>
   <summary class="service-item__summary">
-    <span class="service-item__number" aria-hidden="true">
-      {number}
-    </span>
     <h3 class="service-item__title">{title}</h3>
     <svg class="service-item__chevron" viewBox="0 0 16 16" aria-hidden="true">
       <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"></path>
@@ -80,12 +76,12 @@ const wide = images.length === 1;
     position: relative;
   }
 
-  /* Divisor (MobileDivider 450:1602): degradado navy→dorado→navy de ~2px, solo bajo
-     la columna del título (empieza después del número: 22px + 12px de separación). */
+  /* Divisor (MobileDivider 450:1602): degradado navy→dorado→navy de ~2px bajo el título
+     (a todo el ancho de la fila desde que no hay número). */
   .service-item::after {
     content: '';
     position: absolute;
-    left: 2.125rem;
+    left: 0;
     right: 0;
     bottom: 0;
     height: 2px;
@@ -100,7 +96,7 @@ const wide = images.length === 1;
 
   .service-item__summary {
     display: grid;
-    grid-template-columns: 1.375rem 1fr 1rem;
+    grid-template-columns: 1fr 1rem;
     column-gap: 0.75rem;
     align-items: start;
     padding-block: 1rem;
@@ -110,22 +106,6 @@ const wide = images.length === 1;
 
   .service-item__summary::-webkit-details-marker {
     display: none;
-  }
-
-  /* NumberBadge (450:1589): círculo de 22px, borde 1px dorado al 40%, número Inter 10px. */
-  .service-item__number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.375rem;
-    height: 1.375rem;
-    margin-top: 2px;
-    border: 1px solid rgba(229, 181, 77, 0.4);
-    border-radius: 50%;
-    font-family: var(--font-body);
-    font-size: 0.625rem;
-    line-height: 1;
-    color: var(--color-gold);
   }
 
   .service-item__title {
@@ -156,7 +136,7 @@ const wide = images.length === 1;
   }
 
   .service-item__body {
-    padding: 0 0 1rem 2.125rem;
+    padding: 0 0 1rem;
   }
 
   /* Tipografía de la columna de texto (447:786 / 447:794): descripción Inter 14px/25.2px

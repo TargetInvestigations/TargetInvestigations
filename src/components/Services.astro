@@ -229,14 +229,14 @@ const services = [
 
   <div class="services__list">
     {services.map((service, i) => (
-      <ServiceItem {...service} number={i + 1} images={images[i]} reverse={i % 2 === 1} />
+      <ServiceItem {...service} images={images[i]} reverse={i % 2 === 1} />
     ))}
   </div>
 </div>
 
 <style>
-  /* Mobile (frame 450:1571): kicker a 40px del borde, 40px de aire al final; filas
-     con 24px de margen lateral y fotos del encabezado casi a sangre (5px). */
+  /* Mobile (frame 450:1571): kicker a 40px del borde, 40px de aire al final; filas */
+  /* con 24px de margen lateral y fotos del encabezado casi a sangre (5px). */
   .services {
     --u: 1px;
     container-type: inline-size;
@@ -267,8 +267,8 @@ const services = [
     color: var(--color-white);
   }
 
-  /* HeroImages (450:1579): una foto de 430×310 a 5px de los bordes, 23px por encima
-     de la lista. */
+  /* HeroImages (450:1579): una foto de 430×310 a 5px de los bordes, 23px por encima */
+  /* de la lista. */
   .services__mobile-images {
     margin: 1.75rem calc(5px - 1.5rem) 1.4375rem;
   }
@@ -285,8 +285,8 @@ const services = [
     /* 1px del frame de Figma; escala solo por encima de 1549px de ancho. */
     .services {
       --u: max(1px, 100cqi / 1549);
-      /* Sin padding lateral: `cqi` se mide sobre el content-box, y con padding la
-                         escala quedaba por debajo de la de Figma. El margen lateral lo ponen los hijos. */
+      /* Sin padding lateral: `cqi` se mide sobre el content-box, y con padding la */
+      /* escala quedaba por debajo de la de Figma. El margen lateral lo ponen los hijos. */
       padding: calc(var(--u) * 60) 0 calc(var(--u) * 15);
     }
 
@@ -294,12 +294,12 @@ const services = [
       display: none;
     }
 
-    /* Encabezado (53:140): kicker Inter Bold 19px/33px con tracking 4.4px; heading
-         Fraunces SemiBold 49px/56.4px en una caja de ~342px (por eso ocupa dos líneas),
-         20.4px debajo del kicker. En Figma (actualizado 2026-10-13) los dos van en una
-         columna de 331px centrada en la página, con el texto alineado a la izquierda
-         dentro de ella (antes la columna iba al borde izquierdo del contenedor de 1167px).
-         El heading (352px, ver abajo) sobresale un poco a la derecha, como en Figma. */
+    /* Encabezado (53:140): kicker Inter Bold 19px/33px con tracking 4.4px; heading */
+    /* Fraunces SemiBold 49px/56.4px en una caja de ~342px (por eso ocupa dos líneas), */
+    /* 20.4px debajo del kicker. En Figma (actualizado 2026-10-13) los dos van en una */
+    /* columna de 331px centrada en la página, con el texto alineado a la izquierda */
+    /* dentro de ella (antes la columna iba al borde izquierdo del contenedor de 1167px). */
+    /* El heading (352px, ver abajo) sobresale un poco a la derecha, como en Figma. */
     .services__intro {
       width: calc(var(--u) * 331);
       margin-inline: auto;
@@ -312,15 +312,15 @@ const services = [
       font-size: calc(var(--u) * 19);
       line-height: calc(var(--u) * 33);
       letter-spacing: 0.23em;
-      /* Una línea aunque mida algo más que la columna de 331px (la Inter web es más
-         ancha): sobresale a la derecha, el borde izquierdo queda donde en Figma. */
+      /* Una línea aunque mida algo más que la columna de 331px (la Inter web es más */
+      /* ancha): sobresale a la derecha, el borde izquierdo queda donde en Figma. */
       white-space: nowrap;
     }
 
     .services__heading {
-      /* 342px en Figma; la Fraunces web mide ~2% más ancho y "are you facing?"
-         saltaba a una tercera línea — 352px mantiene los 2 renglones del diseño. Ancho
-         fijo (no max-width) porque la columna mide 331. */
+      /* 342px en Figma; la Fraunces web mide ~2% más ancho y "are you facing?" */
+      /* saltaba a una tercera línea — 352px mantiene los 2 renglones del diseño. Ancho */
+      /* fijo (no max-width) porque la columna mide 331. */
       width: calc(var(--u) * 352);
       padding-top: calc(var(--u) * 20.4);
       font-size: calc(var(--u) * 49);

@@ -81,17 +81,17 @@ const values = [
     margin: 0;
     padding: 0;
     display: grid;
-    /* Mobile (Group 41, 399:523): grupo compacto y centrado, ~72px entre centros sobre
-             440 de ancho (16.4%). */
+    /* Mobile (Group 41, 399:523): grupo compacto y centrado, ~72px entre centros sobre */
+    /* 440 de ancho (16.4%). */
     grid-template-columns: repeat(5, min(16.4vw, 5.5rem));
     justify-content: center;
     gap: 0;
     text-align: center;
   }
 
-  /* Línea dorada que conecta los 5 íconos, difuminada en ambos extremos (nodo real
-     "Ellipse 4" del frame mobile, 399:442) — existe en los dos breakpoints, no solo
-     en desktop. La posición `top` se ajusta al tamaño del ícono de cada breakpoint. */
+  /* Línea dorada que conecta los 5 íconos, difuminada en ambos extremos (nodo real */
+  /* "Ellipse 4" del frame mobile, 399:442) — existe en los dos breakpoints, no solo */
+  /* en desktop. La posición `top` se ajusta al tamaño del ícono de cada breakpoint. */
   .value-badges::before {
     content: '';
     position: absolute;
@@ -145,11 +145,11 @@ const values = [
     opacity: 0;
   }
 
-  /* Nodo real "Discretion" (I175:694;175:603 desktop / 399:483 mobile): Inter Bold,
-     fill #e5b54d — no Fraunces ni crema. Mobile 11.6px a 440 de ancho. Por debajo de
-     440 las columnas se achican con `vw`, así que la letra también (2.636vw = 11.6/440):
-     con un tamaño fijo, a 360px (Android típico) las etiquetas se pegaban entre sí y a
-     320 se montaban (pedido 4 del frame "Cambios / Correcciones"). */
+  /* Nodo real "Discretion" (I175:694;175:603 desktop / 399:483 mobile): Inter Bold, */
+  /* fill #e5b54d — no Fraunces ni crema. Mobile 11.6px a 440 de ancho. Por debajo de */
+  /* 440 las columnas se achican con `vw`, así que la letra también (2.636vw = 11.6/440): */
+  /* con un tamaño fijo, a 360px (Android típico) las etiquetas se pegaban entre sí y a */
+  /* 320 se montaban (pedido 4 del frame "Cambios / Correcciones"). */
   .value-badges__label {
     font-family: var(--font-body);
     font-weight: 700;
@@ -164,46 +164,58 @@ const values = [
     display: none;
   }
 
+  /* --- Desktop (≥1024px): réplica del Group 38 (175:731) en las unidades del Hero */
+  /* (`--u`, definido en Hero.astro: 1px de Figma escalado al ancho y al alto del Hero). */
+  /* Círculos de 56px (64px con el trazo) separados ~172px entre centros, fila compacta */
+  /* centrada; línea de 1064×4px en el centro de los círculos con degradado que se */
+  /* apaga en los extremos (8%–91%); etiquetas Inter Bold 23.4px, 10px debajo del */
+  /* círculo. En hover (interacciones 175:640…677) el círculo se rellena, la etiqueta se */
+  /* oculta y aparece la descripción. --- */
   @media (min-width: 1024px) {
     .value-badges {
-      grid-template-columns: repeat(5, 1fr);
-      justify-content: normal;
-      gap: 1.5rem;
+      grid-template-columns: repeat(5, calc(var(--u) * 172));
+      justify-content: center;
+      gap: 0;
+    }
+
+    .value-badges::before {
+      top: calc(var(--u) * 30);
+      width: calc(var(--u) * 1064);
+      height: calc(var(--u) * 4);
+      background: linear-gradient(
+        to right,
+        rgba(10, 25, 41, 0) 0%,
+        var(--color-gold-light) 8%,
+        var(--color-gold-light) 91%,
+        rgba(10, 25, 41, 0) 100%
+      );
     }
 
     .value-badges__item {
-      gap: 0.35rem;
-    }
-
-    /* Icono más grande en desktop (nodo 175:730) — la línea conectora (::before,
-               definida en el estilo base) se re-centra a la mitad del nuevo tamaño. */
-    .value-badges::before {
-      top: 1.25rem;
-      /* Reset de la línea mobile: a todo el ancho y de 1px (layout aprobado a 1366). */
-      left: 0;
-      right: 0;
-      width: auto;
-      transform: none;
-      height: 1px;
+      gap: calc(var(--u) * 10);
     }
 
     .value-badges__icon {
-      width: 2.5rem;
-      height: 2.5rem;
+      width: calc(var(--u) * 64);
+      height: calc(var(--u) * 64);
     }
 
     .value-badges__label {
-      font-size: 1rem;
+      font-size: max(calc(var(--u) * 23.4), 0.875rem);
+      line-height: 1.51;
     }
 
     .value-badges__description {
       display: block;
       position: absolute;
-      top: calc(100% + 0.35rem);
+      top: calc(var(--u) * 74);
       left: 50%;
       transform: translateX(-50%);
-      width: 10rem;
-      font-size: 0.8rem;
+      /* Con piso de 10.5rem (3 líneas): en ventanas bajas la letra no baja de 12px y, con la caja de */
+      /* 150u, la descripción quedaba en 5 líneas y se salía por debajo del Hero. */
+      width: max(calc(var(--u) * 150), 10.5rem);
+      font-size: max(calc(var(--u) * 14), 0.75rem);
+      line-height: 1.3;
       color: var(--color-cream);
       opacity: 0;
       pointer-events: none;
@@ -228,57 +240,6 @@ const values = [
     .value-badges__item:hover .value-badges__description,
     .value-badges__item:focus-within .value-badges__description {
       opacity: 1;
-    }
-  }
-
-  /* --- ≥1440px: réplica proporcional del Group 38 (175:731). Usa `--u` (1px del frame
-       de Figma de 1549px), definido en `.hero` (Hero.astro), que es el contenedor de
-       consulta para `cqi`. Círculos de 56px (64px con el trazo) separados ~172px entre
-       centros, fila compacta centrada; línea de 1064×4px en el centro de los círculos
-       con degradado que se apaga en los extremos (8%–91%); etiquetas Inter Bold 23.4px,
-       14px debajo del círculo. --- */
-  @media (min-width: 1440px) {
-    .value-badges {
-      grid-template-columns: repeat(5, calc(var(--u) * 172));
-      justify-content: center;
-      gap: 0;
-    }
-
-    .value-badges::before {
-      top: calc(var(--u) * 30);
-      left: 50%;
-      right: auto;
-      width: calc(var(--u) * 1064);
-      height: calc(var(--u) * 4);
-      transform: translateX(-50%);
-      background: linear-gradient(
-        to right,
-        rgba(10, 25, 41, 0) 0%,
-        var(--color-gold-light) 8%,
-        var(--color-gold-light) 91%,
-        rgba(10, 25, 41, 0) 100%
-      );
-    }
-
-    .value-badges__item {
-      gap: calc(var(--u) * 10);
-    }
-
-    .value-badges__icon {
-      width: calc(var(--u) * 64);
-      height: calc(var(--u) * 64);
-    }
-
-    .value-badges__label {
-      font-size: calc(var(--u) * 23.4);
-      line-height: 1.51;
-    }
-
-    .value-badges__description {
-      top: calc(var(--u) * 74);
-      width: calc(var(--u) * 150);
-      font-size: calc(var(--u) * 14);
-      line-height: 1.3;
     }
   }
 </style>

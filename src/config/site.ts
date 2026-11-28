@@ -14,7 +14,7 @@ export const siteConfig = {
     founder: 'Andrea Roa',
     coverageArea: 'Boca Raton, West Palm Beach, surrounding areas, and South Florida',
     // Número de licencia de investigador privado (Class A), entregado por el cliente.
-    licenseNumber: 'A 3600222' as string | null,
+    licenseNumber: 'A3600222' as string | null,
   },
 
   contact: {
